@@ -51,7 +51,7 @@ const app = new Vue({
 
       dateNow: {
         get: function() {
-          return new Date();
+          return new Date().toString();
         }
       },
 

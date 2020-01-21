@@ -2,8 +2,8 @@ const express = require('express');
 const apiRouter = express.Router();
 
 // mounting Routers on URLs
-const tripRouter = require('./Routers/tripRouter');
-apiRouter.use('/trip', tripRouter);
+const tripsRouter = require('./Routers/tripsRouter');
+apiRouter.use('/trips', tripsRouter);
 
 const spendingsRouter = require('./Routers/spendingsRouter');
 apiRouter.use('/spendings', spendingsRouter);
