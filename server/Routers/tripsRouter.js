@@ -14,8 +14,10 @@ tripsRouter.param('tripId', (req, res, next, tripId) => {
 
         if (err) {
             next(err);
+       
         } else if (row) {
             req.trip = row;
+       
         } else {
             res.sendStatus(404);
         }
@@ -36,6 +38,7 @@ tripsRouter.get('/', (req, res, next) => {
 
         if (err) {
             next(err);
+      
         } else {
             res.status(200).json({trips: rows});
         }
@@ -55,7 +58,8 @@ tripsRouter.post('/', (req, res, next) => {
     if (!req.body.trip.description || !req.body.trip.dateStart || !req.body.trip.dateEnd || !req.body.trip.totalCash) {
         return res.sendStatus(400);
     }
-
+    
+    // inserting req.body to Trips table
     db.run(`
         insert into Trips (description, trip_start, trip_end, total_cash)
         values ($description, $dateStart, $dateEnd, $totalCash);
@@ -65,26 +69,81 @@ tripsRouter.post('/', (req, res, next) => {
         $dateEnd: req.body.trip.dateEnd,
         $totalCash: req.body.trip.totalCash,
     }, function(err) {
-            if (err) {
+        
+        if (err) {
                 next(err);
+         
             } else {
                 console.log(`Newly Trip with ID: ${this.lastID} is created`);
 
+                // sending back the newly created Trip
                 db.get(`
                     select * from Trips
                     where Trips.id = ${this.lastID};
                 `, (err, row) => {
+                   
                     if (err) {
                         next(err);
+                   
                     } else {
                         res.status(201).json({ trip: row });
                     }
-                })
+                });
             }
 
     });
 
 });
+
+//--- PUT to update Trip
+tripsRouter.put('./:tripId', (req, res, next) => {
+    const newTrip = req.body.trip;
+    console.log(newTrip);
+
+    db.run(`
+        update Trips
+        set description = $description,
+            trip_start = $dateStart,
+            trip_end = $dateEnd,
+            total_cash = #totalCash
+        where Trips.id = ${req.trip.id} 
+    `, {
+        $description: req.body.trip.description,
+        $dateStart: req.body.trip.dateStart,
+        $dateEnd: req.body.trip.dateEnd,
+        $totalCash: req.body.trip.totalCash,
+    }, function(err) {
+        
+        if (err) {
+            next(err);
+       
+        } else {
+            console.log(`Trip with ID: ${this.lastID} updated!`);
+
+            db.get(`
+                    select * from Trips
+                    where Trips.id = ${this.lastID};
+                `, (err, row) => {
+                    
+                    if (err) {
+                        next(err);
+                  
+                    } else {
+                        res.status(200).json({ trip: row });
+                    }
+                
+            });
+        }
+        
+    });
+
+});
+
+//--- DELETE Trip
+
+
+
+
 
 
 
