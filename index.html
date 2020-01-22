@@ -5,6 +5,7 @@
   <link rel="stylesheet" type="text/css" href="./public/css/reset.css">
   <link rel="stylesheet" type="text/css" href="./public/css/style.css">
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js" defer></script>
+  <script src="./components/Trip.js" defer></script>
   <script src="./index.js" defer></script>
 </head>
 <body>
@@ -56,32 +57,12 @@
             <th class="editButton"></th>
           </thead>
           <tbody>
-            <tr class="odd">
-              <td>
-                <img class="deleteButton" src="public/img/X_Button.svg">
-              </td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td>
-                <img class="editButton" src="public/img/icon_money.svg">
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <img class="deleteButton" src="public/img/X_Button.svg">
-              </td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td>
-                <img class="editButton" src="public/img/icon_money.svg">
-              </td>
-            </tr>
+            
+            <trip v-bind:description = "description"
+                  v-bind:datestart = "dateStart"
+                  v-bind:dateend = "dateEnd"
+                  v-bind:totalcash = "totalCash"></trip>
+            
           </tbody>
         </table>
       </div>
