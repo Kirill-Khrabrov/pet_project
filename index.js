@@ -149,5 +149,19 @@ const app = new Vue({
 
 
 
+    },
+
+    //--- test section
+    // adding lifecircle hooks
+    created: function() {
+      console.log(`
+        Vue app front page is created:
+        description: ${this.description},
+        date Start: ${this.dateStart},
+        date End: ${this.dateEnd},
+        total cash: ${this.totalCash},
+        trip ID: ${this.tripId},
+        spend ID: ${this.spendId},
+      `)
     }
   });

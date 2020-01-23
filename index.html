@@ -45,7 +45,7 @@
         <input type="number" id="totalCash" min="0" max="999999" v-model="totalCash" />
       </div>
 
-      <div class="container" id="StrtForm_allTrips_container">
+      <div class="container" id="StrtForm_allTrips_container" v-if="startFormIsValid">
         <table id="StrtForm_allTrips">
           <thead>
             <th></th>
@@ -76,7 +76,7 @@
     </div>
 
     <!--Section for everyday visualisation-->
-    <div class="section" id="SpndVis">
+    <div class="section" id="SpndVis" v-if="startFormIsValid">
 
       <div class="container">
         <label for="daysLeft">DAYS LEFT</label>
@@ -97,7 +97,7 @@
 
     <!--Section for everyday spendings adding-->
 
-    <div class="section" id="SpndAdd">
+    <div class="section" id="SpndAdd" v-if="startFormIsValid">
 
       <div class="container">
           <label for="currentDate">CURRENT DATE</label>
@@ -152,6 +152,7 @@
 
     </div>
 
+    <!--Section for developer buttons-->
     <div class="section" id="Developer">
       <button id="Developer_button" v-on:click="developerPane">Logg</button>
       <button id="Developer_button" v-on:click="saveTrip">Save Trip</button>
