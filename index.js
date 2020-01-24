@@ -43,18 +43,6 @@ const app = new Vue({
         }
       },
 
-      dayNow: {
-        get: function() {
-          return Math.floor(new Date() / (1000 * 3600 * 24));
-        }
-      },
-
-      dateNow: {
-        get: function() {
-          return new Date().toLocaleDateString();
-        }
-      },
-
       totalDays: function() {
         //counting total days depending on start and end dates
         if ((this.dayEnd - this.dayStart) < 0) {
@@ -66,7 +54,7 @@ const app = new Vue({
 
       daysLeft: function() {
         //counting days  remaining till trip ends
-        return this.dayEnd - this.dayNow + 1;
+        return this.dayEnd - this.dayNow() + 1;
       },
 
       cashLeft: function() {
@@ -82,6 +70,14 @@ const app = new Vue({
     },
     
     methods: {
+
+      dayNow: function() {
+          return Math.floor(new Date() / (1000 * 3600 * 24));
+      },
+
+      dateNow: function() {
+          return new Date().toLocaleDateString();
+      },
 
       startTrip: function() {
         //functions that starts trip and makes the SpndVis section  active
@@ -135,7 +131,7 @@ const app = new Vue({
           Trip description is: ${this.description}
           Trip starts at: ${this.dateStart}
           Trip end at ${this.dateEnd}
-          Today is ${this.dateNow}
+          Today is ${this.dateNow()}
           Total cash is ${this.totalCash}
           Todays spendings is: ${this.todaySpendings}
           List of trips is: ${this.tripList}
@@ -160,7 +156,7 @@ const app = new Vue({
         date Start: ${this.dateStart},
         date End: ${this.dateEnd},
         total cash: ${this.totalCash},
-        today is ${this.dateNow}
+        today is ${this.dateNow()}
         trip ID: ${this.tripId},
         spend ID: ${this.spendId},
       `)
