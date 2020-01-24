@@ -5,6 +5,7 @@
   <link rel="stylesheet" type="text/css" href="./public/css/reset.css">
   <link rel="stylesheet" type="text/css" href="./public/css/style.css">
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js" defer></script>
+  <script src="./components/Trip.js" defer></script>
   <script src="./index.js" defer></script>
 </head>
 <body>
@@ -44,7 +45,7 @@
         <input type="number" id="totalCash" min="0" max="999999" v-model="totalCash" />
       </div>
 
-      <div class="container" id="StrtForm_allTrips_container">
+      <div class="container" id="StrtForm_allTrips_container" v-if="startFormIsValid">
         <table id="StrtForm_allTrips">
           <thead>
             <th></th>
@@ -56,32 +57,12 @@
             <th class="editButton"></th>
           </thead>
           <tbody>
-            <tr class="odd">
-              <td>
-                <img class="deleteButton" src="public/img/X_Button.svg">
-              </td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td>
-                <img class="editButton" src="public/img/icon_money.svg">
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <img class="deleteButton" src="public/img/X_Button.svg">
-              </td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td>
-                <img class="editButton" src="public/img/icon_money.svg">
-              </td>
-            </tr>
+            
+            <trip v-bind:description = "description"
+                  v-bind:datestart = "dateStart"
+                  v-bind:dateend = "dateEnd"
+                  v-bind:totalcash = "totalCash"></trip>
+            
           </tbody>
         </table>
       </div>
@@ -95,7 +76,7 @@
     </div>
 
     <!--Section for everyday visualisation-->
-    <div class="section" id="SpndVis">
+    <div class="section" id="SpndVis" v-if="startFormIsValid">
 
       <div class="container">
         <label for="daysLeft">DAYS LEFT</label>
@@ -116,7 +97,7 @@
 
     <!--Section for everyday spendings adding-->
 
-    <div class="section" id="SpndAdd">
+    <div class="section" id="SpndAdd" v-if="startFormIsValid">
 
       <div class="container">
           <label for="currentDate">CURRENT DATE</label>
@@ -171,6 +152,7 @@
 
     </div>
 
+    <!--Section for developer buttons-->
     <div class="section" id="Developer">
       <button id="Developer_button" v-on:click="developerPane">Logg</button>
       <button id="Developer_button" v-on:click="saveTrip">Save Trip</button>
@@ -182,85 +164,3 @@
   <script src="public/js/utils.js"></script>
 </body>
 </html>
-
-<!--
-    <header>
-      
-    <form v-on:reset="resetFields" v-on:submit.prevent="submitForm">
-      <div class="form-row">
-        <div class="form-field">
-          <label for="first-name">First Name</label>
-          <input type="text" id="first-name" v-model.trim="firstName" />
-        </div>
-        <div class="form-field">
-          <label for="last-name">Last Name</label>
-          <input type="text" id="last-name" v-model.trim="lastName" />
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-field">
-          <label for="email">Email</label>
-          <input type="text" id="email" v-model.trim="email" />
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-field">
-          <label for="ticket-quantity">Ticket Quantity</label>
-          <select id="ticket-quantity" v-model.number="ticketQuantity">
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-          </select>
-        </div>
-        <div class="form-field">
-          <legend>Ticket Type</legend>
-          <div>
-            <input type="radio" id="general" value="general" v-model="ticketType">
-            <label for="general">General Admission</label>
-          </div>
-          <div>
-            <input type="radio" id="vip" value="vip" v-model="ticketType">
-            <label for="vip">VIP</label>
-          </div>
-        </div>
-      </div>
-      <div class="form-row checkbox">
-        <fieldset>
-          <legend>How did you hear about this event?</legend>
-          <div>
-            <input type="checkbox" id="friend" value="friend" v-model="referrals">
-            <label for="friend">Friend</label>
-          </div>
-          <div>
-            <input type="checkbox" id="publication" value="publication" v-model="referrals">
-            <label for="publication">Publication</label>
-          </div>
-          <div>
-            <input type="checkbox" id="social-media" value="social" v-model="referrals">
-            <label for="social-media">Social Media</label>
-          </div>
-        </fieldset>
-      </div>
-      <div class="form-row vertical">
-        <label for="requests">Special requests</label>
-        <textarea id="requests" v-model.trim="specialRequests"></textarea>
-      </div>
-      <div class="form-row vertical agreement checkbox">
-        <fieldset>
-          <legend>Purchase Agreement</legend>
-          <p>I, {{ fullName }}, wish to buy {{ ticketDescription }}. I understand that all ticket sales are final.</p>
-          <input type="checkbox" name="agreement" id="agree" v-model="purchaseAgreementSigned" />
-          <label for="agree">I Agree</label>
-        </fieldset>
-      </div>
-      <div class="form-row vertical">
-        <label for="signature">Signature</label>
-        <input id="signature" class="signature" v-model="fullName"/>
-      </div>
-      <div>
-        <button type="reset" class="reset">Reset</button>
-        <button type="submit" v-bind:disabled="!formIsValid">Confirm Tickets</button>
-      </div>
-    </form>
-  -->
