@@ -1,28 +1,34 @@
 const express = require('express');
-const { getAllFromDatabase,
-    getFromDatabaseById,
-    addToDatabase,
-    updateInstanceInDatabase,
-    deleteFromDatabasebyId } = require('../db');
-const checkMillionDollarIdea = require('../checkMillionDollarIdea');
+const sqlite3 = require('sqlite3');
+const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite');
 
-// /api/ideas
-const ideaRouter = express.Router();
+// creating router for /api/spendings
+const spendingsRouter = express.Router();
 
-ideaRouter.param('ideaId', (req, res, next, id) => {
-    const idea = getFromDatabaseById('ideas', id);
+// adding parameter to Router
+spendingsRouter.param('spendId', (req, res, next, spendId) => {
+    
+    // retrieving Spend row from Spends table
+    db.get(`
+        select * from Spends
+        where Spends.id = ${spendId};
+    `, (err, row) => {
 
-    if (idea) {
-        req.idea = idea;
-        next();
-    } else {
-        res.status(404).send();
-    }
+        if (err) {
+            next(err);
+        } else if (row) {
+            req.spend = row;
+            next();
+        } else {
+            res.sendStatus(404);
+        }
+        
+    });
 
 });
 
 // GET /api/ideas to get an array of all ideas.
-ideaRouter.get('/', (req, res, next) => {
+spendingsRouter.get('/', (req, res, next) => {
     const ideas = getAllFromDatabase('ideas');
 
     if (ideas) {
@@ -35,19 +41,19 @@ ideaRouter.get('/', (req, res, next) => {
 });
 
 // POST /api/ideas to create a new idea and save it to the database.
-ideaRouter.post('/', checkMillionDollarIdea, (req, res, next) => {
+spendingsRouter.post('/', checkMillionDollarIdea, (req, res, next) => {
     const newIdea = req.body;
         addToDatabase('ideas', newIdea);
         res.status(201).send(newIdea);
 });
 
 // GET /api/ideas/:ideaId to get a single idea by id.
-ideaRouter.get('/:ideaId', (req, res, next) => {
+spendingsRouter.get('/:ideaId', (req, res, next) => {
     res.status(200).send(req.idea);
 })
 
 // PUT /api/ideas/:ideaId to update a single idea by id.
-ideaRouter.put('/:ideaId', checkMillionDollarIdea, (req, res, next) => {
+spendingsRouter.put('/:ideaId', checkMillionDollarIdea, (req, res, next) => {
     const newIdea = req.body;
 
     if (!newIdea.name || !newIdea.description || !newIdea.numWeeks || !newIdea.weeklyRevenue) {
@@ -61,7 +67,7 @@ ideaRouter.put('/:ideaId', checkMillionDollarIdea, (req, res, next) => {
 });
 
 // DELETE /api/ideas/:ideaId to delete a single idea by id.
-ideaRouter.delete('/:ideaId', (req, res, next) => {
+spendingsRouter.delete('/:ideaId', (req, res, next) => {
     
     const isDeleted = deleteFromDatabasebyId('ideas', req.params.ideaId);
     if (isDeleted) {
@@ -72,7 +78,7 @@ ideaRouter.delete('/:ideaId', (req, res, next) => {
     }
 });
 
-module.exports = ideaRouter;
+module.exports = spendingsRouter;
 
 
 

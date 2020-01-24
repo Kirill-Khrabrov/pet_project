@@ -49,6 +49,12 @@ const app = new Vue({
         }
       },
 
+      dateNow: {
+        get: function() {
+          return new Date().toLocaleDateString();
+        }
+      },
+
       totalDays: function() {
         //counting total days depending on start and end dates
         if ((this.dayEnd - this.dayStart) < 0) {
@@ -72,12 +78,7 @@ const app = new Vue({
         return Math.round(this.totalCash / this.daysLeft);
       },
 
-      dateNow: {
-        get: function() {
-          return new Date().toLocaleDateString();
-        },
-     },
-    
+      
     },
     
     methods: {
@@ -158,8 +159,8 @@ const app = new Vue({
         description: ${this.description},
         date Start: ${this.dateStart},
         date End: ${this.dateEnd},
-        today is ${this.dateNow}
         total cash: ${this.totalCash},
+        today is ${this.dateNow}
         trip ID: ${this.tripId},
         spend ID: ${this.spendId},
       `)

@@ -3,12 +3,21 @@ const db = new sqlite3.Database('./database.sqlite');
 
 db.serialize(() => {
     db.run(`
-        create table if not exists Artist (
+        create table if not exists Trips (
             id integer primary key,
-            name text not null,
-            date_of_birth text not null,
-            biography text not null,
-            is_currently_employed integer default 1
+            description text not null,
+            trip_start text not null,
+            trip_end text not null,
+            total_cash integer not null
         );
     `);
+    db.run(`
+        create table if not exists Spends (
+            id integer primary key,
+            trip_id integer not null,
+            date text not null,
+            spends_sum integer not null
+        );
+    `);
+    console.log('Database is created');
 });
