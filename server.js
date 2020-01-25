@@ -7,10 +7,6 @@ const PORT = process.env.PORT || 4001;
 const cors = require('cors');
 app.use(cors());
 
-// Logging middleware
-const morgan = require('morgan');
-app.use(morgan('dev'));
-
 // Middware for parsing request bodies here:
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());

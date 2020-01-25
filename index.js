@@ -6,8 +6,8 @@ const app = new Vue({
       description: '',      //description ==> text
       dateStart: '',        //Date object ==> parsed to date format for sqllite
       dateEnd: '',          //Date object ==> parsed to date format for sqllite
-      totalCash: 0,      //Total Budjet ==> parsed to Number
-      todaySpendings: 0,   //Todays spendings 
+      totalCash: 0,         //Total Budjet ==> parsed to Number
+      todaySpendings: 0,    //Todays spendings 
       tripId: 0,
       spendId: 0,
       tripList: [],
@@ -106,6 +106,23 @@ const app = new Vue({
         
 
       },
+
+      // GET all Trips form DB
+      getAllTrips: function () {
+        fetch('http://localhost:4001/api/trips').
+          then(response => {
+            if (response.ok){
+              return response.json();
+            }
+            throw new Error('Request failed!');
+            }, networkError => console.log(networkError.message)).
+          
+          then(jsonResponse => {
+            console.log('response is Successfull!')
+            console.log(jsonResponse);
+          });
+      },
+
 
       showSavedTrips: function() {
         //retrieves the saved trips from database and renders them

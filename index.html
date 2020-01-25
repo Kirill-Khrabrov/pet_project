@@ -58,10 +58,12 @@
           </thead>
           <tbody>
             
-            <trip v-bind:description = "description"
+            <tr is="trip" 
+                  v-bind:description = "description"
                   v-bind:datestart = "dateStart"
                   v-bind:dateend = "dateEnd"
-                  v-bind:totalcash = "totalCash"></trip>
+                  v-bind:totalcash = "totalCash">
+            </tr>
             
           </tbody>
         </table>
@@ -154,7 +156,8 @@
 
     <!--Section for developer buttons-->
     <div class="section" id="Developer">
-      <button id="Developer_button" v-on:click="developerPane">Logg</button>
+      <button id="Developer_button" v-on:click="getAllTrips">Show all Trips</button>
+      <button id="Developer_button" v-on:click="getAllTrips">Show specific Trip</button>
       <button id="Developer_button" v-on:click="saveTrip">Save Trip</button>
       <button id="Developer_button" v-on:click="saveSpending">Save Spend</button>
     </div>
