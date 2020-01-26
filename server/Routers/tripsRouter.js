@@ -32,7 +32,7 @@ tripsRouter.param('tripId', (req, res, next, tripId) => {
 
 //--- GET all trips
 tripsRouter.get('/', (req, res, next) => {
-   
+  
     db.all(`
         select * from Trips;
     `, (err, rows) => {

@@ -59,10 +59,12 @@
           <tbody>
             
             <tr is="trip" 
-                  v-bind:description = "description"
-                  v-bind:datestart = "dateStart"
-                  v-bind:dateend = "dateEnd"
-                  v-bind:totalcash = "totalCash">
+                  v-for="trip in trips"
+                  v-bind:key="trip.id"
+                  v-bind:description = "trip.description"
+                  v-bind:datestart = "trip.trip_start"
+                  v-bind:dateend = "trip.trip_end"
+                  v-bind:totalcash = "trip.total_cash">
             </tr>
             
           </tbody>

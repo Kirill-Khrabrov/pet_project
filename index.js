@@ -10,7 +10,7 @@ const app = new Vue({
       todaySpendings: 0,    //Todays spendings 
       tripId: 0,
       spendId: 0,
-      tripList: [],
+      trips: [],
       spendingList: [],
       
     },
@@ -118,8 +118,13 @@ const app = new Vue({
             }, networkError => console.log(networkError.message)).
           
           then(jsonResponse => {
-            console.log('response is Successfull!')
-            console.log(jsonResponse);
+            // should check if trip list is allready have this data!!!!
+            for (let i = 0; i < jsonResponse.trips.length; i++) {
+              this.trips.push(jsonResponse.trips[i]);
+            }
+
+            console.log(this.trips);
+
           });
       },
 
