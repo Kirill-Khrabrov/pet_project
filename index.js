@@ -12,7 +12,7 @@ const app = new Vue({
       spendId: 0,
       trips: [],
       spendingList: [],
-      
+            
     },
     computed: {
       startFormIsValid: function() {
@@ -22,15 +22,14 @@ const app = new Vue({
           return false;
         }
       },
+      
 
       tripStatus: function() {
-        if (this.daysLeft == 0) {
-          return 'finished';
-        } else {
-          return 'in process';
-        }
+        // check if Trip is started or not ==> used to show FrontEnd sections
       },
 
+
+      //section for days calculations
       dayStart: {
         get: function() {
           return Math.floor(new Date(this.dateStart) / (1000 * 3600 * 24));
@@ -56,6 +55,8 @@ const app = new Vue({
         //counting days  remaining till trip ends
         return this.dayEnd - this.dayNow() + 1;
       },
+
+
 
       cashLeft: function() {
         //counting remaining budjet
@@ -88,28 +89,18 @@ const app = new Vue({
         this.description = '';
         this.dateStart = '';
         this.dateEnd = '';
-        this.totalBudject = 0;
+        this.totalCash = 0;
       },
 
-      saveTrip: function() {
-        //saves the trip info to database
-        const tripObject = {};
-
-        tripObject.id = this.tripId++;
-        tripObject.description = this.description;
-        tripObject.start = this.dateStart;
-        tripObject.end = this.dateEnd;
-        tripObject.cash = this.totalCash;
-        tripObject.listOfSpendings = [];
-
-        this.tripList.push(tripObject);
-        
-
-      },
+     
+// CRUD Functionallity
 
       // GET all Trips form DB
       getAllTrips: function () {
-        fetch('http://localhost:4001/api/trips').
+        // reset the trip list for refilling it from Trops.BD
+        this.trips.length = 0;
+        
+       fetch('http://localhost:4001/api/trips').
           then(response => {
             if (response.ok){
               return response.json();
@@ -118,7 +109,8 @@ const app = new Vue({
             }, networkError => console.log(networkError.message)).
           
           then(jsonResponse => {
-            // should check if trip list is allready have this data!!!!
+            
+            //refill tripList with rows from Trips.DB
             for (let i = 0; i < jsonResponse.trips.length; i++) {
               this.trips.push(jsonResponse.trips[i]);
             }
@@ -128,19 +120,40 @@ const app = new Vue({
           });
       },
 
+      saveToTripDatabase: function() {
+        
+        const newTrip = {
+          description: this.description,
+          dateStart: this.dateStart,
+          dateEnd: this.dateEnd,
+          totalCash: this.totalCash,
+        };
 
-      showSavedTrips: function() {
-        //retrieves the saved trips from database and renders them
-      },
+        const fetchOptions = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'                     
+          },
+          body: JSON.stringify({ trip: newTrip })
+        };
 
+        fetch('http://localhost:4001/api/trips', fetchOptions).
+          then(response => {
+            if (response.ok){
+              return response.json();
+            }
+            throw new Error('Request failed!');
+            }, networkError => console.log(networkError.message)).
+            
+            then(jsonResponse => {
+              console.log(jsonResponse);
+
+        });
+    },
+     
       saveSpending: function() {
         //saves the daily spending to database for current trip
-        const todaySpendsObject = {};
-
-        todaySpendsObject.id = this.spendId++;
-        todaySpendsObject.cash = this.todaySpendings;
-
-        this.spendingList.push(todaySpendsObject);
+       
       },
 
       resetSpendingFields: function() {
