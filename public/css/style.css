@@ -88,20 +88,20 @@ table {
 .deleteButton {
   width: 17px;
   transform: rotate(45deg);
+  cursor: pointer;
 }
 
 .editButton {
   width: 17px;
+  cursor: pointer;
 }
 
 
 
 /* Start Form styles */
 
-
-
-
-/* Button styles */
-.editButton {
-  cursor: pointer;
+#StrtForm_allTrips_container {
+  overflow: scroll; 
+  max-height: 13em;
 }
+

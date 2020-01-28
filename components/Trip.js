@@ -5,26 +5,32 @@ const Trip = Vue.component('trip', {
     template: `
                 <tr>
                     <td>
-                     <img class="deleteButton" src="public/img/X_Button.svg">
+                     <img class="deleteButton" v-on:click="removeTrip" src="public/img/X_Button.svg">
                     </td>
                     <td>{{ description }}</td>
                     <td>{{ datestart }}</td>
                     <td>{{ dateend }}</td>
                     <td>{{ totalcash }}</td>
                     <td>
-                        <img class="editButton" src="public/img/icon_money.svg" v-on:click="chooseTrip">
+                        <img class="editButton" src="public/img/icon_money.svg" v-on:click="showTrip">
                     </td>
                 </tr>`,
     methods: {
-        chooseTrip: function() {
-            console.log(`This trip info:
-            ID: ${this.id}
-            Descr: ${this.description}
-            DTStrt: ${this.datestart}
-            DTEnd: ${this.dateend}
-            TTLCAsh: ${this.totalcash}
-            `);
-        }
+        //testing method
+        showTrip: function() {
+            this.$emit('show-trip', {
+                tripId: this.id,
+            });
+        },
+
+        //delete from DB
+        removeTrip: function() {
+            //generate 'remove' event and transfer Trip's ID
+            this.$emit('remove', {
+                tripId: this.id,
+            });
+        },
+
     },
 
    

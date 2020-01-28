@@ -8,8 +8,6 @@ const app = new Vue({
       dateEnd: '',          //Date object ==> parsed to date format for sqllite
       totalCash: 0,         //Total Budjet ==> parsed to Number
       todaySpendings: 0,    //Todays spendings 
-      tripId: 0,
-      spendId: 0,
       trips: [],
       spendingList: [],
             
@@ -120,6 +118,28 @@ const app = new Vue({
           });
       },
 
+      //GET specific Trip
+      getSpecificTrip: function(target) {
+
+        console.log(`Sending GET specific Request`);
+        
+        fetch(`http://localhost:4001/api/trips/${target.tripId}`).
+          then(response => {
+            console.log(response);
+            if (response.ok){
+              return response.json();
+            }
+          
+            throw new Error('Request failed!');
+          }, networkError => console.log(networkError.message)).
+          
+          then(jsonResponse => {
+            console.log(jsonResponse.trip);
+        });
+
+      },
+
+      //POST Trip to DB
       saveToTripDatabase: function() {
         
         const newTrip = {
@@ -147,9 +167,36 @@ const app = new Vue({
             
             then(jsonResponse => {
               console.log(jsonResponse);
-
+              this.trips.push(jsonResponse.trips);
         });
-    },
+        
+      },
+
+    //DELETE Trip from DB
+      removeFromDatabase: function(target) {
+        
+        console.log(`Sending Delete Request`);
+        
+        const fetchOptions = {
+          method: 'DELETE'
+        };
+
+        fetch(`http://localhost:4001/api/trips/${target.tripId}`, fetchOptions).
+          then(response => {
+            console.log(response);
+            if (!response.ok) {
+              return new Promise(resolve => resolve(null));
+            }
+            return response.json()
+          }).
+          then(jsonResponse => {
+            console.log(jsonResponse);
+            this.trips.filter(trip => trip.id !== target.tripId)
+        });
+
+        
+    
+      },
      
       saveSpending: function() {
         //saves the daily spending to database for current trip
@@ -192,8 +239,6 @@ const app = new Vue({
         date End: ${this.dateEnd},
         total cash: ${this.totalCash},
         today is ${this.dateNow()}
-        trip ID: ${this.tripId},
-        spend ID: ${this.spendId},
-      `)
+       `)
     }
   });

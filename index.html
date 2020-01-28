@@ -57,9 +57,11 @@
           </thead>
           <tbody>
             
-            <tr is="trip" 
-                  v-for="trip in trips"
-                  v-bind:id="trip.id"
+            <tr is = "trip" 
+                  v-on:remove = "removeFromDatabase"
+                  v-on:show-trip = "getSpecificTrip"
+                  v-for = "trip in trips"
+                  v-bind:id = "trip.id"
                   v-bind:description = "trip.description"
                   v-bind:datestart = "trip.trip_start"
                   v-bind:dateend = "trip.trip_end"
