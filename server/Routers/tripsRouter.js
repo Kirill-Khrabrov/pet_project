@@ -6,7 +6,7 @@ const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite'
 const tripsRouter = express.Router();
 
 // adding parameter to Router
-/*tripsRouter.param('tripId', (req, res, next, tripId) => {
+tripsRouter.param('tripId', (req, res, next, tripId) => {
 
     console.log(`received new Request to do smth with ${tripId}`);
     
@@ -19,8 +19,9 @@ const tripsRouter = express.Router();
             next(err);
        
         } else if (row) {
+            console.log(`adding ${Object.entries(row)} to response`);
             req.trip = row;
-       
+            next();
         } else {
             res.sendStatus(404);
         }
@@ -28,7 +29,7 @@ const tripsRouter = express.Router();
     });
    
 });
-*/
+
 
 //------- CORS functionallity
 
@@ -43,7 +44,7 @@ tripsRouter.get('/', (req, res, next) => {
             next(err);
       
         } else {
-            res.status(200).json({trips: rows});
+            res.status(200).json(rows);
         }
 
     });
@@ -52,26 +53,10 @@ tripsRouter.get('/', (req, res, next) => {
 
 //--- GET specific trip
 tripsRouter.get('/:tripId', (req, res, next) => {
+    res.status(200).send(req.trip);
+    });
 
-    console.log(`received new Request to retrieve  ${req.tripId}`);
-    
-    db.get(`
-        select * from Trips
-        where Trips.id = ${req.tripId};
-    `, (err, row) => {
 
-        if (err) {
-            next(err);
-       
-        } else if (row) {
-            req.trip = row;
-       
-        } else {
-            res.sendStatus(404);
-        }
-
-    res.status(200).json({ trip: req.trip })
-});
 
 //--- POST tirp
 tripsRouter.post('/', (req, res, next) => {
@@ -173,7 +158,7 @@ tripsRouter.delete('/:tripId', (req, res, next) => {
             next(err);
        
         } else {
-            console.log(`Trip with ID: ${this.lastID} deleted!`);
+            console.log(`Trip with ID: ${req.trip.id} deleted!`);
             res.sendStatus(204);
         }
     });

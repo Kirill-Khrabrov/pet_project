@@ -109,8 +109,8 @@ const app = new Vue({
           then(jsonResponse => {
             
             //refill tripList with rows from Trips.DB
-            for (let i = 0; i < jsonResponse.trips.length; i++) {
-              this.trips.push(jsonResponse.trips[i]);
+            for (let i = 0; i < jsonResponse.length; i++) {
+              this.trips.push(jsonResponse[i]);
             }
 
             console.log(this.trips);
@@ -125,16 +125,15 @@ const app = new Vue({
         
         fetch(`http://localhost:4001/api/trips/${target.tripId}`).
           then(response => {
-            console.log(response);
             if (response.ok){
               return response.json();
             }
-          
             throw new Error('Request failed!');
+
           }, networkError => console.log(networkError.message)).
           
           then(jsonResponse => {
-            console.log(jsonResponse.trip);
+            console.log(`GET request: ${jsonResponse  }`);
         });
 
       },
@@ -166,8 +165,8 @@ const app = new Vue({
             }, networkError => console.log(networkError.message)).
             
             then(jsonResponse => {
-              console.log(jsonResponse);
-              this.trips.push(jsonResponse.trips);
+              console.log(jsonResponse.trip);
+              this.trips.push(jsonResponse.trip);
         });
         
       },
@@ -187,11 +186,12 @@ const app = new Vue({
             if (!response.ok) {
               return new Promise(resolve => resolve(null));
             }
-            return response.json()
+            return response;
           }).
           then(jsonResponse => {
             console.log(jsonResponse);
-            this.trips.filter(trip => trip.id !== target.tripId)
+            //not works => REPAIR!!!!!
+            this.trips.filter(trip => trip.id !== target.tripId);
         });
 
         
