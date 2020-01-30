@@ -133,7 +133,11 @@ const app = new Vue({
           }, networkError => console.log(networkError.message)).
           
           then(jsonResponse => {
-            console.log(`GET request: ${jsonResponse  }`);
+            console.log(`GET request: ${jsonResponse}`);
+            this.description = jsonResponse.description;
+            this.dateStart = jsonResponse.trip_start;
+            this.dateEnd = jsonResponse.trip_end;
+            this.totalCash = jsonResponse.total_cash;
         });
 
       },
@@ -182,16 +186,14 @@ const app = new Vue({
 
         fetch(`http://localhost:4001/api/trips/${target.tripId}`, fetchOptions).
           then(response => {
-            console.log(response);
+            
             if (!response.ok) {
               return new Promise(resolve => resolve(null));
             }
             return response;
           }).
           then(jsonResponse => {
-            console.log(jsonResponse);
-            //not works => REPAIR!!!!!
-            this.trips.filter(trip => trip.id !== target.tripId);
+            this.trips = this.trips.filter(trip => trip.id !== target.tripId);          
         });
 
         

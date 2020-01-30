@@ -7,9 +7,7 @@ const tripsRouter = express.Router();
 
 // adding parameter to Router
 tripsRouter.param('tripId', (req, res, next, tripId) => {
-
-    console.log(`received new Request to do smth with ${tripId}`);
-    
+  
     db.get(`
         select * from Trips
         where Trips.id = ${tripId};
@@ -19,7 +17,6 @@ tripsRouter.param('tripId', (req, res, next, tripId) => {
             next(err);
        
         } else if (row) {
-            console.log(`adding ${Object.entries(row)} to response`);
             req.trip = row;
             next();
         } else {
@@ -80,8 +77,6 @@ tripsRouter.post('/', (req, res, next) => {
                 next(err);
          
             } else {
-                console.log(`Newly Trip with ID: ${this.lastID} is created`);
-
                 // sending back the newly created Trip
                 db.get(`
                     select * from Trips
@@ -147,8 +142,7 @@ tripsRouter.put('/:tripId', (req, res, next) => {
 
 //--- DELETE Trip
 tripsRouter.delete('/:tripId', (req, res, next) => {
-    console.log(`received DELETE request to delete from DB ${req.trip.id}`);
-
+    
     db.run(`
         delete from Trips
         where Trips.id = ${req.trip.id} 
@@ -158,7 +152,7 @@ tripsRouter.delete('/:tripId', (req, res, next) => {
             next(err);
        
         } else {
-            console.log(`Trip with ID: ${req.trip.id} deleted!`);
+            
             res.sendStatus(204);
         }
     });
