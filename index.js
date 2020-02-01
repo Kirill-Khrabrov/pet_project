@@ -225,9 +225,10 @@ const app = new Vue({
             throw new Error('Request failed!');
             }, networkError => console.log(networkError.message)).
             
-            then(() => {
-
-              this.getAllTrips();
+            then((jsonResponse) => {
+               
+              const indexOfUpdatedTrip = this.trips.indexOf(jsonResponse.trip);
+              this.trips.splice(indexOfUpdatedTrip, 1, jsonResponse.trip);
 
               });
                      
