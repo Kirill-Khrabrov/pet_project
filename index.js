@@ -9,6 +9,11 @@ const app = new Vue({
       specifiedTripId: 0,
       trips: [],
       spendingList: [],
+      status: {
+        notStarted: false,
+        inProcess: false,
+        finished: false
+      }
             
     },
     computed: {
@@ -20,11 +25,6 @@ const app = new Vue({
         }
       },
       
-
-      tripStatus: function() {
-        // check if Trip is started or not ==> used to show FrontEnd sections
-      },
-
 
       //section for days calculations
       dayStart: {
@@ -87,7 +87,7 @@ const app = new Vue({
         this.totalCash = 0;
       },
 
-     
+          
 // CRUD Functionallity
 
       // GET all Trips form DB
@@ -266,8 +266,8 @@ const app = new Vue({
 
     },
 
-    //--- test section
-    // adding lifecircle hooks
+     // adding lifecircle hooks
+     // test
     created: function() {
       console.log(`
         Vue app front page is created:
@@ -277,5 +277,30 @@ const app = new Vue({
         total cash: ${this.totalCash},
         today is ${this.dateNow()}
        `)
+    },
+
+    updated: function() {
+     
+      if (this.startFormIsValid) {
+        
+        if (this.dayNow() - this.dayStart < 0) {
+          this.status.notStarted = true;
+          this.status.inProcess = false;
+          this.status.finished = false;
+          console.log('Trip is not started');
+        
+        } else if (this.dayNow() - this.dayStart > 0 && this.dayNow() - this.dayEnd < 0) {
+          this.status.notStarted = false;
+          this.status.inProcess = true;
+          this.status.finished = false;
+          console.log('Trip is in process');
+
+        } else if (this.dayNow() - this.dayEnd > 0) {
+          this.status.notStarted = false;
+          this.status.inProcess = false;
+          this.status.finished = true;
+          console.log('Trip is finished');
+        }
+      }
     }
   });

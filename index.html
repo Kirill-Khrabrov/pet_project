@@ -41,8 +41,15 @@
       </div>
 
       <div class="container" v-if="startFormIsValid">
+          <label for="tripStatus" v-if="status.notStarted || status.inProcess || status.finished">TRIP STATUS</label>  
+          <p id="tripStatus" v-if="status.notStarted"> NOT STARTED </p>
+          <p id="tripStatus" v-if="status.inProcess"> IN PROCESS </p>
+          <p id="tripStatus" v-if="status.finished"> FINISHED </p>
+      </div>
+
+      <div class="container" v-if="startFormIsValid">
         <label for="totalDays">DAYS TOTAL</label>
-        <p type="text" id="totalDays"> {{ totalDays }} </p>
+        <p id="totalDays"> {{ totalDays }} </p>
       </div>
           
       <div class="container" id="StrtForm_allTrips_container">
