@@ -45,7 +45,7 @@
         <p type="text" id="totalDays"> {{ totalDays }} </p>
       </div>
           
-      <div class="container" id="StrtForm_allTrips_container" v-if="startFormIsValid">
+      <div class="container" id="StrtForm_allTrips_container">
         <table id="StrtForm_allTrips">
           <thead>
             <th></th>
@@ -74,14 +74,14 @@
 
       <div class="container">
         <button v-on:click="resetStrtForm"> Reset</button>
-        <button v-on:click="saveToTripDatabase" v-bind:disabled="!startFormIsValid">Save</button>
-        <button>Details</button>            
+        <button v-on:click="saveToTripDatabase" v-bind:disabled="!startFormIsValid">Save Trip</button>
+        <button v-on:click="saveChangesToDatabase" v-bind:disabled="!startFormIsValid">Save Changes</button>
       </div>
        
     </div>
 
     <!--Section for everyday visualisation-->
-    <div class="section" id="SpndVis" v-if="startFormIsValid">
+    <div class="section" id="SpndVis">
 
       <div class="container">
         <label for="daysLeft">DAYS LEFT</label>
@@ -102,7 +102,7 @@
 
     <!--Section for everyday spendings adding-->
 
-    <div class="section" id="SpndAdd" v-if="startFormIsValid">
+    <div class="section" id="SpndAdd">
 
       <div class="container">
           <label for="currentDate">CURRENT DATE</label>

@@ -99,31 +99,29 @@ tripsRouter.post('/', (req, res, next) => {
 //--- PUT to update Trip
 tripsRouter.put('/:tripId', (req, res, next) => {
     const newTrip = req.body.trip;
-    console.log(newTrip);
-
+    
     db.run(`
         update Trips
         set description = $description,
             trip_start = $dateStart,
             trip_end = $dateEnd,
-            total_cash = #totalCash
-        where Trips.id = ${req.trip.id} 
+            total_cash = $totalCash
+        where Trips.id = ${req.trip.id}; 
     `, {
-        $description: req.body.trip.description,
-        $dateStart: req.body.trip.dateStart,
-        $dateEnd: req.body.trip.dateEnd,
-        $totalCash: req.body.trip.totalCash,
+        $description: newTrip.description,
+        $dateStart: newTrip.dateStart,
+        $dateEnd: newTrip.dateEnd,
+        $totalCash: newTrip.totalCash,
     }, function(err) {
         
         if (err) {
             next(err);
        
         } else {
-            console.log(`Trip with ID: ${this.lastID} updated!`);
-
+           
             db.get(`
                     select * from Trips
-                    where Trips.id = ${this.lastID};
+                    where Trips.id = ${req.trip.id};
                 `, (err, row) => {
                     
                     if (err) {

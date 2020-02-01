@@ -16,7 +16,7 @@ const Trip = Vue.component('trip', {
                     </td>
                 </tr>`,
     methods: {
-        //testing method
+        //get specific Trip from DB
         showTrip: function() {
             this.$emit('show-trip', {
                 tripId: this.id,
@@ -31,7 +31,7 @@ const Trip = Vue.component('trip', {
             });
         },
 
-    },
+        },
 
    
    

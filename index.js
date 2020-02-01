@@ -1,5 +1,3 @@
-//test section
-
 const app = new Vue({
     el: '#app',
     data: {
@@ -8,6 +6,7 @@ const app = new Vue({
       dateEnd: '',          //Date object ==> parsed to date format for sqllite
       totalCash: 0,         //Total Budjet ==> parsed to Number
       todaySpendings: 0,    //Todays spendings 
+      specifiedTripId: 0,
       trips: [],
       spendingList: [],
             
@@ -61,6 +60,7 @@ const app = new Vue({
       },
 
       everydayCash: function() {
+        // NOT WORKS PROPERLLY
         //counting average sum for day
         return Math.round(this.totalCash / this.daysLeft);
       },
@@ -78,10 +78,7 @@ const app = new Vue({
           return new Date().toLocaleDateString();
       },
 
-      startTrip: function() {
-        //functions that starts trip and makes the SpndVis section  active
-      },
-
+    
       resetStrtForm: function() {
         //reset StrtForm 
         this.description = '';
@@ -133,7 +130,8 @@ const app = new Vue({
           }, networkError => console.log(networkError.message)).
           
           then(jsonResponse => {
-            console.log(`GET request: ${jsonResponse}`);
+            console.log(`GET request: ${Object.entries(jsonResponse)}`);
+            this.specifiedTripId = jsonResponse.id;
             this.description = jsonResponse.description;
             this.dateStart = jsonResponse.trip_start;
             this.dateEnd = jsonResponse.trip_end;
@@ -192,14 +190,50 @@ const app = new Vue({
             }
             return response;
           }).
-          then(jsonResponse => {
+          then(() => {
             this.trips = this.trips.filter(trip => trip.id !== target.tripId);          
         });
 
-        
-    
       },
-     
+
+    //UPDATE Trip to DB
+      saveChangesToDatabase: function() {
+
+        console.log('Sending PUT request');
+
+        const updatedTrip = {
+          description: this.description,
+          dateStart: this.dateStart,
+          dateEnd: this.dateEnd,
+          totalCash: this.totalCash,
+        };
+
+        const fetchOptions = {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'                     
+          },
+          body: JSON.stringify({ trip: updatedTrip })
+        };
+
+        
+        fetch(`http://localhost:4001/api/trips/${this.specifiedTripId}`, fetchOptions).
+          then(response => {
+            if (response.ok){
+              return response.json();
+            }
+            throw new Error('Request failed!');
+            }, networkError => console.log(networkError.message)).
+            
+            then(() => {
+
+              this.getAllTrips();
+
+              });
+                     
+      },
+
+          
       saveSpending: function() {
         //saves the daily spending to database for current trip
        
