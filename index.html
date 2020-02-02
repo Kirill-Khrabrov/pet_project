@@ -88,7 +88,7 @@
     </div>
 
     <!--Section for everyday visualisation-->
-    <div class="section" id="SpndVis">
+    <div class="section" id="SpndVis" v-if = "status.inProcess">
 
       <div class="container">
         <label for="daysLeft">DAYS LEFT</label>
@@ -109,24 +109,24 @@
 
     <!--Section for everyday spendings adding-->
 
-    <div class="section" id="SpndAdd">
+    <div class="section" id="SpndAdd" v-if="status.inProcess || status.finished">
 
       <div class="container">
           <label for="currentDate">CURRENT DATE</label>
           <p id="currentDate"> {{ dateNow() }} </p>
       </div>
 
-      <div class="container">
+      <div class="container" v-if="status.inProcess">
           <label for="todaySpendings">TODAYS SPENDINGS</label>
           <input type="number" id="todaySpendings" min="0" max="999999" v-model="todaySpendings" />
       </div>
 
-      <div class="container">
+      <div class="container" v-if="status.inProcess">
          <button>Add Spending</button>
          <button>Reset</button> 
       </div>
 
-      <div class="container">
+      <div class="container" v-if="status.inProcess || status.finished">
         <table>
           <thead>
             <th class="deleteButton"></th>
