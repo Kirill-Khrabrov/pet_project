@@ -2,13 +2,11 @@ const express = require('express');
 const sqlite3 = require('sqlite3');
 const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite');
 
-// creating router for /api/spendings
-const spendingsRouter = express.Router();
+// creating nested Router for /api/Trips/spendings
+const spendingsRouter = express.Router({mergeParams: true});
 
-// adding parameter to Router
 spendingsRouter.param('spendId', (req, res, next, spendId) => {
-    
-    // retrieving Spend row from Spends table
+  
     db.get(`
         select * from Spends
         where Spends.id = ${spendId};
@@ -16,66 +14,147 @@ spendingsRouter.param('spendId', (req, res, next, spendId) => {
 
         if (err) {
             next(err);
+       
         } else if (row) {
             req.spend = row;
             next();
         } else {
             res.sendStatus(404);
         }
+
+    });
+   
+});
+
+
+//------- CORS functionallity
+
+//--- GET all spends for specific trip
+spendingsRouter.get('/', (req, res, next) => {
+  
+    db.all(`
+        select * from Spends
+        where SPends.trip_id = ${req.params.tripId};
+    `, (err, rows) => {
+
+        if (err) {
+            next(err);
+      
+        } else {
+            res.status(200).json(rows);
+        }
+
+    });
+
+});
+
+//--- GET specific trip
+spendingsRouter.get('/:spendId', (req, res, next) => {
+    res.status(200).send(req.spend);
+    });
+
+
+
+//--- POST tirp
+spendingsRouter.post('/', (req, res, next) => {
+    //checking if the req.body is full of Data
+    if (!req.body.trip.description || !req.body.trip.dateStart || !req.body.trip.dateEnd || !req.body.trip.totalCash) {
+        return res.sendStatus(400);
+    }
+    
+    // inserting req.body to Trips table
+    db.run(`
+        insert into Trips (description, trip_start, trip_end, total_cash)
+        values ($description, $dateStart, $dateEnd, $totalCash);
+    `, {
+        $description: req.body.trip.description,
+        $dateStart: req.body.trip.dateStart,
+        $dateEnd: req.body.trip.dateEnd,
+        $totalCash: req.body.trip.totalCash,
+    }, function(err) {
+        
+        if (err) {
+                next(err);
+         
+            } else {
+                // sending back the newly created Trip
+                db.get(`
+                    select * from Trips
+                    where Trips.id = ${this.lastID};
+                `, (err, row) => {
+                   
+                    if (err) {
+                        next(err);
+                   
+                    } else {
+                        res.status(201).json({ spend: row });
+                    }
+                });
+            }
+
+    });
+
+});
+
+//--- PUT to update Trip
+spendingsRouter.put('/:tripId', (req, res, next) => {
+    const newTrip = req.body.trip;
+    
+    db.run(`
+        update Trips
+        set description = $description,
+            trip_start = $dateStart,
+            trip_end = $dateEnd,
+            total_cash = $totalCash
+        where Trips.id = ${req.trip.id}; 
+    `, {
+        $description: newTrip.description,
+        $dateStart: newTrip.dateStart,
+        $dateEnd: newTrip.dateEnd,
+        $totalCash: newTrip.totalCash,
+    }, function(err) {
+        
+        if (err) {
+            next(err);
+       
+        } else {
+           
+            db.get(`
+                    select * from Trips
+                    where Trips.id = ${req.trip.id};
+                `, (err, row) => {
+                    
+                    if (err) {
+                        next(err);
+                  
+                    } else {
+                        res.status(200).json({ trip: row });
+                    }
+                
+            });
+        }
         
     });
 
 });
 
-// GET /api/ideas to get an array of all ideas.
-spendingsRouter.get('/', (req, res, next) => {
-    const ideas = getAllFromDatabase('ideas');
-
-    if (ideas) {
-        res.status(200).send(ideas);
-  
-    } else {
-        res.status(404).send();
-    }
-
-});
-
-// POST /api/ideas to create a new idea and save it to the database.
-spendingsRouter.post('/', checkMillionDollarIdea, (req, res, next) => {
-    const newIdea = req.body;
-        addToDatabase('ideas', newIdea);
-        res.status(201).send(newIdea);
-});
-
-// GET /api/ideas/:ideaId to get a single idea by id.
-spendingsRouter.get('/:ideaId', (req, res, next) => {
-    res.status(200).send(req.idea);
-})
-
-// PUT /api/ideas/:ideaId to update a single idea by id.
-spendingsRouter.put('/:ideaId', checkMillionDollarIdea, (req, res, next) => {
-    const newIdea = req.body;
-
-    if (!newIdea.name || !newIdea.description || !newIdea.numWeeks || !newIdea.weeklyRevenue) {
-        res.status(400).send();
-  
-    } else {
-        const newlyUpdatedIdea = updateInstanceInDatabase('ideas', req.body);
-        res.status(202).send(newlyUpdatedIdea);
-    }
-
-});
-
-// DELETE /api/ideas/:ideaId to delete a single idea by id.
-spendingsRouter.delete('/:ideaId', (req, res, next) => {
+//--- DELETE Trip
+spendingsRouter.delete('/:tripId', (req, res, next) => {
     
-    const isDeleted = deleteFromDatabasebyId('ideas', req.params.ideaId);
-    if (isDeleted) {
-        res.status(204).send();
+    db.run(`
+        delete from Trips
+        where Trips.id = ${req.trip.id} 
+    `, function(err) {
+        
+        if (err) {
+            next(err);
+       
+        } else {
+            
+            res.sendStatus(204);
+        }
+    });
 
-    } else {
-        res.sendStatus(500).send();
-    }
 });
 
 module.exports = spendingsRouter;

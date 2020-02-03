@@ -1,9 +1,14 @@
 const express = require('express');
 const sqlite3 = require('sqlite3');
 const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite');
+const spendingsRouter = require('./spendingsRouter');
+
 
 // creating router for /api/trips
 const tripsRouter = express.Router();
+
+//nesting spendingsRouter inside /trips path
+tripsRouter.use('/:tripId/spends', spendingsRouter);
 
 // adding parameter to Router
 tripsRouter.param('tripId', (req, res, next, tripId) => {
@@ -156,16 +161,5 @@ tripsRouter.delete('/:tripId', (req, res, next) => {
     });
 
 });
-
-
-
-
-
-
-
-
-
-
-
 
 module.exports = tripsRouter;

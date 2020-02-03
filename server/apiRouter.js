@@ -5,9 +5,4 @@ const apiRouter = express.Router();
 const tripsRouter = require('./Routers/tripsRouter');
 apiRouter.use('/trips', tripsRouter);
 
-//const spendingsRouter = require('./Routers/spendingsRouter');
-//apiRouter.use('/spendings', spendingsRouter);
-
-
-
 module.exports = apiRouter;

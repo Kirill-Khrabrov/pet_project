@@ -1,21 +1,28 @@
 const app = new Vue({
     el: '#app',
+    
     data: {
-      description: '',      //description ==> text
-      dateStart: '',        //Date object ==> parsed to date format for sqllite
-      dateEnd: '',          //Date object ==> parsed to date format for sqllite
-      totalCash: 0,         //Total Budjet ==> parsed to Number
-      todaySpendings: 0,    //Todays spendings 
+      //trip properties
+      description: '',
+      dateStart: '',        
+      dateEnd: '',          
+      totalCash: 0,
       specifiedTripId: 0,
-      trips: [],
-      spendingList: [],
       status: {
         notStarted: false,
         inProcess: false,
         finished: false
-      }
-            
+      },
+
+      // save all trips and all spendings retrived from DB
+      tripsList: [],
+      spendsList: [],
+
+      //spend properties
+      spendDescription: '',
+      spendCash: 0, 
     },
+
     computed: {
       startFormIsValid: function() {
         if (this.description && this.dateStart && this.dateEnd && this.totalCash) {
@@ -78,7 +85,7 @@ const app = new Vue({
           return new Date().toLocaleDateString();
       },
 
-    
+
       resetStrtForm: function() {
         //reset StrtForm 
         this.description = '';
@@ -87,13 +94,14 @@ const app = new Vue({
         this.totalCash = 0;
       },
 
-          
+      
 // CRUD Functionallity
-
-      // GET all Trips form DB
+    // GET.............................................. 
+      
+      //all Trips form DB
       getAllTrips: function () {
         // reset the trip list for refilling it from Trops.BD
-        this.trips.length = 0;
+        this.tripsList.length = 0;
         
        fetch('http://localhost:4001/api/trips').
           then(response => {
@@ -107,10 +115,35 @@ const app = new Vue({
             
             //refill tripList with rows from Trips.DB
             for (let i = 0; i < jsonResponse.length; i++) {
-              this.trips.push(jsonResponse[i]);
+              this.tripsList.push(jsonResponse[i]);
             }
 
-            console.log(this.trips);
+            console.log(this.tripsList);
+
+          });
+      },
+
+      //all Spends form DB
+      getAllSpends: function () {
+        // reset the spends list for refilling it from Spends.BD
+        this.spendsList.length = 0;
+        
+       fetch(`http://localhost:4001/api/trips/${this.specifiedTripId}/spends`).
+          then(response => {
+            if (response.ok){
+              return response.json();
+            }
+            throw new Error('Request failed!');
+            }, networkError => console.log(networkError.message)).
+          
+          then(jsonResponse => {
+            
+            //refill tripList with rows from Trips.DB
+            for (let i = 0; i < jsonResponse.length; i++) {
+              this.spendsList.push(jsonResponse[i]);
+            }
+
+            console.log(this.spendsList);
 
           });
       },
@@ -140,8 +173,9 @@ const app = new Vue({
 
       },
 
-      //POST Trip to DB
-      saveToTripDatabase: function() {
+      //POST..............................................
+      //Trip to DB
+      saveTripToDatabase: function() {
         
         const newTrip = {
           description: this.description,
@@ -168,7 +202,39 @@ const app = new Vue({
             
             then(jsonResponse => {
               console.log(jsonResponse.trip);
-              this.trips.push(jsonResponse.trip);
+              this.tripsList.push(jsonResponse.trip);
+        });
+        
+      },
+
+      //Spend to DB
+      saveSpendToDatabase: function() {
+        
+        const newSpend = {
+          date: this.dateNow(),
+          description: this.spendDescription,
+          spendCash: this.spendCash,
+        };
+
+        const fetchOptions = {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'                     
+          },
+          body: JSON.stringify({ spend: newSpend })
+        };
+
+        fetch(`http://localhost:4001/api/trips/${this.specifiedTripId}/spends`, fetchOptions).
+          then(response => {
+            if (response.ok){
+              return response.json();
+            }
+            throw new Error('Request failed!');
+            }, networkError => console.log(networkError.message)).
+            
+            then(jsonResponse => {
+              console.log(jsonResponse.spend);
+              this.spends.push(jsonResponse.spend);
         });
         
       },
@@ -191,7 +257,7 @@ const app = new Vue({
             return response;
           }).
           then(() => {
-            this.trips = this.trips.filter(trip => trip.id !== target.tripId);          
+            this.tripsList = this.tripsList.filter(trip => trip.id !== target.tripId);          
         });
 
       },
@@ -227,45 +293,21 @@ const app = new Vue({
             
             then((jsonResponse) => {
                
-              const indexOfUpdatedTrip = this.trips.indexOf(jsonResponse.trip);
-              this.trips.splice(indexOfUpdatedTrip, 1, jsonResponse.trip);
+              const indexOfUpdatedTrip = this.tripsList.indexOf(jsonResponse.trip);
+              this.tripsList.splice(indexOfUpdatedTrip, 1, jsonResponse.trip);
 
               });
                      
       },
 
           
-      saveSpending: function() {
-        //saves the daily spending to database for current trip
-       
-      },
-
       resetSpendingFields: function() {
         //resets SpndAdd_Form fields
         this.todaysSpendings = 0;
       },
 
-      developerPane: function() {
-        console.log(`
-          Trip description is: ${this.description}
-          Trip starts at: ${this.dateStart}
-          Trip end at ${this.dateEnd}
-          Today is ${this.dateNow()}
-          Total cash is ${this.totalCash}
-          Todays spendings is: ${this.todaySpendings}
-          List of trips is: ${this.tripList}
-          List of spends ${this.spendingList}
-
-        `);
-        
-        
-        
-      }
-
-
-
     },
-
+      
      // adding lifecircle hooks
      // test
     created: function() {
@@ -303,4 +345,6 @@ const app = new Vue({
         }
       }
     }
+
+
   });
