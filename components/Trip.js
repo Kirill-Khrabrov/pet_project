@@ -26,7 +26,7 @@ const Trip = Vue.component('trip', {
         //delete from DB
         removeTrip: function() {
             //generate 'remove' event and transfer Trip's ID
-            this.$emit('remove', {
+            this.$emit('remove-trip', {
                 tripId: this.id,
             });
         },

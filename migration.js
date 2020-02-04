@@ -15,6 +15,7 @@ db.serialize(() => {
         create table if not exists Spends (
             id integer primary key,
             trip_id integer not null,
+            description text not null,
             date text not null,
             spends_sum integer not null
         );

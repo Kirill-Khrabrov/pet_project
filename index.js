@@ -20,6 +20,7 @@ const app = new Vue({
 
       //spend properties
       spendDescription: '',
+      spendDate: new Date().toLocaleDateString(),
       spendCash: 0, 
     },
 
@@ -173,6 +174,28 @@ const app = new Vue({
 
       },
 
+      //GET specific Spend
+      getSpecificSpend: function(target) {
+
+        console.log(`Sending GET specific Request`);
+        
+        fetch(`http://localhost:4001/api/trips/${this.specifiedTripId}/spends/${target.spenId}`).
+          then(response => {
+            if (response.ok){
+              return response.json();
+            }
+            throw new Error('Request failed!');
+
+          }, networkError => console.log(networkError.message)).
+          
+          then(jsonResponse => {
+            console.log(`GET request: ${Object.entries(jsonResponse)}`);
+            this.spendDescription = jsonResponse.description;
+            this.spendCash = jsonResponse.spends_sum;
+          });
+
+      },
+
       //POST..............................................
       //Trip to DB
       saveTripToDatabase: function() {
@@ -211,7 +234,7 @@ const app = new Vue({
       saveSpendToDatabase: function() {
         
         const newSpend = {
-          date: this.dateNow(),
+          date: this.spendDate,
           description: this.spendDescription,
           spendCash: this.spendCash,
         };
@@ -234,13 +257,14 @@ const app = new Vue({
             
             then(jsonResponse => {
               console.log(jsonResponse.spend);
-              this.spends.push(jsonResponse.spend);
+              this.spendsList.push(jsonResponse.spend);
         });
         
       },
 
-    //DELETE Trip from DB
-      removeFromDatabase: function(target) {
+    //DELETE...................... 
+      //Trip from DB
+      removeTripFromDatabase: function(target) {
         
         console.log(`Sending Delete Request`);
         
@@ -258,6 +282,29 @@ const app = new Vue({
           }).
           then(() => {
             this.tripsList = this.tripsList.filter(trip => trip.id !== target.tripId);          
+        });
+
+      },
+
+      //Spend from DB
+      removeSpendFromDatabase: function(target) {
+        
+        console.log(`Sending Delete Request`);
+        
+        const fetchOptions = {
+          method: 'DELETE'
+        };
+
+        fetch(`http://localhost:4001/api/trips/${this.specifiedTripId}/trips/${target.spendId}`, fetchOptions).
+          then(response => {
+            
+            if (!response.ok) {
+              return new Promise(resolve => resolve(null));
+            }
+            return response;
+          }).
+          then(() => {
+            this.spendsList = this.spendsList.filter(spend => spend.id !== target.spendId);          
         });
 
       },
