@@ -179,7 +179,7 @@ const app = new Vue({
 
         console.log(`Sending GET specific Request`);
         
-        fetch(`http://localhost:4001/api/trips/${this.specifiedTripId}/spends/${target.spenId}`).
+        fetch(`http://localhost:4001/api/trips/${this.specifiedTripId}/spends/${target.spendId}`).
           then(response => {
             if (response.ok){
               return response.json();
@@ -295,7 +295,7 @@ const app = new Vue({
           method: 'DELETE'
         };
 
-        fetch(`http://localhost:4001/api/trips/${this.specifiedTripId}/trips/${target.spendId}`, fetchOptions).
+        fetch(`http://localhost:4001/api/trips/${this.specifiedTripId}/spends/${target.spendId}`, fetchOptions).
           then(response => {
             
             if (!response.ok) {
@@ -340,10 +340,18 @@ const app = new Vue({
             
             then((jsonResponse) => {
                
-              const indexOfUpdatedTrip = this.tripsList.indexOf(jsonResponse.trip);
-              this.tripsList.splice(indexOfUpdatedTrip, 1, jsonResponse.trip);
+              
+              this.tripsList.forEach(trip => {
 
-              });
+                if (trip.id === jsonResponse.trip.id) {
+                  let indexOfUpdatedTrip = this.tripsList.indexOf(trip);
+
+                  this.tripsList.splice(indexOfUpdatedTrip, 1, jsonResponse.trip);
+                }
+              
+              })
+                       
+            });
                      
       },
 

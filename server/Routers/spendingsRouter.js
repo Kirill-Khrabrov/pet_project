@@ -139,11 +139,11 @@ spendingsRouter.put('/:tripId', (req, res, next) => {
 });
 
 //--- DELETE Trip
-spendingsRouter.delete('/:tripId', (req, res, next) => {
+spendingsRouter.delete('/:spendId', (req, res, next) => {
     
     db.run(`
-        delete from Trips
-        where Trips.id = ${req.trip.id} 
+        delete from Spends
+        where Spends.id = ${req.trip.id} 
     `, function(err) {
         
         if (err) {
