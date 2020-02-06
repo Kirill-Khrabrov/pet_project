@@ -130,7 +130,7 @@
      
 
       <div class="container" v-if="status.inProcess">
-         <button v-on:click="saveSpendToDatabase">Add Spending</button>
+         <button v-on:click="saveSpendToDatabase" v-bind:disabled = "this.specifiedTripId == 0">Add Spending</button>
          <button>Reset</button> 
       </div>
 
@@ -165,7 +165,6 @@
     <!--Section for developer buttons-->
     <div class="section" id="Developer">
       <button id="Developer_button" v-on:click="getAllTrips">Show all Trips</button>
-      <button id="Developer_button" v-bind:disabled="!startFormIsValid" v-on:click="getAllSpends">Show all SPends</button>
     </div>
 
   </div>

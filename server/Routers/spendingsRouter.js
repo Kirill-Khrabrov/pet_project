@@ -48,30 +48,30 @@ spendingsRouter.get('/', (req, res, next) => {
 
 });
 
-//--- GET specific trip
+//--- GET specific Spend
 spendingsRouter.get('/:spendId', (req, res, next) => {
     res.status(200).send(req.spend);
     });
 
 
 
-//--- POST tirp
+//--- POST Spend
 spendingsRouter.post('/', (req, res, next) => {
     //checking if the req.body is full of Data
-    if (!req.body.trip.description || !req.body.trip.dateStart || !req.body.trip.dateEnd || !req.body.trip.totalCash) {
+    if (!req.body.spend.date || !req.body.spend.description || !req.body.spend.spendCash ) {
         return res.sendStatus(400);
     }
     
     // inserting req.body to Trips table
     db.run(`
-        insert into Trips (description, trip_start, trip_end, total_cash)
-        values ($description, $dateStart, $dateEnd, $totalCash);
+        insert into Spends (trip_id, description, date, spends_sum)
+        values ($tripId, $description, $date, $spends_sum);
     `, {
-        $description: req.body.trip.description,
-        $dateStart: req.body.trip.dateStart,
-        $dateEnd: req.body.trip.dateEnd,
-        $totalCash: req.body.trip.totalCash,
-    }, function(err) {
+        $tripId: req.body.spend.tripId,
+        $description: req.body.spend.description,
+        $date: req.body.spend.date,
+        $spends_sum: req.body.spend.spendCash,
+       }, function(err) {
         
         if (err) {
                 next(err);
@@ -79,8 +79,8 @@ spendingsRouter.post('/', (req, res, next) => {
             } else {
                 // sending back the newly created Trip
                 db.get(`
-                    select * from Trips
-                    where Trips.id = ${this.lastID};
+                    select * from Spends
+                    where Spends.id = ${this.lastID};
                 `, (err, row) => {
                    
                     if (err) {
@@ -143,7 +143,7 @@ spendingsRouter.delete('/:spendId', (req, res, next) => {
     
     db.run(`
         delete from Spends
-        where Spends.id = ${req.trip.id} 
+        where Spends.id = ${req.spend.id} 
     `, function(err) {
         
         if (err) {

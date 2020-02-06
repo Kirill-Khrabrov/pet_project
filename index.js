@@ -124,31 +124,6 @@ const app = new Vue({
           });
       },
 
-      //all Spends form DB
-      getAllSpends: function () {
-        // reset the spends list for refilling it from Spends.BD
-        this.spendsList.length = 0;
-        
-       fetch(`http://localhost:4001/api/trips/${this.specifiedTripId}/spends`).
-          then(response => {
-            if (response.ok){
-              return response.json();
-            }
-            throw new Error('Request failed!');
-            }, networkError => console.log(networkError.message)).
-          
-          then(jsonResponse => {
-            
-            //refill tripList with rows from Trips.DB
-            for (let i = 0; i < jsonResponse.length; i++) {
-              this.spendsList.push(jsonResponse[i]);
-            }
-
-            console.log(this.spendsList);
-
-          });
-      },
-
       //GET specific Trip
       getSpecificTrip: function(target) {
 
@@ -226,6 +201,7 @@ const app = new Vue({
             then(jsonResponse => {
               console.log(jsonResponse.trip);
               this.tripsList.push(jsonResponse.trip);
+              this.specifiedTripId = jsonResponse.trip.id;
         });
         
       },
@@ -234,6 +210,7 @@ const app = new Vue({
       saveSpendToDatabase: function() {
         
         const newSpend = {
+          tripId: this.specifiedTripId,
           date: this.spendDate,
           description: this.spendDescription,
           spendCash: this.spendCash,
@@ -358,7 +335,39 @@ const app = new Vue({
           
       resetSpendingFields: function() {
         //resets SpndAdd_Form fields
-        this.todaysSpendings = 0;
+        this.spendDescription = '';
+        this.spendCash = 0;
+      },
+
+    },
+    
+    watch: {
+      
+      specifiedTripId: function () {
+       
+          // reset the spends list for refilling it from Spends.BD
+          this.spendsList.length = 0;
+          this.resetSpendingFields();
+          
+         fetch(`http://localhost:4001/api/trips/${this.specifiedTripId}/spends`).
+            then(response => {
+              if (response.ok){
+                return response.json();
+              }
+              throw new Error('Request failed!');
+              }, networkError => console.log(networkError.message)).
+            
+            then(jsonResponse => {
+              
+              //refill tripList with rows from Trips.DB
+              for (let i = 0; i < jsonResponse.length; i++) {
+                this.spendsList.push(jsonResponse[i]);
+              }
+  
+              console.log(this.spendsList);
+  
+            });
+       
       },
 
     },
@@ -377,7 +386,8 @@ const app = new Vue({
     },
 
     updated: function() {
-     
+      
+      //section to control the status
       if (this.startFormIsValid) {
         
         if (this.dayNow() - this.dayStart < 0) {
@@ -399,6 +409,8 @@ const app = new Vue({
           console.log('Trip is finished');
         }
       }
+
+      
     }
 
 
