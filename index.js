@@ -26,11 +26,7 @@ const app = new Vue({
 
     computed: {
       startFormIsValid: function() {
-        if (this.description && this.dateStart && this.dateEnd && this.totalCash) {
-          return true;
-        } else {
-          return false;
-        }
+        return this.description && this.dateStart && this.dateEnd && this.totalCash;
       },
       
 
@@ -101,9 +97,7 @@ const app = new Vue({
       
       //all Trips form DB
       getAllTrips: function () {
-        // reset the trip list for refilling it from Trops.BD
-        this.tripsList.length = 0;
-        
+               
        fetch('http://localhost:4001/api/trips').
           then(response => {
             if (response.ok){
@@ -115,10 +109,8 @@ const app = new Vue({
           then(jsonResponse => {
             
             //refill tripList with rows from Trips.DB
-            for (let i = 0; i < jsonResponse.length; i++) {
-              this.tripsList.push(jsonResponse[i]);
-            }
-
+            this.tripsList = jsonResponse;
+            
             console.log(this.tripsList);
 
           });
@@ -360,10 +352,7 @@ const app = new Vue({
             then(jsonResponse => {
               
               //refill tripList with rows from Trips.DB
-              for (let i = 0; i < jsonResponse.length; i++) {
-                this.spendsList.push(jsonResponse[i]);
-              }
-  
+              this.spendsList = jsonResponse; 
               console.log(this.spendsList);
   
             });
