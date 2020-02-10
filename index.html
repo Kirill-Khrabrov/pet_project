@@ -89,19 +89,24 @@
     </div>
 
     <!--Section for everyday visualisation-->
-    <div class="section" id="SpndVis" v-if = "status.inProcess">
+    <div class="section" id="SpndVis" v-if = "status.inProcess || status.finished">
 
-      <div class="container">
-        <label for="daysLeft">DAYS LEFT</label>
+      <div class="container" v-if = "status.inProcess">
+        <label for="daysLeft" >DAYS LEFT</label>
         <p id="daysLeft"> {{ daysLeft }} </p>
       </div>
 
-      <div class="container">
+      <div class="container" v-if = "status.inProcess || status.finished">
         <label for="cashLeft">CASH LEFT</label>
         <p id="cashLeft"> {{ cashLeft }} </p>
       </div>
 
-      <div class="container">
+      <div class="container" v-if = "status.finished">
+        <label for="totalSpends">TOTAL SPENDS</label>
+        <p id="totalSpends"> {{ totalSpends }} </p>
+      </div>
+
+      <div class="container" v-if = "status.inProcess">
         <label for="everydayCash">DAILY BUDJET</label>
         <p id="everydayCash">{{ everydayCash }} </p>
       </div>
@@ -112,7 +117,7 @@
 
     <div class="section" id="SpndAdd" v-if="status.inProcess || status.finished">
 
-      <div class="container">
+      <div class="container" v-if="status.inProcess">
           <label for="currentDate">CURRENT DATE</label>
           <p id="currentDate"> {{ dateNow() }} </p>
       </div>

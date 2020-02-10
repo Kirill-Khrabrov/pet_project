@@ -57,13 +57,44 @@ const app = new Vue({
 
         cashLeft: function() {
         //counting remaining budjet
+          if (this.spendsList.length == 0) {
+            return this.totalCash;
+        
+          } else {
+            let copiedTotalCash = this.totalCash;
           
-      },
+            this.spendsList.forEach(spend => {
+              copiedTotalCash -= spend.spends_sum;
+            });
 
-      everydayCash: function() {
+            return copiedTotalCash;
+          }
+          
+        },
+
+        totalSpends: function() {
+        //counting all spendings
+          if (this.spendsList.length == 0) {
+            return 0;
+      
+        } else {
+          let totalSpends = 0;
+
+          this.spendsList.forEach(spend => {
+            totalSpends += spend.spends_sum;
+          });
+
+          return totalSpends;
+        }  
+        
+        
+
+        },
+
+        everydayCash: function() {
         //counting average sum for day
-        return Math.round(this.totalCash / this.daysLeft);
-      },
+          return Math.round(this.cashLeft / this.daysLeft);
+        },
 
       
     },
