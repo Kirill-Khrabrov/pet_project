@@ -387,34 +387,6 @@ const app = new Vue({
 
       },
 
-      totalDays: function() {
-        //section to control the status
-        if (this.startFormIsValid) {
-        
-          if (this.dayNow() - this.dayStart < 0) {
-          
-            this.status.notStarted = true;
-            this.status.inProcess = false;
-            this.status.finished = false;
-            console.log(`Trip is not started: todays is ${this.dayNow()} and trip starts at ${this.dayStart}`);
-    
-         } else if (this.dayNow() - this.dayStart >= 0 && this.dayNow() - this.dayEnd <= 0) {
-            this.status.notStarted = false;
-            this.status.inProcess = true;
-            this.status.finished = false;
-            console.log(`Trip is in process: todays is ${this.dayNow()}, trip starts at ${this.dayStart} and ends at ${this.dayEnd}`);
-
-         } else if (this.dayNow() - this.dayEnd > 0) { 
-            this.status.notStarted = false;
-            this.status.inProcess = false;
-            this.status.finished = true;
-            console.log(`Trip finished: todays is ${this.dayNow()}, trip ends at ${this.dayEnd}`);
-          }
-       }
-
-      }
-
-
     },
       
      // adding lifecircle hooks
@@ -423,5 +395,32 @@ const app = new Vue({
       this.getAllTrips();
 
     },
+
+    updated: function() {
+      //section to control the status
+      if (this.startFormIsValid) {
+        
+        if (this.dayNow() - this.dayStart < 0) {
+        
+          this.status.notStarted = true;
+          this.status.inProcess = false;
+          this.status.finished = false;
+          console.log(`Trip is not started: todays is ${this.dayNow()} and trip starts at ${this.dayStart}`);
+  
+       } else if (this.dayNow() - this.dayStart >= 0 && this.dayNow() - this.dayEnd <= 0) {
+          this.status.notStarted = false;
+          this.status.inProcess = true;
+          this.status.finished = false;
+          console.log(`Trip is in process: todays is ${this.dayNow()}, trip starts at ${this.dayStart} and ends at ${this.dayEnd}`);
+
+       } else if (this.dayNow() - this.dayEnd > 0) { 
+          this.status.notStarted = false;
+          this.status.inProcess = false;
+          this.status.finished = true;
+          console.log(`Trip finished: todays is ${this.dayNow()}, trip ends at ${this.dayEnd}`);
+        }
+     }
+
+  }
 
   });
