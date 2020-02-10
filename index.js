@@ -57,16 +57,7 @@ const app = new Vue({
 
         cashLeft: function() {
         //counting remaining budjet
-          if (this.spendsList.length = 0) {
-            return this.totalCash;
           
-          } else {
-
-            this.spendsList.forEach(spend => {
-              this.totalCash -= spend.spendCash
-            });
-
-          }
       },
 
       everydayCash: function() {
@@ -80,7 +71,7 @@ const app = new Vue({
     methods: {
 
       dayNow: function() {
-          return (Math.floor(new Date() / (1000 * 3600 * 24)) + 1);
+          return Math.floor(new Date() / (1000 * 3600 * 24));
       },
 
       dateNow: function() {
