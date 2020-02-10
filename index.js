@@ -43,28 +43,33 @@ const app = new Vue({
         }
       },
 
-      totalDays: function() {
+        totalDays: function() {
         //counting total days depending on start and end dates
-        if ((this.dayEnd - this.dayStart) < 0) {
-          alert('End of the trip can not be earlier than it starts');
-        } else {
-          return this.dayEnd - this.dayStart + 1;
-        }
-      },
+          if ((this.dayEnd - this.dayStart) > 0) {
+            return this.dayEnd - this.dayStart + 1;
+          }
+        },
 
-      daysLeft: function() {
+        daysLeft: function() {
         //counting days  remaining till trip ends
-        return this.dayEnd - this.dayNow() + 1;
-      },
+          return this.dayEnd - this.dayNow() + 1;
+        },
 
-
-
-      cashLeft: function() {
+        cashLeft: function() {
         //counting remaining budjet
+          if (this.spendsList.length = 0) {
+            return this.totalCash;
+          
+          } else {
+
+            this.spendsList.forEach(spend => {
+              this.totalCash -= spend.spendCash
+            });
+
+          }
       },
 
       everydayCash: function() {
-        // NOT WORKS PROPERLLY
         //counting average sum for day
         return Math.round(this.totalCash / this.daysLeft);
       },
@@ -338,8 +343,8 @@ const app = new Vue({
       specifiedTripId: function () {
        
           // reset the spends list for refilling it from Spends.BD
-          this.spendsList.length = 0;
-          this.resetSpendingFields();
+          //this.spendsList.length = 0;
+          //this.resetSpendingFields();
           
          fetch(`http://localhost:4001/api/trips/${this.specifiedTripId}/spends`).
             then(response => {
@@ -353,7 +358,8 @@ const app = new Vue({
               
               //refill tripList with rows from Trips.DB
               this.spendsList = jsonResponse; 
-              console.log(this.spendsList);
+              
+              this.spendsList.forEach(spend => console.log(spend));
   
             });
 
@@ -392,9 +398,8 @@ const app = new Vue({
      // adding lifecircle hooks
      // test
     created: function() {
-      console.log(`
-        day for calculations is: ${this.dayNow()}
-       `)
+      this.getAllTrips();
+
     },
 
   });

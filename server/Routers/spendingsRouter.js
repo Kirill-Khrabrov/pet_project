@@ -34,7 +34,7 @@ spendingsRouter.get('/', (req, res, next) => {
   
     db.all(`
         select * from Spends
-        where SPends.trip_id = ${req.params.tripId};
+        where Spends.trip_id = ${req.params.tripId};
     `, (err, rows) => {
 
         if (err) {

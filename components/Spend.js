@@ -1,6 +1,5 @@
 const Spend = Vue.component('spend', {
     
-
     props: ['id', 'tripid', 'description', 'date', 'spendcash'],
     template: `
                 <tr>
@@ -14,7 +13,8 @@ const Spend = Vue.component('spend', {
                         <img class="editButton" src="public/img/icon_money.svg" v-on:click="showSpend">
                     </td>
                 </tr>`,
-    methods: {
+   
+                methods: {
         //get specific Spend from DB
         showSpend: function() {
             this.$emit('show-spend', {
@@ -31,9 +31,6 @@ const Spend = Vue.component('spend', {
         },
 
         },
-
-   
-   
 
 
 });
