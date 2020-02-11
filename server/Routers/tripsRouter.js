@@ -146,18 +146,29 @@ tripsRouter.put('/:tripId', (req, res, next) => {
 //--- DELETE Trip
 tripsRouter.delete('/:tripId', (req, res, next) => {
     
-    db.run(`
-        delete from Trips
-        where Trips.id = ${req.trip.id} 
-    `, function(err) {
+    db.serialize(function() {
         
-        if (err) {
-            next(err);
-       
-        } else {
+        db.run(`
+            delete from Trips
+            where Trips.id = ${req.trip.id}
+        `, function(err) {
+            if (err) {
+                next(err);
+            } 
+        });
+
+        db.run(`
+            delete from Spends
+            where Spends.trip_id = ${req.trip.id} 
+        `, function(err) {
+            if (err) {
+                next(err);
             
-            res.sendStatus(204);
-        }
+            } else {
+                res.sendStatus(204);
+            }
+        });
+
     });
 
 });

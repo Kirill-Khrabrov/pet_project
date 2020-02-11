@@ -282,7 +282,9 @@ const app = new Vue({
             return response;
           }).
           then(() => {
-            this.tripsList = this.tripsList.filter(trip => trip.id !== target.tripId);          
+            this.tripsList = this.tripsList.filter(trip => trip.id !== target.tripId);
+            this.spendsList.length = 0;
+            return;          
         });
 
       },
