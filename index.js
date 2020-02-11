@@ -7,13 +7,17 @@ const app = new Vue({
       dateStart: '',        
       dateEnd: '',          
       totalCash: 0,
-      specifiedTripId: 0,
+
       status: {
         notStarted: false,
         inProcess: false,
         finished: false
       },
 
+      //helper vars
+      specifiedTripId: 0,
+      specifiedSpendId: 0,
+      
       // save all trips and all spendings retrived from DB
       tripsList: [],
       spendsList: [],
@@ -186,6 +190,7 @@ const app = new Vue({
             console.log(`GET request: ${Object.entries(jsonResponse)}`);
             this.spendDescription = jsonResponse.description;
             this.spendCash = jsonResponse.spends_sum;
+            this.specifiedSpendId = jsonResponse.id;
           });
 
       },
@@ -306,7 +311,7 @@ const app = new Vue({
       },
 
     //UPDATE Trip to DB
-      saveChangesToDatabase: function() {
+      saveTripChangesToDatabase: function() {
 
         console.log('Sending PUT request');
 
@@ -351,8 +356,56 @@ const app = new Vue({
                      
       },
 
+      //UPDATE Spend to DB
+      saveSpendChangesToDatabase: function() {
+
+        
+
+        const updatedSpend = {
+          description: this.spendDescription,
+          date: this.spendDate,
+          spendCash: this.spendCash,
+        };
+
+        console.log(`Sending PUT request ${Object.entries(updatedSpend)}`);
+
+        const fetchOptions = {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'                     
+          },
+          body: JSON.stringify({ spend: updatedSpend })
+        };
+
+        
+        fetch(`http://localhost:4001/api/trips/${this.specifiedTripId}/spends/${this.specifiedSpendId}`, fetchOptions).
+          then(response => {
+            if (response.ok){
+              return response.json();
+            }
+            throw new Error('Request failed!');
+            }, networkError => console.log(networkError.message)).
+            
+            then((jsonResponse) => {
+                             
+              this.spendsList.forEach(spend => {
+
+                if (spend.id === jsonResponse.spend.id) {
+                  let indexOfUpdatedSpend = this.spendsList.indexOf(spend);
+
+                  this.spendsList.splice(indexOfUpdatedSpend, 1, jsonResponse.spend);
+                }
+              
+              })
+                       
+            });
+                     
+      },
+
+
+
           
-      resetSpendingFields: function() {
+      resetSpendingForm: function() {
         //resets SpndAdd_Form fields
         this.spendDescription = '';
         this.spendCash = 0;
@@ -366,7 +419,7 @@ const app = new Vue({
        
           // reset the spends list for refilling it from Spends.BD
           //this.spendsList.length = 0;
-          //this.resetSpendingFields();
+          //this.resetSpendingForm();
           
          fetch(`http://localhost:4001/api/trips/${this.specifiedTripId}/spends`).
             then(response => {

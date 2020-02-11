@@ -1,16 +1,16 @@
 const Spend = Vue.component('spend', {
     
-    props: ['id', 'tripid', 'description', 'date', 'spendcash'],
+    props: ['id', 'tripid', 'description', 'date', 'spendcash', 'status'],
     template: `
                 <tr>
                     <td>
-                     <img class="deleteButton" v-on:click="removeSpend" src="public/img/X_Button.svg">
+                     <img class="deleteButton" v-on:click="removeSpend" src="public/img/X_Button.svg" v-if="!status.finished">
                     </td>
                     <td>{{ description }}</td>
                     <td>{{ date }}</td>
                     <td>{{ spendcash }}</td>
                     <td>
-                        <img class="editButton" src="public/img/icon_money.svg" v-on:click="showSpend">
+                        <img class="editButton" src="public/img/icon_money.svg" v-on:click="showSpend" v-if="!status.finished">
                     </td>
                 </tr>`,
    

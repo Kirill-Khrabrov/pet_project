@@ -96,22 +96,20 @@ spendingsRouter.post('/', (req, res, next) => {
 
 });
 
-//--- PUT to update Trip
-spendingsRouter.put('/:tripId', (req, res, next) => {
-    const newTrip = req.body.trip;
+//--- PUT to update Spend
+spendingsRouter.put('/:spendId', (req, res, next) => {
+    const updatedSpend = req.body.spend;
     
     db.run(`
-        update Trips
+        update Spends
         set description = $description,
-            trip_start = $dateStart,
-            trip_end = $dateEnd,
-            total_cash = $totalCash
-        where Trips.id = ${req.trip.id}; 
+            date = $date,
+            spends_sum = $spends_sum
+        where Spends.id = ${req.spend.id}; 
     `, {
-        $description: newTrip.description,
-        $dateStart: newTrip.dateStart,
-        $dateEnd: newTrip.dateEnd,
-        $totalCash: newTrip.totalCash,
+        $description: updatedSpend.description,
+        $date: updatedSpend.date,
+        $spends_sum: updatedSpend.spendCash,        
     }, function(err) {
         
         if (err) {
@@ -120,15 +118,15 @@ spendingsRouter.put('/:tripId', (req, res, next) => {
         } else {
            
             db.get(`
-                    select * from Trips
-                    where Trips.id = ${req.trip.id};
+                    select * from Spends
+                    where Spends.id = ${req.spend.id};
                 `, (err, row) => {
                     
                     if (err) {
                         next(err);
                   
                     } else {
-                        res.status(200).json({ trip: row });
+                        res.status(200).json({ spend: row });
                     }
                 
             });

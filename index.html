@@ -82,8 +82,8 @@
 
       <div class="container">
         <button v-on:click="resetStrtForm"> Reset</button>
-        <button v-on:click="saveTripToDatabase" v-bind:disabled="!startFormIsValid">Save Trip</button>
-        <button v-on:click="saveChangesToDatabase" v-bind:disabled="!startFormIsValid">Save Changes</button>
+        <button v-on:click="saveTripToDatabase" v-bind:disabled="!startFormIsValid">Add Trip</button>
+        <button v-on:click="saveTripChangesToDatabase" v-bind:disabled="!startFormIsValid">Save Changes</button>
       </div>
        
     </div>
@@ -135,8 +135,11 @@
      
 
       <div class="container" v-if="status.inProcess">
-         <button v-on:click="saveSpendToDatabase" v-bind:disabled = "this.specifiedTripId == 0">Add Spending</button>
-         <button>Reset</button> 
+         
+         <button v-on:click="resetSpendingForm"> Reset</button>
+         <button v-on:click="saveSpendToDatabase" v-bind:disabled = "this.specifiedTripId == 0">Add Spend</button>
+         <button v-on:click="saveSpendChangesToDatabase" v-bind:disabled="this.specifiedTripId == 0">Save Changes</button>
+
       </div>
 
       <div class="container" v-if="status.inProcess || status.finished">
@@ -154,6 +157,7 @@
                   v-on:remove-spend = "removeSpendFromDatabase"
                   v-on:show-spend = "getSpecificSpend"
                   v-for = "spend in spendsList"
+                  v-bind:status = "status"
                   v-bind:id = "spend.id"
                   v-bind:tripid = "specifiedTripId"
                   v-bind:description = "spend.description"
