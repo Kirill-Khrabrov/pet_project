@@ -1,114 +1,17 @@
 /* developers styles */
-div {
-  border: 1px solid black;
-}
+
 
 
 /* Site-Wide Styles */
 
 
-
-#app {
-  margin-left: auto;
-  margin-right: auto;
-  width: 90%;
-  height: 100%;
-  border: 1px solid #f0f8ff;
-  border-radius: 3px;
-  background-color: #f0f8ff;
-  opacity: 80%;
-}
-
 header {
   background-color: #f0f8ff;
-  height: 4em;
-  text-align: left;
-
-}
-
-header h1 {
-  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  font-size: 2em;
-  font-style: italic;
-  font-weight: 600;
-  color: #ff0000;
-  margin-top: 1em;
-  margin-left: .5em;
-}
-
-.section {
-  border: 1px solid black;
-  border-radius: 3px;
-  margin: .5em auto;
-  width: 90%;
-  background-color: #AFC2CA;
-  display: flex;
-  flex-flow: column wrap;
-}
-
-.container {
-  flex-wrap: wrap;
-  padding: .5em;
-  display: inline-flex;
-  justify-content: space-between;
-}
-
-label {
-  padding-right: 1em;
-  
-  margin-top: auto;
-  margin-bottom: auto;
-
-}
-
-input {
   
 }
 
-.container p {
-  
-  color: #f0f8ff;
-  font-size: 1.2em;
-  font-weight: 800;
-  margin-top: auto;
-  margin-bottom: auto;
-  
-}
 
-.dateContainer {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: space-between;
-  padding: .5em;
-}
 
-button {
-  width: 8em; 
-  margin: auto;
-  cursor: pointer;
-}
-
-/* Global table styles */
-
-table {
-  width: 100%;
-  table-layout: fixed;
-}
-
-.odd {
-  background-color: #f0f8ff;
-}
-
-.deleteButton {
-  width: 17px;
-  transform: rotate(45deg);
-  cursor: pointer;
-}
-
-.editButton {
-  width: 17px;
-  cursor: pointer;
-}
 
 
 
@@ -116,6 +19,5 @@ table {
 
 #StrtForm_allTrips_container {
   overflow: scroll; 
-  max-height: 13em;
 }
 

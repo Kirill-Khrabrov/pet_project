@@ -2,8 +2,22 @@
 <html>
 <head>
   <title>Pocket Cash calculator</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- local styling -->
   <link rel="stylesheet" type="text/css" href="./public/css/reset.css">
   <link rel="stylesheet" type="text/css" href="./public/css/style.css">
+
+  <!-- Jquery for bootstarp-->
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+  <!-- Bootstrap-->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+  <!-- Vue.js-->
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js" defer></script>
   <script src="./components/Trip.js" defer></script>
   <script src="./components/Spend.js" defer></script>
@@ -12,7 +26,7 @@
 <body>
 
   <!--Vue.js section activation-->
-  <div id="app">
+  <div class="container-md" id="app">
     
     <!--Header section-->
     <header>
@@ -20,36 +34,50 @@
     </header>
     
     <!--Form to send global trip info-->
-    <div class="section">
+    <div>
       
-      <h1> Trip Details </h1>
+      <h2> Trip Details </h2>
 
-      <div class="trip_container">
+      <!-- Trip section Container -->
+      <div class="container" id="tripSection">
         
-        <div class="container">
-        
-          <div>
-            <label for="dateStart">DATE START</label>
-            <input type="date" id="dateStart" v-model="dateStart" />
+        <!-- Start End data container -->
+        <div class="row align-items-center justify-content-around">
+          <div class="col-6">
+            <div class="row justify-content-around">
+              <label class="col-md-6" for="dateStart">DATE START</label>
+              <input class="col-md-6" type="date" id="dateStart" v-model="dateStart" />
+            </div>
           </div>
 
-          <div>
-            <label for="dateEnd">DATE END</label>
-            <input type="date" id="dateEnd" v-model="dateEnd" /> 
-          </div>
+          <div class="col-6">
+            <div class="row justify-content-around">
+              <label class="col-md-6" for="dateEnd">DATE END</label>
+              <input class="col-md-6" type="date" id="dateEnd" v-model="dateEnd" />
+            </div>
+          </div> 
+      </div>
 
-        </div>
+       
       
-        <div class="container">
-          <div>
-            <label for="description">DESCRIPTION</label>
-            <input type="text" id="description" v-model.trim="description" />
+        <!-- Trip Description & cash container -->
+        <div class="row align-items-center justify-content-around">
+          <div class="col-md-6">
+            <div class="row">
+              <p class="col-md-6 my-auto">DESCRIPTION</p>
+              <textarea  class="col-md-6" id="description" v-model.trim="description"></textarea>
+            </div>
           </div>
         
-          <div>
-            <label for="totalBudject">YOUR CASH</label>
-            <input type="number" id="totalCash" min="0" max="999999" v-model="totalCash" />
+          
+          <div class="col-md-6">
+            <div class="row">
+              <label class="col-md-6" for="totalBudject">YOUR CASH</label>
+              <input class="col-md-6" type="number" id="totalCash" min="0" max="999999" v-model="totalCash" />
+            </div>
           </div>
+        
+        
         </div>
 
         <div class="container" v-if="startFormIsValid">
@@ -93,13 +121,14 @@
         </div>
   
         <div class="container" v-if="status.inProcess || status.finished">
-          <table>
+          <table class="table table-striped">
             <thead>
               <th class="deleteButton"></th>
+              <th class="editButton"></th>
               <th>Description</th>
               <th>Date</th>
               <th>Spending Sum</th>
-              <th class="editButton"></th>
+              
             </thead>
             <tbody>
              
@@ -124,7 +153,7 @@
     </div>
 
     <!--Section for everyday visualisation-->
-    <div class="section" id="SpndVis" v-if = "status.inProcess || status.finished">
+    <div id="SpndVis" v-if = "status.inProcess || status.finished">
 
       <div class="container" v-if="startFormIsValid">
         <label for="tripStatus" v-if="status.notStarted || status.inProcess || status.finished">TRIP STATUS</label>  
@@ -166,16 +195,17 @@
     </div>
     --> 
 
-
-    <div class="container" id="StrtForm_allTrips_container">
-      <table id="StrtForm_allTrips">
+    <details>
+      <summary>All trips list</summary>
+      <div class="container">
+      <table class="table table-striped">
         <thead>
+          <th></th>
           <th></th>
           <th>Description</th>
           <th>Trip Start</th>
           <th>Trip End</th>
-          <th>Total Cash</th>
-          <th></th>
+          <th>Total Cash</th>          
         </thead>
         <tbody>
           
@@ -192,7 +222,8 @@
           
         </tbody>
       </table>
-    </div>
+      </div>
+    </details>
 
   </div>
 

@@ -5,15 +5,16 @@ const Trip = Vue.component('trip', {
     template: `
                 <tr>
                     <td>
-                     <img class="deleteButton" v-on:click="removeTrip" src="public/img/X_Button.svg">
+                     <img class="deleteButton" v-on:click="removeTrip" src="public/img/x-circle.svg">
+                    </td>
+                    <td>
+                        <img class="editButton" src="public/img/play.svg" v-on:click="showTrip">
                     </td>
                     <td>{{ description }}</td>
                     <td>{{ datestart }}</td>
                     <td>{{ dateend }}</td>
                     <td>{{ totalcash }}</td>
-                    <td>
-                        <img class="editButton" src="public/img/icon_money.svg" v-on:click="showTrip">
-                    </td>
+                    
                 </tr>`,
     methods: {
         //get specific Trip from DB
