@@ -1,3 +1,9 @@
+/* developers styles */
+div {
+  border: 1px solid black;
+}
+
+
 /* Site-Wide Styles */
 
 
@@ -5,7 +11,7 @@
 #app {
   margin-left: auto;
   margin-right: auto;
-  width: 70%;
+  width: 90%;
   height: 100%;
   border: 1px solid #f0f8ff;
   border-radius: 3px;
@@ -43,20 +49,20 @@ header h1 {
 .container {
   flex-wrap: wrap;
   padding: .5em;
-  display: flex;
-
+  display: inline-flex;
+  justify-content: space-between;
 }
 
-.container label {
+label {
   padding-right: 1em;
-  min-width: 20%;
+  
   margin-top: auto;
   margin-bottom: auto;
 
 }
 
-.container input {
-  width: 40%;
+input {
+  
 }
 
 .container p {
@@ -67,6 +73,13 @@ header h1 {
   margin-top: auto;
   margin-bottom: auto;
   
+}
+
+.dateContainer {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  padding: .5em;
 }
 
 button {

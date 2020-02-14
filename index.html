@@ -20,76 +20,118 @@
     </header>
     
     <!--Form to send global trip info-->
-    <div class="section" id="StrtForm">
-      <div class="container">
-        <label for="description">DESCRIPTION</label>
-        <input type="text" id="description" v-model.trim="description" />
-      </div>
+    <div class="section">
+      
+      <h1> Trip Details </h1>
 
-      <div class="container">
-        <label for="dateStart">DATE START</label>
-        <input type="date" id="dateStart" v-model="dateStart" />
-      </div>
+      <div class="trip_container">
+        
+        <div class="container">
+        
+          <div>
+            <label for="dateStart">DATE START</label>
+            <input type="date" id="dateStart" v-model="dateStart" />
+          </div>
 
-      <div class="container">
-        <label for="dateEnd">DATE END</label>
-        <input type="date" id="dateEnd" v-model="dateEnd" /> 
-      </div>
+          <div>
+            <label for="dateEnd">DATE END</label>
+            <input type="date" id="dateEnd" v-model="dateEnd" /> 
+          </div>
 
-      <div class="container">
-        <label for="totalBudject">YOUR CASH</label>
-        <input type="number" id="totalCash" min="0" max="999999" v-model="totalCash" />
-      </div>
+        </div>
+      
+        <div class="container">
+          <div>
+            <label for="description">DESCRIPTION</label>
+            <input type="text" id="description" v-model.trim="description" />
+          </div>
+        
+          <div>
+            <label for="totalBudject">YOUR CASH</label>
+            <input type="number" id="totalCash" min="0" max="999999" v-model="totalCash" />
+          </div>
+        </div>
 
-      <div class="container" v-if="startFormIsValid">
-          <label for="tripStatus" v-if="status.notStarted || status.inProcess || status.finished">TRIP STATUS</label>  
-          <p id="tripStatus" v-if="status.notStarted"> NOT STARTED </p>
-          <p id="tripStatus" v-if="status.inProcess"> IN PROCESS </p>
-          <p id="tripStatus" v-if="status.finished"> FINISHED </p>
-      </div>
-
-      <div class="container" v-if="startFormIsValid">
-        <label for="totalDays">DAYS TOTAL</label>
-        <p id="totalDays"> {{ totalDays }} </p>
-      </div>
+        <div class="container" v-if="startFormIsValid">
+          <label for="totalDays">DAYS TOTAL</label>
+          <p id="totalDays"> {{ totalDays }} </p>
+        </div>
           
-      <div class="container" id="StrtForm_allTrips_container">
-        <table id="StrtForm_allTrips">
-          <thead>
-            <th></th>
-            <th>Description</th>
-            <th>Trip Start</th>
-            <th>Trip End</th>
-            <th>Total Cash</th>
-            <th></th>
-          </thead>
-          <tbody>
-            
-            <tr is = "trip" 
-                  v-on:remove-trip = "removeTripFromDatabase"
-                  v-on:show-trip = "getSpecificTrip"
-                  v-for = "trip in tripsList"
-                  v-bind:id = "trip.id"
-                  v-bind:description = "trip.description"
-                  v-bind:datestart = "trip.trip_start"
-                  v-bind:dateend = "trip.trip_end"
-                  v-bind:totalcash = "trip.total_cash">
-            </tr>
-            
-          </tbody>
-        </table>
+        <div class="container">
+          <button v-on:click="resetStrtForm"> Reset</button>
+          <button v-on:click="saveTripToDatabase" v-bind:disabled="!startFormIsValid">Add Trip</button>
+          <button v-on:click="saveTripChangesToDatabase" v-bind:disabled="!startFormIsValid">Save Changes</button>
+        </div>
+
       </div>
 
-      <div class="container">
-        <button v-on:click="resetStrtForm"> Reset</button>
-        <button v-on:click="saveTripToDatabase" v-bind:disabled="!startFormIsValid">Add Trip</button>
-        <button v-on:click="saveTripChangesToDatabase" v-bind:disabled="!startFormIsValid">Save Changes</button>
-      </div>
+      <div class="spends_container" v-if="status.inProcess || status.finished">
+
+        <div class="container" v-if="status.inProcess">
+            <label for="currentDate">CURRENT DATE</label>
+            <p id="currentDate"> {{ dateNow() }} </p>
+        </div>
+  
+        <div class="container" v-if="status.inProcess">
+          <label for="spendDescription">SPEND DESCRIPTION</label>
+          <input type="text" id="spendDescription"  v-model:trim="spendDescription" />
+        </div>
+  
+        <div class="container" v-if="status.inProcess">
+            <label for="todaySpendings">TODAYS SPENDINGS</label>
+            <input type="number" id="todaySpendings" min="0" max="999999" v-model="spendCash" />
+        </div>
+  
+       
+  
+        <div class="container" v-if="status.inProcess">
+           
+           <button v-on:click="resetSpendingForm"> Reset</button>
+           <button v-on:click="saveSpendToDatabase" v-bind:disabled = "this.specifiedTripId == 0">Add Spend</button>
+           <button v-on:click="saveSpendChangesToDatabase" v-bind:disabled="this.specifiedTripId == 0">Save Changes</button>
+  
+        </div>
+  
+        <div class="container" v-if="status.inProcess || status.finished">
+          <table>
+            <thead>
+              <th class="deleteButton"></th>
+              <th>Description</th>
+              <th>Date</th>
+              <th>Spending Sum</th>
+              <th class="editButton"></th>
+            </thead>
+            <tbody>
+             
+              <tr is = "spend" 
+                    v-on:remove-spend = "removeSpendFromDatabase"
+                    v-on:show-spend = "getSpecificSpend"
+                    v-for = "spend in spendsList"
+                    v-bind:status = "status"
+                    v-bind:id = "spend.id"
+                    v-bind:tripid = "specifiedTripId"
+                    v-bind:description = "spend.description"
+                    v-bind:date = "spend.date"
+                    v-bind:spendcash = "spend.spends_sum">
+              </tr>
+  
+            </tbody>
+          </table>
+        </div>
+  
+      </div>       
        
     </div>
 
     <!--Section for everyday visualisation-->
     <div class="section" id="SpndVis" v-if = "status.inProcess || status.finished">
+
+      <div class="container" v-if="startFormIsValid">
+        <label for="tripStatus" v-if="status.notStarted || status.inProcess || status.finished">TRIP STATUS</label>  
+        <p id="tripStatus" v-if="status.notStarted"> NOT STARTED </p>
+        <p id="tripStatus" v-if="status.inProcess"> IN PROCESS </p>
+        <p id="tripStatus" v-if="status.finished"> FINISHED </p>
+      </div>
 
       <div class="container" v-if = "status.inProcess">
         <label for="daysLeft" >DAYS LEFT</label>
@@ -115,61 +157,7 @@
 
     <!--Section for everyday spendings adding-->
 
-    <div class="section" id="SpndAdd" v-if="status.inProcess || status.finished">
-
-      <div class="container" v-if="status.inProcess">
-          <label for="currentDate">CURRENT DATE</label>
-          <p id="currentDate"> {{ dateNow() }} </p>
-      </div>
-
-      <div class="container" v-if="status.inProcess">
-        <label for="spendDescription">SPEND DESCRIPTION</label>
-        <input type="text" id="spendDescription"  v-model:trim="spendDescription" />
-      </div>
-
-      <div class="container" v-if="status.inProcess">
-          <label for="todaySpendings">TODAYS SPENDINGS</label>
-          <input type="number" id="todaySpendings" min="0" max="999999" v-model="spendCash" />
-      </div>
-
-     
-
-      <div class="container" v-if="status.inProcess">
-         
-         <button v-on:click="resetSpendingForm"> Reset</button>
-         <button v-on:click="saveSpendToDatabase" v-bind:disabled = "this.specifiedTripId == 0">Add Spend</button>
-         <button v-on:click="saveSpendChangesToDatabase" v-bind:disabled="this.specifiedTripId == 0">Save Changes</button>
-
-      </div>
-
-      <div class="container" v-if="status.inProcess || status.finished">
-        <table>
-          <thead>
-            <th class="deleteButton"></th>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Spending Sum</th>
-            <th class="editButton"></th>
-          </thead>
-          <tbody>
-           
-            <tr is = "spend" 
-                  v-on:remove-spend = "removeSpendFromDatabase"
-                  v-on:show-spend = "getSpecificSpend"
-                  v-for = "spend in spendsList"
-                  v-bind:status = "status"
-                  v-bind:id = "spend.id"
-                  v-bind:tripid = "specifiedTripId"
-                  v-bind:description = "spend.description"
-                  v-bind:date = "spend.date"
-                  v-bind:spendcash = "spend.spends_sum">
-            </tr>
-
-          </tbody>
-        </table>
-      </div>
-
-    </div>
+    
 
     <!--Section for developer buttons-->
     <!--
@@ -179,8 +167,35 @@
     --> 
 
 
+    <div class="container" id="StrtForm_allTrips_container">
+      <table id="StrtForm_allTrips">
+        <thead>
+          <th></th>
+          <th>Description</th>
+          <th>Trip Start</th>
+          <th>Trip End</th>
+          <th>Total Cash</th>
+          <th></th>
+        </thead>
+        <tbody>
+          
+          <tr is = "trip" 
+                v-on:remove-trip = "removeTripFromDatabase"
+                v-on:show-trip = "getSpecificTrip"
+                v-for = "trip in tripsList"
+                v-bind:id = "trip.id"
+                v-bind:description = "trip.description"
+                v-bind:datestart = "trip.trip_start"
+                v-bind:dateend = "trip.trip_end"
+                v-bind:totalcash = "trip.total_cash">
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+
   </div>
 
-  <script src="public/js/utils.js"></script>
+  
 </body>
 </html>
