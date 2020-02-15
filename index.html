@@ -42,28 +42,28 @@
       <div class="container" id="tripSection">
         
         <!-- Start End data container -->
-        <div class="row align-items-center justify-content-around">
+        <div class="row py-1">
           <div class="col-6">
-            <div class="row justify-content-around">
-              <label class="col-md-6" for="dateStart">DATE START</label>
+            <div class="row">
+              <p class="col-md-6 my-auto">DATE START</p>
               <input class="col-md-6" type="date" id="dateStart" v-model="dateStart" />
             </div>
           </div>
 
           <div class="col-6">
-            <div class="row justify-content-around">
-              <label class="col-md-6" for="dateEnd">DATE END</label>
+            <div class="row">
+              <p class="col-md-6 my-auto">DATE END</p>
               <input class="col-md-6" type="date" id="dateEnd" v-model="dateEnd" />
             </div>
           </div> 
-      </div>
+        </div>
 
        
       
         <!-- Trip Description & cash container -->
-        <div class="row align-items-center justify-content-around">
+        <div class="row py-1">
           <div class="col-md-6">
-            <div class="row">
+            <div class="row" >
               <p class="col-md-6 my-auto">DESCRIPTION</p>
               <textarea  class="col-md-6" id="description" v-model.trim="description"></textarea>
             </div>
@@ -72,7 +72,7 @@
           
           <div class="col-md-6">
             <div class="row">
-              <label class="col-md-6" for="totalBudject">YOUR CASH</label>
+              <p class="col-md-6 my-auto">YOUR CASH</p>
               <input class="col-md-6" type="number" id="totalCash" min="0" max="999999" v-model="totalCash" />
             </div>
           </div>
