@@ -1,6 +1,8 @@
 /* developers styles */
 
-
+.container > * {
+  border: 1px solid red;
+}
 
 /* Site-Wide Styles */
 

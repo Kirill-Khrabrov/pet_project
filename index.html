@@ -26,22 +26,29 @@
 <body>
 
   <!--Vue.js section activation-->
-  <div class="container-md" id="app">
+  <div class="container" id="app">
     
     <!--Header section-->
     <header>
       <h1>Pocket Cash Calculator</h1>
     </header>
     
-    <!--Form to send global trip info-->
-    <div>
+    <!-- Trip & Spend global containers-->
+    <div class="container-xl">
       
-      <h2> Trip Details </h2>
+      <div class="row">
+        <h2> Trip Details </h2>
+      </div>
+            
+      <div class="row">
+        <!-- Trip section -->
+   
+        <div class="col">
+          
+          <div class="container" id="tripSection">
 
-      <!-- Trip section Container -->
-      <div class="container" id="tripSection">
         
-        <!-- Start End data container -->
+        <!-- Start End data row -->
         <div class="row py-1">
           <div class="col">
             <div class="row">
@@ -57,10 +64,9 @@
             </div>
           </div> 
         </div>
-
        
       
-        <!-- Trip Description & cash container -->
+        <!-- Trip Description & cash row -->
         <div class="row py-1">
             
           <div class="col-5">
@@ -74,31 +80,42 @@
               </div>
 
           </div>
-          
-          
+                    
           <textarea  class="col-7" id="description" v-model.trim="description"></textarea>
         </div>  
         
         
+       <!-- Calculated Trip total days row -->
+        
+          <div class="row text-center" v-if="startFormIsValid">
+            <label class="col-4" for="totalDays">DAYS TOTAL</label>
+            <p class="col-6"> {{ totalDays }} </p>
+          </div>
        
-        
-        
-      
-
-        <div class="container" v-if="startFormIsValid">
-          <label for="totalDays">DAYS TOTAL</label>
-          <p id="totalDays"> {{ totalDays }} </p>
-        </div>
           
-        <div class="container">
-          <button v-on:click="resetStrtForm"> Reset</button>
-          <button v-on:click="saveTripToDatabase" v-bind:disabled="!startFormIsValid">Add Trip</button>
-          <button v-on:click="saveTripChangesToDatabase" v-bind:disabled="!startFormIsValid">Save Changes</button>
+        <!-- Buttons for Trip functions row-->
+        
+          <div class="row">
+            <button class="col-3" v-on:click="resetStrtForm"> Reset</button>
+            <button class="col-3" v-on:click="saveTripToDatabase" v-bind:disabled="!startFormIsValid">Add Trip</button>
+            <button class="col-3" v-on:click="saveTripChangesToDatabase" v-bind:disabled="!startFormIsValid">Save Changes</button>
+          </div>
+       
+
+      
+      
+        
+        
+        
+        
+          </div>
+
         </div>
 
-      </div>
-
-      <div class="spends_container" v-if="status.inProcess || status.finished">
+      <!-- Spends section-->
+        <div class="col">
+          
+          <div class="container" v-if="status.inProcess || status.finished">
 
         <div class="container" v-if="status.inProcess">
             <label for="currentDate">CURRENT DATE</label>
@@ -153,7 +170,11 @@
           </table>
         </div>
   
-      </div>       
+          </div>  
+    
+        </div>
+
+      </div>     
        
     </div>
 
