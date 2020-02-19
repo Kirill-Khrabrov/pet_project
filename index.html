@@ -34,14 +34,12 @@
     </header>
     
     <!-- Trip & Spend global containers-->
-    <div class="container-xl">
-      
-    
+    <div class="container-fluid">    
             
       <div class="row">
         <!-- Trip section -->
    
-        <div class="col">
+        <div class="col-lg-6">
           <div class="container" id="tripSection">        
         <!-- Start End data row -->
           <!--Header-->
@@ -88,7 +86,7 @@
         
        <!-- Calculated Trip total days row -->
         
-          <div class="row text-center" v-if="startFormIsValid">
+          <div class="row" v-if="startFormIsValid">
             <label class="col-4" for="totalDays">DAYS TOTAL</label>
             <p class="col-6"> {{ totalDays }} </p>
           </div>
@@ -97,9 +95,9 @@
         <!-- Buttons for Trip functions row-->
         
           <div class="row">
-            <button class="col-3" v-on:click="resetStrtForm"> Reset</button>
-            <button class="col-3" v-on:click="saveTripToDatabase" v-bind:disabled="!startFormIsValid">Add Trip</button>
-            <button class="col-3" v-on:click="saveTripChangesToDatabase" v-bind:disabled="!startFormIsValid">Save Changes</button>
+            <button v-on:click="resetStrtForm"> Reset</button>
+            <button v-on:click="saveTripToDatabase" v-bind:disabled="!startFormIsValid">Add Trip</button>
+            <button v-on:click="saveTripChangesToDatabase" v-bind:disabled="!startFormIsValid">Save Changes</button>
           </div>   
         
         
@@ -108,7 +106,7 @@
         </div>
 
       <!-- Spends section-->
-        <div class="col">
+        <div class="col-lg-6">
           
           <div class="container" v-if="status.inProcess || status.finished">
            <!--Header-->   
@@ -146,34 +144,33 @@
         </div>
   
 
-
-        <div class="container" v-if="status.inProcess || status.finished">
-          <table class="table table-striped">
-            <thead>
-              <th class="deleteButton"></th>
-              <th class="editButton"></th>
-              <th>Description</th>
-              <th>Date</th>
-              <th>Spending Sum</th>
-              
-            </thead>
-            <tbody>
-             
-              <tr is = "spend" 
-                    v-on:remove-spend = "removeSpendFromDatabase"
-                    v-on:show-spend = "getSpecificSpend"
-                    v-for = "spend in spendsList"
-                    v-bind:status = "status"
-                    v-bind:id = "spend.id"
-                    v-bind:tripid = "specifiedTripId"
-                    v-bind:description = "spend.description"
-                    v-bind:date = "spend.date"
-                    v-bind:spendcash = "spend.spends_sum">
-              </tr>
-  
-            </tbody>
-          </table>
-        </div>
+        <div class="row" v-if="status.inProcess || status.finished">
+          <details>
+             <summary>Spends list</summary>               
+                 <table class="table table-striped">
+                    <thead>
+                     <th class="deleteButton"></th>
+                     <th class="editButton"></th>
+                     <th>Description</th>
+                     <th>Date</th>
+                      <th>Spending Sum</th>              
+                    </thead>
+                  <tbody>
+                    <tr is = "spend" 
+                      v-on:remove-spend = "removeSpendFromDatabase"
+                      v-on:show-spend = "getSpecificSpend"
+                      v-for = "spend in spendsList"
+                      v-bind:status = "status"
+                      v-bind:id = "spend.id"
+                      v-bind:tripid = "specifiedTripId"
+                      v-bind:description = "spend.description"
+                      v-bind:date = "spend.date"
+                      v-bind:spendcash = "spend.spends_sum">
+                     </tr>
+                   </tbody>
+                 </table>
+              </details>
+            </div>
   
           </div>  
     
@@ -184,32 +181,43 @@
     </div>
 
     <!-- Trip details global container-->
-    <div id="SpndVis" v-if = "status.inProcess || status.finished">
+    <div class="container-lg">
 
-      <div class="container" v-if="startFormIsValid">
-        <label for="tripStatus" v-if="status.notStarted || status.inProcess || status.finished">TRIP STATUS</label>  
-        <p id="tripStatus" v-if="status.notStarted"> NOT STARTED </p>
-        <p id="tripStatus" v-if="status.inProcess"> IN PROCESS </p>
-        <p id="tripStatus" v-if="status.finished"> FINISHED </p>
+      <div class="row">
+        <label for="tripStatus" v-if="status.notStarted || status.inProcess || status.finished">TRIP STATUS</label> 
+      </div>
+      <div class="row">
+          <p id="tripStatus" v-if="status.notStarted"> NOT STARTED </p>
+      </div>
+      <div class="row">
+          <p id="tripStatus" v-if="status.inProcess"> IN PROCESS </p>
+      </div>
+      <div class="row">
+          <p id="tripStatus" v-if="status.finished"> FINISHED </p>
+      </div>       
+      
+
+      <div class="row">
+        <div class="col-4" v-if = "status.inProcess">
+          <label for="daysLeft" >DAYS LEFT</label>
+          <p id="daysLeft"> {{ daysLeft }} </p>
+        </div>
+
+        <div class="col-4" v-if = "status.inProcess || status.finished">
+          <label for="cashLeft">CASH LEFT</label>
+          <p id="cashLeft"> {{ cashLeft }} </p>
+        </div>
+
+        <div class="col-4" v-if = "status.finished">
+          <label for="totalSpends">TOTAL SPENDS</label>
+          <p id="totalSpends"> {{ totalSpends }} </p>
+        </div>
       </div>
 
-      <div class="container" v-if = "status.inProcess">
-        <label for="daysLeft" >DAYS LEFT</label>
-        <p id="daysLeft"> {{ daysLeft }} </p>
-      </div>
-
-      <div class="container" v-if = "status.inProcess || status.finished">
-        <label for="cashLeft">CASH LEFT</label>
-        <p id="cashLeft"> {{ cashLeft }} </p>
-      </div>
-
-      <div class="container" v-if = "status.finished">
-        <label for="totalSpends">TOTAL SPENDS</label>
-        <p id="totalSpends"> {{ totalSpends }} </p>
-      </div>
-
-      <div class="container" v-if = "status.inProcess">
+      <div class="row" v-if = "status.inProcess">
         <label for="everydayCash">DAILY BUDJET</label>
+      </div>  
+      <div class="row" v-if = "status.inProcess">
         <p id="everydayCash">{{ everydayCash }} </p>
       </div>
 
@@ -221,7 +229,7 @@
     
 
     <!-- Trip list global container -->
-    <details>
+    <details class="container-fluid">
       <summary>All trips list</summary>
       <div class="container">
       <table class="table table-striped">
