@@ -32,7 +32,6 @@ const app = new Vue({
       startFormIsValid: function() {
         return this.description && this.dateStart && this.dateEnd && this.totalCash;
       },
-      
 
       //section for days calculations
       dayStart: {
@@ -81,18 +80,15 @@ const app = new Vue({
           if (this.spendsList.length == 0) {
             return 0;
       
-        } else {
-          let totalSpends = 0;
+           } else {
+            let totalSpends = 0;
 
-          this.spendsList.forEach(spend => {
-            totalSpends += spend.spends_sum;
-          });
+            this.spendsList.forEach(spend => {
+              totalSpends += spend.spends_sum;
+            });
 
-          return totalSpends;
-        }  
-        
-        
-
+            return totalSpends;
+          }
         },
 
         everydayCash: function() {

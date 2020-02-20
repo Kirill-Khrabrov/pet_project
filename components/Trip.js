@@ -5,10 +5,10 @@ const Trip = Vue.component('trip', {
     template: `
                 <tr>
                     <td>
-                     <img class="deleteButton" v-on:click="removeTrip" src="public/img/x-circle.svg">
+                     <img src="public/img/x-circle.svg" v-on:click="removeTrip" >
                     </td>
                     <td>
-                        <img class="editButton" src="public/img/play.svg" v-on:click="showTrip">
+                        <img src="public/img/play.svg" v-on:click="showTrip">
                     </td>
                     <td>{{ description }}</td>
                     <td>{{ datestart }}</td>
