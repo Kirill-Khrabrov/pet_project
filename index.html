@@ -80,7 +80,7 @@
             
           <div class="col-6">
               <div class="row py-1 text-left">
-                <p class="col my-auto">DESCRIPTION</p>
+                <p class="col ml-auto">DESCRIPTION</p>
               </div>
               
               <div class="row py-1 text-left">
@@ -96,19 +96,19 @@
         
        <!-- Calculated Trip total days row -->
         
-          <div class="row" v-if="startFormIsValid">
+          <div class="row py-3" v-if="startFormIsValid">
             <div class="col">
-              <div class=row>
-                <label class="col-6" for="totalDays">DAYS TOTAL</label>
-                <p class="col-6"> {{ totalDays }} </p>
+              <div class="row text-left">
+                <label class="col-6 my-auto" for="totalDays">DAYS TOTAL</label>
+                <p class="col-6 my-auto"> {{ totalDays }} </p>
               </div>
             </div>
             <div class="col">
-              <div class="row">
-                <label class="col" for="tripStatus" v-if="status.notStarted || status.inProcess || status.finished">TRIP STATUS</label>
-                <p class="col" id="tripStatus" v-if="status.notStarted"> NOT STARTED </p>
-                <p class="col" id="tripStatus" v-if="status.inProcess"> IN PROCESS </p>
-                <p class="col" id="tripStatus" v-if="status.finished"> FINISHED </p>
+              <div class="row text-left">
+                <label class="co my-auto" for="tripStatus" v-if="status.notStarted || status.inProcess || status.finished">TRIP STATUS</label>
+                <p class="col my-auto" id="tripStatus" v-if="status.notStarted"> NOT STARTED </p>
+                <p class="col my-auto" id="tripStatus" v-if="status.inProcess"> IN PROCESS </p>
+                <p class="col my-auto" id="tripStatus" v-if="status.finished"> FINISHED </p>
               </div>
             </div>
           </div>
