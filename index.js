@@ -112,10 +112,14 @@ const app = new Vue({
 
       resetStrtForm: function() {
         //reset StrtForm 
+        this.resetSpendingForm();
+        this.spendsList.length = 0;
+        this.specifiedTripId = 0;
         this.description = '';
         this.dateStart = '';
         this.dateEnd = '';
         this.totalCash = 0;
+        
       },
 
       
