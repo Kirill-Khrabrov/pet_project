@@ -7,13 +7,10 @@ const Trip = Vue.component('trip', {
                     <td>
                      <img src="public/img/x-circle.svg" v-on:click="removeTrip" >
                     </td>
-                    <td>
-                        <img src="public/img/play.svg" v-on:click="showTrip">
-                    </td>
-                    <td>{{ description }}</td>
-                    <td>{{ datestart }}</td>
-                    <td>{{ dateend }}</td>
-                    <td>{{ totalcash }}</td>
+                    <td v-on:click="showTrip"> {{ description }}</td>
+                    <td v-on:click="showTrip">{{ datestart }}</td>
+                    <td v-on:click="showTrip">{{ dateend }}</td>
+                    <td v-on:click="showTrip">{{ totalcash }}</td>
                     
                 </tr>`,
     methods: {

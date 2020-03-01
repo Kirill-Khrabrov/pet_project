@@ -150,6 +150,7 @@ const app = new Vue({
       //GET specific Trip
       getSpecificTrip: function(target) {
 
+        this.resetSpendingForm();
         console.log(`Sending GET specific Request`);
         
         fetch(`http://localhost:4001/api/trips/${target.tripId}`).
@@ -266,7 +267,7 @@ const app = new Vue({
     //DELETE...................... 
       //Trip from DB
       removeTripFromDatabase: function(target) {
-        
+                
         console.log(`Sending Delete Request`);
         
         const fetchOptions = {
@@ -418,10 +419,7 @@ const app = new Vue({
     watch: {
       
       specifiedTripId: function () {
-       
-          // reset the spends list for refilling it from Spends.BD
-          //this.spendsList.length = 0;
-          //this.resetSpendingForm();
+        if (this.specifiedTripId !== 0) {
           
          fetch(`http://localhost:4001/api/trips/${this.specifiedTripId}/spends`).
             then(response => {
@@ -439,6 +437,8 @@ const app = new Vue({
               this.spendsList.forEach(spend => console.log(spend));
   
             });
+          
+          }
 
       },
 

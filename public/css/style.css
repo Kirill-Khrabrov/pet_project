@@ -1,25 +1,77 @@
-/* developers styles */
 
-
-.container > * {
-  border: 1px solid red;
-}
-
-
-/* Site-Wide Styles */
-
-
-header {
-  background-color: #f0f8ff;
+body {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url("../../../abstract-1278008_1920.jpg"); 
   
 }
 
-
-
-
-/* Start Form styles */
-
-#StrtForm_allTrips_container {
-  overflow: scroll; 
+p, h1, h3, button {
+  font-family: "Titillium Web";
 }
+
+
+
+/* Classes for SpendsList visualisation */
+.ShortList {
+  height: 8em;
+  overflow-y: auto;
+}
+
+.LongList {
+  height: 21em;
+  overflow-y: auto;
+}
+
+/* Classe for TripsList visualisation */
+.TripList {
+  height: 14em;
+  overflow-y: auto
+}
+
+
+header {
+  background-color: #bddbf5;
+  
+}
+
+tbody tr:hover {
+  background-color: #bddbf5!important;
+}
+
+th {
+  font-weight: 500
+}
+
+td > img:hover {
+  cursor: pointer;
+}
+
+button {
+  background-color: #d9e1e9;
+  font-family: "Titillium Web";
+  font-weight: 600;
+}
+
+input {
+  border: 0px;
+  font-family: "Titillium Web";
+  
+}
+
+input:hover {
+  cursor: pointer;
+  background-color: #dfedfca8;
+}
+
+
+.inactive {
+  display: none;
+}
+
+#TripSection, #TripInfoSection, #SpendSection {
+
+  background-color: #dfedfca8;
+ 
+}
+
+
 

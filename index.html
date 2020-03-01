@@ -9,6 +9,9 @@
   <link rel="stylesheet" type="text/css" href="./public/css/reset.css">
   <link rel="stylesheet" type="text/css" href="./public/css/style.css">
 
+  <!-- Google fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Bangers|Fredoka+One|Odibee+Sans|Titillium+Web&display=swap" rel="stylesheet">
+
   <!-- Jquery for bootstarp-->
   <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
@@ -29,20 +32,20 @@
     
     <!-- Application Header -->
     <header class="py-1">
-      <h1>Pocket Cash Calculator</h1>
+      <h1 class="font-weight-bold">Pocket Cash Calculator</h1>
     </header>
     
     <!-- ClobalContainer for Trip Details/Spend Details/Trip info/Trips list-->
-    <div class="container-fluid py-2">    
+    <div class="container-fluid">    
             
       <div class="row text-center">
         
         <!-- Trip form section -->   
-        <div class="col-md-6 order-md-1 p-2" id="tripSection">
+        <div id="TripSection" class="col-md-6 order-md-1 p-4 mx-auto" >
           <div class="container">
             <div class="row py-2">
               <div class="col p-0 text-left">
-                <h3 class="my-auto"> Trip Details </h3>
+                <h3 class="my-auto font-weight-bold"> Trip Details </h3>
               </div>
               <div class="col p-0 text-right">
                 <button class="rounded-circle my-1" v-on:click="resetStrtForm"> <img class="mb-1" src="public/img/x.svg" > </button>
@@ -111,8 +114,8 @@
     
         <!-- Buttons for Trip functions row-->
           <div class="row py-4 pb-5">            
-            <button class="col-3 ml-auto" v-on:click="saveTripToDatabase" v-bind:disabled="!startFormIsValid || status.finished">Save</button>
-            <button class="col-3 mr-auto" v-on:click="saveTripChangesToDatabase" v-bind:disabled="!startFormIsValid || status.finished">Apply</button>
+            <button class="col-3 ml-auto rounded-left" v-on:click="saveTripToDatabase" v-bind:disabled="!startFormIsValid || status.finished">Save</button>
+            <button class="col-3 mr-auto rounded-right" v-on:click="saveTripChangesToDatabase" v-bind:disabled="!startFormIsValid || status.finished">Apply</button>
           </div>   
         
         
@@ -121,8 +124,15 @@
         </div>
 
          <!-- Trip Info section -->
-        <div class="col-md-12 order-md-3" v-if="startFormIsValid">
+        <div id="TripInfoSection" class="col-md-12 order-md-3" v-bind:class="{inactive: !startFormIsValid}">
    
+          <div class="row pt-4 text-center" v-if = "status.inProcess">
+              <div class="col">
+                <label for="everydayCash">DAILY BUDJET</label>         
+                <p id="everydayCash">{{ everydayCash }} </p>
+              </div>
+          </div>
+
           <div class="row pt-4 text-center">
             <div class="col-4 ml-auto" v-if = "status.inProcess">
               <label for="daysLeft" >DAYS LEFT</label>
@@ -140,24 +150,19 @@
             </div>
           </div>
     
-          <div class="row pt-4 text-center" v-if = "status.inProcess">
-            <div class="col">
-              <label for="everydayCash">DAILY BUDJET</label>         
-              <p id="everydayCash">{{ everydayCash }} </p>
-            </div>
-          </div>
+          
     
         </div>
 
       <!-- Spends section-->
-        <div class="col-md-6 order-md-2 p-2">
+        <div id="SpendSection" class="col-md-6 order-md-2 pt-4 px-4 mx-auto" v-bind:class="{inactive: !startFormIsValid || status.notStarted}">
           
-          <div class="container" v-if="status.inProcess || status.finished">
+          <div class="container">
            <!--Header--> 
            
            <div class="row py-2">
               <div class="col p-0 text-left">
-                <h3 class="my-auto"> Spend Details </h3>
+                <h3 class="my-auto font-weight-bold"> Spend Details </h3>
               </div>
               <div class="col p-0 text-right">
                 <button class="rounded-circle my-1" v-on:click="resetSpendingForm"> <img class="mb-1" src="public/img/x.svg" > </button>
@@ -186,8 +191,8 @@
         
   
         <div class="row py-2" v-if="status.inProcess">          
-           <button class="col-3 ml-auto" v-on:click="saveSpendToDatabase" v-bind:disabled="this.specifiedTripId == 0">Save</button>
-           <button class="col-3 mr-auto" v-on:click="saveSpendChangesToDatabase" v-bind:disabled="this.specifiedTripId == 0">Apply</button>  
+           <button class="col-3 ml-auto rounded-left" v-on:click="saveSpendToDatabase" v-bind:disabled="this.specifiedTripId == 0">Save</button>
+           <button class="col-3 mr-auto rounded-right" v-on:click="saveSpendChangesToDatabase" v-bind:disabled="this.specifiedTripId == 0">Apply</button>  
         </div>
   
 
@@ -195,16 +200,15 @@
             <details class="col my-auto">
               <summary class="col my-auto">Spends list</summary>               
               <div class="row py-1 text-center">
-                <div class="col my-auto">
-                  <table class="table table-striped" v-if="spendsList.length !== 0">
+                <div class="col my-auto" v-bind:class="{ShortList: !status.finished, LongList: status.finished}">
+                  <table class="table table-sm table-striped" v-if="spendsList.length !== 0">
                     <thead>
-                      <th class="deleteButton"></th>
-                      <th class="editButton"></th>
+                      <th></th>
                       <th>Description</th>
                       <th>Date</th>
                       <th>Spending Sum</th>              
-                    </thead>
-                    <tbody>
+                    </thead>                    
+                    <tbody >
                       <tr is = "spend" 
                           v-on:remove-spend = "removeSpendFromDatabase"
                           v-on:show-spend = "getSpecificSpend"
@@ -216,7 +220,7 @@
                           v-bind:date = "spend.date"
                           v-bind:spendcash = "spend.spends_sum">
                       </tr>
-                    </tbody>
+                    </tbody>                    
                   </table>
                 </div>
               </div>
@@ -227,26 +231,23 @@
     
         </div>
 
-       
-
       </div>     
 
       <!-- Global container for Trip list  -->   
-      <div class="row py-1 text-center">
+      <div id="TripsListSection" class="row py-1 text-center">
         <details class="col my-auto">
           <summary class="col my-auto">Trips list</summary>
-          <div class="row py-1 text-center"> 
-            <div class="col my-auto">
-              <table class="table table-striped">
+          <div class="TripList row py-1 text-center"> 
+            <div class="col mb-auto">
+              <table class="table table-md table-striped">
                 <thead>
-                  <th></th>
                   <th></th>
                   <th>Description</th>
                   <th>Trip Start</th>
                   <th>Trip End</th>
                   <th>Total Cash</th>          
                 </thead>
-                <tbody class="overflow-auto">
+                <tbody id="TripList" class="overflow-auto">
                   <tr is = "trip" 
                       v-on:remove-trip = "removeTripFromDatabase"
                       v-on:show-trip = "getSpecificTrip"

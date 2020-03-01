@@ -4,14 +4,11 @@ const Spend = Vue.component('spend', {
     template: `
                 <tr>
                     <td>
-                     <img src="public/img/x-circle.svg" v-on:click="removeSpend"  v-if="!status.finished">
+                     <img src="public/img/x-circle.svg" v-on:click="removeSpend" v-if="!status.finished">
                     </td>
-                    <td>
-                        <img src="public/img/play.svg" v-on:click="showSpend" v-if="!status.finished">
-                    </td>
-                    <td>{{ description }}</td>
-                    <td>{{ date }}</td>
-                    <td>{{ spendcash }}</td>                   
+                    <td v-on:click="showSpend">{{ description }}</td>
+                    <td v-on:click="showSpend">{{ date }}</td>
+                    <td v-on:click="showSpend">{{ spendcash }}</td>                   
                 </tr>`,
    
                 methods: {
