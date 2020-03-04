@@ -9,6 +9,9 @@
   <link rel="stylesheet" type="text/css" href="./public/css/reset.css">
   <link rel="stylesheet" type="text/css" href="./public/css/style.css">
 
+  <!-- Google fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Bangers|Fredoka+One|Odibee+Sans|Titillium+Web&display=swap" rel="stylesheet">
+
   <!-- Jquery for bootstarp-->
   <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
@@ -24,80 +27,95 @@
   <script src="./index.js" defer></script>
 </head>
 <body>
-
   <!--Vue.js section activation-->
-  <div class="container" id="app">
+  <div class="container px-3" id="app">
     
-    <!--Header section-->
-    <header>
-      <h1>Pocket Cash Calculator</h1>
+    <!-- Application Header -->
+    <header class="py-1">
+      <h1 class="font-weight-bold">Pocket Cash Calculator</h1>
     </header>
     
-    <!-- Trip & Spend global containers-->
+    <!-- ClobalContainer for Trip Details/Spend Details/Trip info/Trips list-->
     <div class="container-fluid">    
             
-      <div class="row">
-        <!-- Trip section -->
-   
-        <div class="col-lg-6">
-          <div class="container" id="tripSection">        
-        <!-- Start End data row -->
-          <!--Header-->
-            <div class="row">
-              <h3> Trip Details </h3>
-            </div>        
+      <div class="row text-center">
         
-          <!--Trip form-->    
-            <div class="row py-1">
+        <!-- Trip form section -->   
+        <div id="TripSection" class="col-md-6 order-md-1 p-4 mx-auto" >
+          <div class="container">
+            <div class="row py-2">
+              <div class="col p-0 text-left">
+                <h3 class="my-auto font-weight-bold"> Trip Details </h3>
+              </div>
+              <div class="col p-0 text-right">
+                <button class="rounded-circle my-1" v-on:click="resetStrtForm"> <img class="mb-1" src="public/img/x.svg" > </button>
+              </div>
+            </div>
+        
+          <!--Trip Data Start & Data End row-->    
+            <div class="row py-2">
+              
               <div class="col">
-                <div class="row">
-              <p class="col my-auto">DATE START</p>
-              <input class="col-6" type="date" id="dateStart" v-model="dateStart" />
-            </div>
-          </div>
+                <div class="row text-center">
+                  <p class="col my-auto pb-2">DATE START</p>
+                </div>
+                <div class="row text-center">
+                  <input class="m-auto" type="date" id="dateStart" v-model="dateStart" />
+                </div>
+              </div>       
 
-          <div class="col">
-            <div class="row">
-              <p class="col my-auto">DATE END</p>
-              <input class="col-6" type="date" id="dateEnd" v-model="dateEnd" />
-            </div>
-          </div> 
-        </div>
-       
+              <div class="col">
+                <div class="row text-center">
+                  <p class="col my-auto pb-2">DATE END</p>
+                </div>
+                <div class="row text-center">
+                  <input class="m-auto" type="date" id="dateEnd" v-model="dateEnd" />
+                </div>            
+              </div>
+
+            </div>       
       
-        <!-- Trip Description & cash row -->
-        <div class="row py-1">
+            <!-- Trip Description & cash row -->
+            <div class="row py-3">
             
-          <div class="col-5">
-              <div class="row py-1">
-                <p class="col my-auto">DESCRIPTION</p>
+              <div class="col-6">
+                <div class="row py-1 text-left">
+                  <p class="col ml-auto">DESCRIPTION</p>
+                </div>
+                <div class="row py-1 text-left">
+                  <p class="col-6 my-auto">YOUR CASH</p>
+                  <input class="col-5 my-auto mr-auto" type="number" id="totalCash" min="0" max="999999" v-model="totalCash" />
+                </div>
               </div>
               
-              <div class="row py-1">
-                      <p class="col my-auto">YOUR CASH</p>
-                      <input class="col" type="number" id="totalCash" min="0" max="999999" v-model="totalCash" />
+              <textarea  class="col-6 ml-auto" v-model.trim="description"></textarea>
+            
+            </div>  
+        
+        
+         <!-- Calculated Trip total days row -->
+        
+          <div class="row py-3 pb-5" v-if="startFormIsValid">
+            <div class="col">
+              <div class="row text-left">
+                <label class="col-6 my-auto" for="totalDays">DAYS TOTAL</label>
+                <p class="col-6 my-auto font-weight-bold text-white"> {{ totalDays }} </p>
               </div>
-
+            </div>
+            <div class="col">
+              <div class="row text-left">
+                <label class="co my-auto" for="tripStatus" v-if="status.notStarted || status.inProcess || status.finished">TRIP STATUS</label>
+                <p class="col my-auto text-white" id="tripStatus" v-if="status.notStarted"> NOT STARTED </p>
+                <p class="col my-auto text-white" id="tripStatus" v-if="status.inProcess"> IN PROCESS </p>
+                <p class="col my-auto text-white" id="tripStatus" v-if="status.finished"> FINISHED </p>
+              </div>
+            </div>
           </div>
-                    
-          <textarea  class="col-7" v-model.trim="description"></textarea>
-        </div>  
-        
-        
-       <!-- Calculated Trip total days row -->
-        
-          <div class="row" v-if="startFormIsValid">
-            <label class="col-4" for="totalDays">DAYS TOTAL</label>
-            <p class="col-6"> {{ totalDays }} </p>
-          </div>
-       
-          
+    
         <!-- Buttons for Trip functions row-->
-        
-          <div class="row">
-            <button v-on:click="resetStrtForm"> Reset</button>
-            <button v-on:click="saveTripToDatabase" v-bind:disabled="!startFormIsValid">Add Trip</button>
-            <button v-on:click="saveTripChangesToDatabase" v-bind:disabled="!startFormIsValid">Save Changes</button>
+          <div class="row py-4 pb-5">            
+            <button class="col-3 ml-auto rounded-left" v-on:click="saveTripToDatabase" v-bind:disabled="!startFormIsValid || status.finished">Save</button>
+            <button class="col-3 mr-auto rounded-right" v-on:click="saveTripChangesToDatabase" v-bind:disabled="!startFormIsValid || status.finished">Apply</button>
           </div>   
         
         
@@ -105,169 +123,150 @@
 
         </div>
 
-      <!-- Spends section-->
-        <div class="col-lg-6">
+         <!-- Trip Info section -->
+        <div id="TripInfoSection" class="col-md-12 order-md-3" v-bind:class="{inactive: !startFormIsValid}">
+   
+          <div class="row pt-4 text-center" v-if = "status.inProcess">
+              <div class="col">
+                <label for="everydayCash">DAILY BUDJET</label>         
+                <p class="font-weight-bold text-white" id="everydayCash">{{ everydayCash }} </p>
+              </div>
+          </div>
+
+          <div class="row pt-4 text-center">
+            <div class="col-4 ml-auto" v-if = "status.inProcess">
+              <label for="daysLeft" >DAYS LEFT</label>
+              <p class="font-weight-bold text-white" id="daysLeft"> {{ daysLeft }} </p>
+            </div>
+    
+            <div class="col-4 mr-auto" v-if = "status.inProcess || status.finished">
+              <label for="cashLeft">CASH LEFT</label>
+              <p class="font-weight-bold text-white" id="cashLeft"> {{ cashLeft }} </p>
+            </div>
+    
+            <div class="col-4" v-if = "status.finished">
+              <label for="totalSpends">TOTAL SPENDS</label>
+              <p class="font-weight-bold text-white" id="totalSpends"> {{ totalSpends }} </p>
+            </div>
+          </div>
+    
           
-          <div class="container" v-if="status.inProcess || status.finished">
-           <!--Header-->   
-            <div class="row">
-              <h3> Spend Detaisl </h3>
+    
+        </div>
+
+      <!-- Spends section-->
+        <div id="SpendSection" class="col-md-6 order-md-2 pt-4 px-4 mx-auto" v-bind:class="{inactive: !startFormIsValid || status.notStarted}">
+          
+          <div class="container">
+           <!--Header--> 
+           
+           <div class="row py-2">
+              <div class="col p-0 text-left">
+                <h3 class="my-auto font-weight-bold"> Spend Details </h3>
+              </div>
+              <div class="col p-0 text-right">
+                <button class="rounded-circle my-1" v-on:click="resetSpendingForm"> <img class="mb-1" src="public/img/x.svg" > </button>
+              </div>
             </div>
 
-            <div class="row" v-if="status.inProcess">
-              <label class="col" for="currentDate">CURRENT DATE</label>
-              <p class="col" id="currentDate"> {{ dateNow() }} </p>
+
+            <div class="row py-3" v-if="status.inProcess">
+              <label class="col my-auto py-2" for="currentDate">CURRENT DATE</label>
+              <p class="col my-auto py-2" id="currentDate"> {{ dateNow() }} </p>
             </div>
   
-            <div class="row" v-if="status.inProcess">
-              <div class="col-5">
-                <div class="row">
-                  <label for="spendDescription">SPEND DESCRIPTION</label>
-                </div> 
-                <div class="row">
-                  <label class="col" for="todaySpendings">TODAYS SPENDINGS</label>
-                  <input class="col" type="number" id="todaySpendings" min="0" max="999999" v-model="spendCash" />
-                </div>
-              </div>
 
-            
-            <textarea class="col-7" v-model:trim="spendDescription"></textarea>
-          
-          
-          </div>
+            <div class="row py-3" v-if="status.inProcess">            
+                <div class="col-6">
+                    <div class="row py-1 text-left">
+                      <p class="col ml-auto">SPEND DESCRIPTION</p>
+                    </div>                    
+                    <div class="row py-1 text-left">
+                            <p class="col-6 my-auto">SPEND CASH</p>
+                            <input class="col-5 my-auto mr-auto" type="number" id="todaySpendings" min="0" max="999999" v-model="spendCash" />
+                    </div>      
+                </div>                          
+                <textarea  class="col-6 ml-auto" v-model.trim="spendDescription"></textarea>
+              </div>       
         
   
-        <div class="row" v-if="status.inProcess">           
-           <button v-on:click="resetSpendingForm"> Reset</button>
-           <button v-on:click="saveSpendToDatabase" v-bind:disabled = "this.specifiedTripId == 0">Add Spend</button>
-           <button v-on:click="saveSpendChangesToDatabase" v-bind:disabled="this.specifiedTripId == 0">Save Changes</button>  
+        <div class="row py-2" v-if="status.inProcess">          
+           <button class="col-3 ml-auto rounded-left" v-on:click="saveSpendToDatabase" v-bind:disabled="this.specifiedTripId == 0">Save</button>
+           <button class="col-3 mr-auto rounded-right" v-on:click="saveSpendChangesToDatabase" v-bind:disabled="this.specifiedTripId == 0">Apply</button>  
         </div>
   
 
-        <div class="row" v-if="status.inProcess || status.finished">
-          <details>
-             <summary>Spends list</summary>               
-                 <table class="table table-striped">
+        <div class="row py-1 text-center" v-if="status.inProcess || status.finished">
+            <details class="col my-auto">
+              <summary class="col my-auto">Spends list</summary>               
+              <div class="row py-1 text-center">
+                <div class="col my-auto" v-bind:class="{ShortList: !status.finished, LongList: status.finished}">
+                  <table class="table table-sm table-striped" v-if="spendsList.length !== 0">
                     <thead>
-                     <th class="deleteButton"></th>
-                     <th class="editButton"></th>
-                     <th>Description</th>
-                     <th>Date</th>
+                      <th></th>
+                      <th>Description</th>
+                      <th>Date</th>
                       <th>Spending Sum</th>              
-                    </thead>
-                  <tbody>
-                    <tr is = "spend" 
-                      v-on:remove-spend = "removeSpendFromDatabase"
-                      v-on:show-spend = "getSpecificSpend"
-                      v-for = "spend in spendsList"
-                      v-bind:status = "status"
-                      v-bind:id = "spend.id"
-                      v-bind:tripid = "specifiedTripId"
-                      v-bind:description = "spend.description"
-                      v-bind:date = "spend.date"
-                      v-bind:spendcash = "spend.spends_sum">
-                     </tr>
-                   </tbody>
-                 </table>
-              </details>
-            </div>
+                    </thead>                    
+                    <tbody >
+                      <tr is = "spend" 
+                          v-on:remove-spend = "removeSpendFromDatabase"
+                          v-on:show-spend = "getSpecificSpend"
+                          v-for = "spend in spendsList"
+                          v-bind:status = "status"
+                          v-bind:id = "spend.id"
+                          v-bind:tripid = "specifiedTripId"
+                          v-bind:description = "spend.description"
+                          v-bind:date = "spend.date"
+                          v-bind:spendcash = "spend.spends_sum">
+                      </tr>
+                    </tbody>                    
+                  </table>
+                </div>
+              </div>
+            </details>
+          </div>        
   
           </div>  
     
         </div>
 
       </div>     
+
+      <!-- Global container for Trip list  -->   
+      <div id="TripsListSection" class="row py-1 text-center">
+        <details class="col my-auto">
+          <summary class="col my-auto">Trips list</summary>
+          <div class="TripList row py-1 text-center"> 
+            <div class="col mb-auto">
+              <table class="table table-md table-striped">
+                <thead>
+                  <th></th>
+                  <th>Description</th>
+                  <th>Trip Start</th>
+                  <th>Trip End</th>
+                  <th>Total Cash</th>          
+                </thead>
+                <tbody id="TripList" class="overflow-auto">
+                  <tr is = "trip" 
+                      v-on:remove-trip = "removeTripFromDatabase"
+                      v-on:show-trip = "getSpecificTrip"
+                      v-for = "trip in tripsList"
+                      v-bind:id = "trip.id"
+                      v-bind:description = "trip.description"
+                      v-bind:datestart = "trip.trip_start"
+                      v-bind:dateend = "trip.trip_end"
+                      v-bind:totalcash = "trip.total_cash">
+                  </tr>
+                </tbody>
+              </table>
+        </details>
+      </div>
        
-    </div>
-
-    <!-- Trip details global container-->
-    <div class="container-lg">
-
-      <div class="row">
-        <label for="tripStatus" v-if="status.notStarted || status.inProcess || status.finished">TRIP STATUS</label> 
-      </div>
-      <div class="row">
-          <p id="tripStatus" v-if="status.notStarted"> NOT STARTED </p>
-      </div>
-      <div class="row">
-          <p id="tripStatus" v-if="status.inProcess"> IN PROCESS </p>
-      </div>
-      <div class="row">
-          <p id="tripStatus" v-if="status.finished"> FINISHED </p>
-      </div>       
-      
-
-      <div class="row">
-        <div class="col-4" v-if = "status.inProcess">
-          <label for="daysLeft" >DAYS LEFT</label>
-          <p id="daysLeft"> {{ daysLeft }} </p>
-        </div>
-
-        <div class="col-4" v-if = "status.inProcess || status.finished">
-          <label for="cashLeft">CASH LEFT</label>
-          <p id="cashLeft"> {{ cashLeft }} </p>
-        </div>
-
-        <div class="col-4" v-if = "status.finished">
-          <label for="totalSpends">TOTAL SPENDS</label>
-          <p id="totalSpends"> {{ totalSpends }} </p>
-        </div>
-      </div>
-
-      <div class="row" v-if = "status.inProcess">
-        <label for="everydayCash">DAILY BUDJET</label>
-      </div>  
-      <div class="row" v-if = "status.inProcess">
-        <p id="everydayCash">{{ everydayCash }} </p>
-      </div>
-
-    </div>
-
-  
-    
+    </div>    
 
     
 
-    <!-- Trip list global container -->
-    <details class="container-fluid">
-      <summary>All trips list</summary>
-      <div class="container">
-      <table class="table table-striped">
-        <thead>
-          <th></th>
-          <th></th>
-          <th>Description</th>
-          <th>Trip Start</th>
-          <th>Trip End</th>
-          <th>Total Cash</th>          
-        </thead>
-        <tbody>
-          
-          <tr is = "trip" 
-                v-on:remove-trip = "removeTripFromDatabase"
-                v-on:show-trip = "getSpecificTrip"
-                v-for = "trip in tripsList"
-                v-bind:id = "trip.id"
-                v-bind:description = "trip.description"
-                v-bind:datestart = "trip.trip_start"
-                v-bind:dateend = "trip.trip_end"
-                v-bind:totalcash = "trip.total_cash">
-          </tr>
-          
-        </tbody>
-      </table>
-      </div>
-    </details>
-
-    <!--Section for developer buttons-->
-    <!--
-    <div class="section" id="Developer">
-      <button id="Developer_button" v-on:click="getAllSpends">Show all Spends</button>
-    </div>
-    --> 
-
-  </div>
-
-  
+  </div>  
 </body>
 </html>

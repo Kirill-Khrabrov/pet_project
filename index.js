@@ -32,7 +32,6 @@ const app = new Vue({
       startFormIsValid: function() {
         return this.description && this.dateStart && this.dateEnd && this.totalCash;
       },
-      
 
       //section for days calculations
       dayStart: {
@@ -81,18 +80,15 @@ const app = new Vue({
           if (this.spendsList.length == 0) {
             return 0;
       
-        } else {
-          let totalSpends = 0;
+           } else {
+            let totalSpends = 0;
 
-          this.spendsList.forEach(spend => {
-            totalSpends += spend.spends_sum;
-          });
+            this.spendsList.forEach(spend => {
+              totalSpends += spend.spends_sum;
+            });
 
-          return totalSpends;
-        }  
-        
-        
-
+            return totalSpends;
+          }
         },
 
         everydayCash: function() {
@@ -116,10 +112,14 @@ const app = new Vue({
 
       resetStrtForm: function() {
         //reset StrtForm 
+        this.resetSpendingForm();
+        this.spendsList.length = 0;
+        this.specifiedTripId = 0;
         this.description = '';
         this.dateStart = '';
         this.dateEnd = '';
         this.totalCash = 0;
+        
       },
 
       
@@ -150,6 +150,7 @@ const app = new Vue({
       //GET specific Trip
       getSpecificTrip: function(target) {
 
+        this.resetSpendingForm();
         console.log(`Sending GET specific Request`);
         
         fetch(`http://localhost:4001/api/trips/${target.tripId}`).
@@ -266,7 +267,7 @@ const app = new Vue({
     //DELETE...................... 
       //Trip from DB
       removeTripFromDatabase: function(target) {
-        
+                
         console.log(`Sending Delete Request`);
         
         const fetchOptions = {
@@ -418,10 +419,7 @@ const app = new Vue({
     watch: {
       
       specifiedTripId: function () {
-       
-          // reset the spends list for refilling it from Spends.BD
-          //this.spendsList.length = 0;
-          //this.resetSpendingForm();
+        if (this.specifiedTripId !== 0) {
           
          fetch(`http://localhost:4001/api/trips/${this.specifiedTripId}/spends`).
             then(response => {
@@ -439,6 +437,8 @@ const app = new Vue({
               this.spendsList.forEach(spend => console.log(spend));
   
             });
+          
+          }
 
       },
 
