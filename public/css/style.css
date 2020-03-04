@@ -1,11 +1,16 @@
 
 body {
-  background-image: linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url("../../../abstract-1278008_1920.jpg"); 
+  background-image: linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url("../img/abstract-1278008_1920.jpg"); 
   
 }
 
-p, h1, h3, label, button {
+p, h1, h3, label, button, summary {
   font-family: "Titillium Web";
+}
+
+p, label {
+  font-weight: 700;
+  text-shadow: #54aaf0 0 0 10px;
 }
 
 p.text-white {
@@ -29,6 +34,11 @@ p.text-white {
 .TripList {
   height: 14em;
   overflow-y: auto
+}
+
+
+.everydayCash {
+  font-size: 1.3em;
 }
 
 
@@ -72,11 +82,14 @@ input:hover, textarea:hover {
   display: none;
 }
 
-#TripSection, #TripInfoSection, #SpendSection {
+.container-fluid {
 
   background-color: #dfedfca8;
  
 }
 
 
-
+img {
+  height: 14px;
+  width: 14px;
+}

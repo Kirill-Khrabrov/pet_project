@@ -48,7 +48,7 @@
                 <h3 class="my-auto font-weight-bold"> Trip Details </h3>
               </div>
               <div class="col p-0 text-right">
-                <button class="rounded-circle my-1" v-on:click="resetStrtForm"> <img class="mb-1" src="public/img/x.svg" > </button>
+                <button class="rounded-circle my-1" v-on:click="resetStrtForm"> <img class="mb-1" src="public/img/quit.svg"> </button>
               </div>
             </div>
         
@@ -114,8 +114,8 @@
     
         <!-- Buttons for Trip functions row-->
           <div class="row py-4 pb-5">            
-            <button class="col-3 ml-auto rounded-left" v-on:click="saveTripToDatabase" v-bind:disabled="!startFormIsValid || status.finished">Save</button>
-            <button class="col-3 mr-auto rounded-right" v-on:click="saveTripChangesToDatabase" v-bind:disabled="!startFormIsValid || status.finished">Apply</button>
+            <button class="col-1 rounded-circle ml-auto mr-3 my-1 py-1 px-0" v-on:click="saveTripToDatabase" v-bind:disabled="!startFormIsValid || status.finished"> <img class="mb-1" src="public/img/add-icon.svg"> </button>
+            <button class="col-1 rounded-circle mr-auto ml-3 my-1 py-1 px-0" v-on:click="saveTripChangesToDatabase" v-bind:disabled="!startFormIsValid || status.finished"> <img class="mb-1" src="public/img/diskette.svg"> </button>
           </div>   
         
         
@@ -124,28 +124,26 @@
         </div>
 
          <!-- Trip Info section -->
-        <div id="TripInfoSection" class="col-md-12 order-md-3" v-bind:class="{inactive: !startFormIsValid}">
-   
-          <div class="row pt-4 text-center" v-if = "status.inProcess">
-              <div class="col">
-                <label for="everydayCash">DAILY BUDJET</label>         
-                <p class="font-weight-bold text-white" id="everydayCash">{{ everydayCash }} </p>
-              </div>
-          </div>
-
+        <div id="TripInfoSection" class="col-md-12 order-md-3 py-1" v-bind:class="{inactive: !startFormIsValid}">
+          
           <div class="row pt-4 text-center">
-            <div class="col-4 ml-auto" v-if = "status.inProcess">
-              <label for="daysLeft" >DAYS LEFT</label>
+            <div class="col mx-auto" v-bind:class="{inactive: !status.inProcess}">
+              <label for="daysLeft">DAYS LEFT</label>
               <p class="font-weight-bold text-white" id="daysLeft"> {{ daysLeft }} </p>
             </div>
-    
-            <div class="col-4 mr-auto" v-if = "status.inProcess || status.finished">
-              <label for="cashLeft">CASH LEFT</label>
+            
+            <div class="col mx-auto" v-bind:class="{inactive: !status.inProcess}">
+              <label class="everydayCash" for="everydayCash">CASH PER DAY</label>         
+              <p class="everydayCash font-weight-bold text-white" id="everydayCash">{{ everydayCash }} </p>
+            </div>
+
+            <div class="col mx-auto" v-bind:class="{inactive: status.notStarted}">
+              <label for="cashLeft">CASH REST</label>
               <p class="font-weight-bold text-white" id="cashLeft"> {{ cashLeft }} </p>
             </div>
     
-            <div class="col-4" v-if = "status.finished">
-              <label for="totalSpends">TOTAL SPENDS</label>
+            <div class="col mx-auto" v-bind:class="{inactive: !status.finished}">
+              <label for="totalSpends">TOTAL EXPENSES</label>
               <p class="font-weight-bold text-white" id="totalSpends"> {{ totalSpends }} </p>
             </div>
           </div>
@@ -162,10 +160,10 @@
            
            <div class="row py-2">
               <div class="col p-0 text-left">
-                <h3 class="my-auto font-weight-bold"> Spend Details </h3>
+                <h3 class="my-auto font-weight-bold"> Expense Details </h3>
               </div>
               <div class="col p-0 text-right">
-                <button class="rounded-circle my-1" v-on:click="resetSpendingForm"> <img class="mb-1" src="public/img/x.svg" > </button>
+                <button class="rounded-circle my-1" v-on:click="resetSpendingForm"> <img class="mb-1" src="public/img/quit.svg"> </button>
               </div>
             </div>
 
@@ -179,10 +177,10 @@
             <div class="row py-3" v-if="status.inProcess">            
                 <div class="col-6">
                     <div class="row py-1 text-left">
-                      <p class="col ml-auto">SPEND DESCRIPTION</p>
+                      <p class="col ml-auto">EXPENSE DESCRIPTION</p>
                     </div>                    
                     <div class="row py-1 text-left">
-                            <p class="col-6 my-auto">SPEND CASH</p>
+                            <p class="col-6 my-auto">EXPENSE AMOUNT</p>
                             <input class="col-5 my-auto mr-auto" type="number" id="todaySpendings" min="0" max="999999" v-model="spendCash" />
                     </div>      
                 </div>                          
@@ -191,14 +189,14 @@
         
   
         <div class="row py-2" v-if="status.inProcess">          
-           <button class="col-3 ml-auto rounded-left" v-on:click="saveSpendToDatabase" v-bind:disabled="this.specifiedTripId == 0">Save</button>
-           <button class="col-3 mr-auto rounded-right" v-on:click="saveSpendChangesToDatabase" v-bind:disabled="this.specifiedTripId == 0">Apply</button>  
+           <button class="col-1 rounded-circle mx-auto my-1 py-1 px-0" v-on:click="saveSpendToDatabase" v-bind:disabled="this.specifiedTripId == 0"> <img class="mb-1" src="public/img/add-icon.svg"> </button>
+           <button class="col-1 rounded-circle mx-auto my-1 py-1 px-0" v-on:click="saveSpendChangesToDatabase" v-bind:disabled="this.specifiedTripId == 0"> <img class="mb-1" src="public/img/diskette.svg"> </button>  
         </div>
   
 
         <div class="row py-1 text-center" v-if="status.inProcess || status.finished">
             <details class="col my-auto">
-              <summary class="col my-auto">Spends list</summary>               
+              <summary class="col my-auto font-weight-bold">LIST OF EXPENSES</summary>               
               <div class="row py-1 text-center">
                 <div class="col my-auto" v-bind:class="{ShortList: !status.finished, LongList: status.finished}">
                   <table class="table table-sm table-striped" v-if="spendsList.length !== 0">
@@ -206,7 +204,7 @@
                       <th></th>
                       <th>Description</th>
                       <th>Date</th>
-                      <th>Spending Sum</th>              
+                      <th>Expense Amount</th>              
                     </thead>                    
                     <tbody >
                       <tr is = "spend" 
@@ -236,16 +234,16 @@
       <!-- Global container for Trip list  -->   
       <div id="TripsListSection" class="row py-1 text-center">
         <details class="col my-auto">
-          <summary class="col my-auto">Trips list</summary>
+          <summary class="col my-auto font-weight-bold">SCHEDULE OF TRIPS</summary>
           <div class="TripList row py-1 text-center"> 
             <div class="col mb-auto">
               <table class="table table-md table-striped">
                 <thead>
                   <th></th>
                   <th>Description</th>
-                  <th>Trip Start</th>
-                  <th>Trip End</th>
-                  <th>Total Cash</th>          
+                  <th>Trip Starts</th>
+                  <th>Trip Ends</th>
+                  <th>Cash</th>          
                 </thead>
                 <tbody id="TripList" class="overflow-auto">
                   <tr is = "trip" 
