@@ -4,16 +4,18 @@ body {
   
 }
 
+
 p, h1, h3, label, button, summary {
   font-family: "Titillium Web";
 }
 
 p, label {
   font-weight: 700;
-  text-shadow: #54aaf0 0 0 10px;
+  text-shadow: #54aaf0 0 0 3px;
 }
 
 p.text-white {
+  font-size: 1.1em;
   text-shadow: #000000 0 0 10px;
   font-weight: 700;
 }
@@ -21,7 +23,7 @@ p.text-white {
 
 /* Classes for SpendsList visualisation */
 .ShortList {
-  height: 8em;
+  height: 7.5em;
   overflow-y: auto;
 }
 
@@ -38,7 +40,7 @@ p.text-white {
 
 
 .everydayCash {
-  font-size: 1.3em;
+  font-size: 1.3em!important;
 }
 
 

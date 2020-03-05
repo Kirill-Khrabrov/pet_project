@@ -31,7 +31,7 @@
   <div class="container px-3" id="app">
     
     <!-- Application Header -->
-    <header class="py-1">
+    <header class="py-1 sticky-top">
       <h1 class="font-weight-bold">Pocket Cash Calculator</h1>
     </header>
     
@@ -41,7 +41,7 @@
       <div class="row text-center">
         
         <!-- Trip form section -->   
-        <div id="TripSection" class="col-md-6 order-md-1 p-4 mx-auto" >
+        <div id="TripSection" class="col-lg-6 order-md-1 p-lg-4 mx-auto" >
           <div class="container">
             <div class="row py-2">
               <div class="col p-0 text-left">
@@ -79,10 +79,10 @@
             <div class="row py-3">
             
               <div class="col-6">
-                <div class="row py-1 text-left">
+                <div class="row py-2 text-left">
                   <p class="col ml-auto">DESCRIPTION</p>
                 </div>
-                <div class="row py-1 text-left">
+                <div class="row py-2 text-left">
                   <p class="col-6 my-auto">YOUR CASH</p>
                   <input class="col-5 my-auto mr-auto" type="number" id="totalCash" min="0" max="999999" v-model="totalCash" />
                 </div>
@@ -113,9 +113,9 @@
           </div>
     
         <!-- Buttons for Trip functions row-->
-          <div class="row py-4 pb-5">            
-            <button class="col-1 rounded-circle ml-auto mr-3 my-1 py-1 px-0" v-on:click="saveTripToDatabase" v-bind:disabled="!startFormIsValid || status.finished"> <img class="mb-1" src="public/img/add-icon.svg"> </button>
-            <button class="col-1 rounded-circle mr-auto ml-3 my-1 py-1 px-0" v-on:click="saveTripChangesToDatabase" v-bind:disabled="!startFormIsValid || status.finished"> <img class="mb-1" src="public/img/diskette.svg"> </button>
+          <div class="row py-lg-4 pb-lg-5">            
+            <button class="col-2 rounded-pill ml-auto mr-3 my-1 py-1 px-0" v-on:click="saveTripToDatabase" v-bind:disabled="!startFormIsValid"> <img class="mb-1" src="public/img/add-icon.svg"> </button>
+            <button class="col-2 rounded-pill mr-auto ml-3 my-1 py-1 px-0" v-on:click="saveTripChangesToDatabase" v-bind:disabled="!startFormIsValid"> <img class="mb-1" src="public/img/diskette.svg"> </button>
           </div>   
         
         
@@ -124,7 +124,7 @@
         </div>
 
          <!-- Trip Info section -->
-        <div id="TripInfoSection" class="col-md-12 order-md-3 py-1" v-bind:class="{inactive: !startFormIsValid}">
+        <div id="TripInfoSection" class="col-lg-12 order-md-3 py-lg-1" v-bind:class="{inactive: !startFormIsValid}">
           
           <div class="row pt-4 text-center">
             <div class="col mx-auto" v-bind:class="{inactive: !status.inProcess}">
@@ -153,7 +153,7 @@
         </div>
 
       <!-- Spends section-->
-        <div id="SpendSection" class="col-md-6 order-md-2 pt-4 px-4 mx-auto" v-bind:class="{inactive: !startFormIsValid || status.notStarted}">
+        <div id="SpendSection" class="col-lg-6 order-md-2 pt-lg-4 px-lg-4 mx-auto" v-bind:class="{inactive: !startFormIsValid || status.notStarted}">
           
           <div class="container">
            <!--Header--> 
@@ -189,8 +189,8 @@
         
   
         <div class="row py-2" v-if="status.inProcess">          
-           <button class="col-1 rounded-circle mx-auto my-1 py-1 px-0" v-on:click="saveSpendToDatabase" v-bind:disabled="this.specifiedTripId == 0"> <img class="mb-1" src="public/img/add-icon.svg"> </button>
-           <button class="col-1 rounded-circle mx-auto my-1 py-1 px-0" v-on:click="saveSpendChangesToDatabase" v-bind:disabled="this.specifiedTripId == 0"> <img class="mb-1" src="public/img/diskette.svg"> </button>  
+           <button class="col-2 rounded-pill ml-auto mr-3 my-1 py-1 px-0" v-on:click="saveSpendToDatabase" v-bind:disabled="this.specifiedTripId == 0 || !spendDescription"> <img class="mb-1" src="public/img/add-icon.svg"> </button>
+           <button class="col-2 rounded-pill mr-auto mr-3 my-1 py-1 px-0" v-on:click="saveSpendChangesToDatabase" v-bind:disabled="this.specifiedTripId == 0 || !spendDescription"> <img class="mb-1" src="public/img/diskette.svg"> </button>  
         </div>
   
 
