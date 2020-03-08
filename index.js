@@ -410,6 +410,7 @@ const app = new Vue({
           
       resetSpendingForm: function() {
         //resets SpndAdd_Form fields
+        this.specifiedSpendId = 0;
         this.spendDescription = '';
         this.spendCash = 0;
       },

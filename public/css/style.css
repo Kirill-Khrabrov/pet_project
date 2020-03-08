@@ -53,6 +53,10 @@ tbody tr:hover {
   background-color: #bddbf5!important;
 }
 
+.activeRow {
+  background-color: #9fcff8!important;
+}
+
 th {
   font-weight: 500
 }
