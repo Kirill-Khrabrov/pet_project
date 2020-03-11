@@ -1,14 +1,14 @@
 const express = require('express');
 const sqlite3 = require('sqlite3');
 const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite');
-const spendingsRouter = require('./spendingsRouter');
+const spendsRouter = require('./spendsRouter');
 
 
 // creating router for /api/trips
 const tripsRouter = express.Router();
 
 //nesting spendingsRouter inside /trips path
-tripsRouter.use('/:tripId/spends', spendingsRouter);
+tripsRouter.use('/:tripId/spends', spendsRouter);
 
 // adding parameter to Router
 tripsRouter.param('tripId', (req, res, next, tripId) => {
@@ -24,6 +24,7 @@ tripsRouter.param('tripId', (req, res, next, tripId) => {
         } else if (row) {
             req.trip = row;
             next();
+
         } else {
             res.sendStatus(404);
         }
@@ -32,10 +33,9 @@ tripsRouter.param('tripId', (req, res, next, tripId) => {
    
 });
 
-
-//------- CORS functionallity
-
-//--- GET all trips
+// CORS functionallity
+// GET......................................... 
+// ...all trips
 tripsRouter.get('/', (req, res, next) => {
   
     db.all(`
@@ -53,14 +53,13 @@ tripsRouter.get('/', (req, res, next) => {
 
 });
 
-//--- GET specific trip
+// ...specific trip
 tripsRouter.get('/:tripId', (req, res, next) => {
     res.status(200).send(req.trip);
-    });
+});
 
-
-
-//--- POST tirp
+// POST........................................
+// ...Trip
 tripsRouter.post('/', (req, res, next) => {
     //checking if the req.body is full of Data
     if (!req.body.trip.description || !req.body.trip.dateStart || !req.body.trip.dateEnd || !req.body.trip.totalCash) {
@@ -94,15 +93,19 @@ tripsRouter.post('/', (req, res, next) => {
                     } else {
                         res.status(201).json({ trip: row });
                     }
+                
                 });
+            
             }
 
     });
 
 });
 
-//--- PUT to update Trip
+// PUT.........................................
+// ...Trip
 tripsRouter.put('/:tripId', (req, res, next) => {
+    
     const newTrip = req.body.trip;
     
     db.run(`
@@ -137,17 +140,20 @@ tripsRouter.put('/:tripId', (req, res, next) => {
                     }
                 
             });
+        
         }
         
     });
 
 });
 
-//--- DELETE Trip
+// DELETE......................................
+// ...Trip
 tripsRouter.delete('/:tripId', (req, res, next) => {
     
     db.serialize(function() {
         
+        // deleting Trip from Trips Table
         db.run(`
             delete from Trips
             where Trips.id = ${req.trip.id}
@@ -157,7 +163,8 @@ tripsRouter.delete('/:tripId', (req, res, next) => {
             } 
         });
 
-        db.run(`
+        // deleting corresponding Expenses from Spends Table
+         db.run(`
             delete from Spends
             where Spends.trip_id = ${req.trip.id} 
         `, function(err) {
@@ -167,6 +174,7 @@ tripsRouter.delete('/:tripId', (req, res, next) => {
             } else {
                 res.sendStatus(204);
             }
+        
         });
 
     });

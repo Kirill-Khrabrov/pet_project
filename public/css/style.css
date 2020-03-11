@@ -1,10 +1,41 @@
-
+/* Global styles */
 body {
-  background-image: linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url("../img/abstract-1278008_1920.jpg"); 
-  
+  background-image: linear-gradient(rgba(255, 255, 255, 0.6), 
+                  rgba(255, 255, 255, 0.6)), 
+                    url("../img/abstract-1278008_1920.jpg");   
 }
 
+header {
+  background-color: #bddbf5;  
+}
 
+button {
+  background-color: #d9e1e9;
+  font-family: "Titillium Web";
+  font-weight: 600;
+}
+
+input, textarea {
+  border: 0px;
+  border-radius: 3px;
+  font-family: "Titillium Web";
+}
+
+input:hover, textarea:hover {
+  cursor: pointer;
+  background-color: #bddbf5;
+}
+
+.container-fluid {
+  background-color: #dfedfca8;
+}
+
+img {
+  height: 14px;
+  width: 14px;
+}
+
+/* Text styles */
 p, h1, h3, label, button, summary {
   font-family: "Titillium Web";
 }
@@ -20,8 +51,11 @@ p.text-white {
   font-weight: 700;
 }
 
+.everydayCash {
+  font-size: 1.3em!important;
+}
 
-/* Classes for SpendsList visualisation */
+/* Styling SpendsList visualisation */
 .ShortList {
   height: 7.5em;
   overflow-y: auto;
@@ -32,23 +66,13 @@ p.text-white {
   overflow-y: auto;
 }
 
-/* Classe for TripsList visualisation */
+/* Styling TripsList visualisation */
 .TripList {
   height: 14em;
   overflow-y: auto
 }
 
-
-.everydayCash {
-  font-size: 1.3em!important;
-}
-
-
-header {
-  background-color: #bddbf5;
-  
-}
-
+/* Table styles */
 tbody tr:hover {
   background-color: #bddbf5!important;
 }
@@ -65,37 +89,7 @@ td > img:hover {
   cursor: pointer;
 }
 
-button {
-  background-color: #d9e1e9;
-  font-family: "Titillium Web";
-  font-weight: 600;
-}
-
-input, textarea {
-  border: 0px;
-  border-radius: 3px;
-  font-family: "Titillium Web";
-  
-}
-
-input:hover, textarea:hover {
-  cursor: pointer;
-  background-color: #bddbf5;
-}
-
-
+/* Styles used for computed visualisation */
 .inactive {
   display: none;
-}
-
-.container-fluid {
-
-  background-color: #dfedfca8;
- 
-}
-
-
-img {
-  height: 14px;
-  width: 14px;
 }

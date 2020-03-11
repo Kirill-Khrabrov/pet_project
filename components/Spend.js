@@ -1,6 +1,7 @@
 const Spend = Vue.component('spend', {
     
     props: ['id', 'tripid', 'description', 'date', 'spendcash', 'status'],
+    
     template: `
                 <tr>
                     <td>
@@ -11,12 +12,15 @@ const Spend = Vue.component('spend', {
                     <td v-on:click="showSpend">{{ spendcash }}</td>                   
                 </tr>`,
    
-                methods: {
+    methods: {
+        
         //get specific Spend from DB
         showSpend: function() {
+            //generate 'show-spend' event and transfer Spend's ID
             this.$emit('show-spend', {
                 spendId: this.id,
             });
+
         },
 
         //delete from DB
@@ -27,7 +31,6 @@ const Spend = Vue.component('spend', {
             });
         },
 
-        },
-
+    },
 
 });

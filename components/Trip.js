@@ -1,6 +1,5 @@
 const Trip = Vue.component('trip', {
     
-
     props: ['id', 'description', 'datestart', 'dateend', 'totalcash'],
     template: `
                 <tr>
@@ -14,25 +13,26 @@ const Trip = Vue.component('trip', {
                     
                 </tr>`,
     methods: {
+        
         //get specific Trip from DB
         showTrip: function() {
+        
+            // generate 'show-trip' event and transfer Trip's ID
             this.$emit('show-trip', {
                 tripId: this.id,
             });
+        
         },
 
         //delete from DB
         removeTrip: function() {
-            //generate 'remove' event and transfer Trip's ID
+        
+            // generate 'remove-trip' event and transfer Trip's ID
             this.$emit('remove-trip', {
                 tripId: this.id,
             });
         },
 
-        },
-
-   
-   
-
+    },
 
 });

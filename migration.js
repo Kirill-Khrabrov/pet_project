@@ -1,3 +1,6 @@
+// this script is used to check, if DB with tables
+// Trips & Spends exist. If not, it creates them
+
 const sqlite3 = require('sqlite3');
 const db = new sqlite3.Database('./database.sqlite');
 
