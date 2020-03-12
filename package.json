@@ -1,25 +1,25 @@
 {
-  "name": "cash_calculator",
+  "name": "pet_project",
   "version": "1.0.0",
-  "description": "",
+  "description": "App for cash-on-hand calculating during Trips",
   "main": "index.js",
   "scripts": {
-    "webpack": "webpack",
-    "start": "node server.js"
+    "build": "node migration.js && node server.js",
+    "start": "npm run build && node index.html"
   },
-  "author": "KHKS",
-  "license": "",
-  "devDependencies": {
-    "webpack": "^3.5.5"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kirill-Khrabrov/pet_project.git"
   },
+  "author": "KHA",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kirill-Khrabrov/pet_project/issues"
+  },
+  "homepage": "https://github.com/Kirill-Khrabrov/pet_project#readme",
   "dependencies": {
-    "chai": "^4.1.2",
-    "cors": "^2.8.4",
-    "csv-parse": "^1.2.1",
-    "express": "^4.15.4",
-    "fs": "0.0.1-security",
-    "lightpick": "^1.6.1",
-    "react-router-dom": "^4.2.2",
-    "sqlite3": "^4.0.6"
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "sqlite3": "^4.1.1"
   }
 }
