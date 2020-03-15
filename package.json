@@ -4,6 +4,7 @@
   "description": "App for cash-on-hand calculating during Trips",
   "main": "index.js",
   "scripts": {
+    "test": "node test_bd.js",
     "build": "node migration.js && node server.js",
     "start": "npm run build && node index.html"
   },
