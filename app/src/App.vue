@@ -1,35 +1,5 @@
-<!DOCTYPE html>
-<html>
-  
-<head>
-  <title>Pocket Cash calculator</title>
-
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <!-- Local styling -->
-  <link rel="stylesheet" type="text/css" href="./public/css/reset.css">
-  <link rel="stylesheet" type="text/css" href="./public/css/style.css">
-
-  <!-- Google fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Bangers|Fredoka+One|Odibee+Sans|Titillium+Web&display=swap" rel="stylesheet">
-
-  <!-- Bootstrap-->
-  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-
-  <!-- Vue.js-->
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js" defer></script>
-  <script src="./components/Trip.js" defer></script>
-  <script src="./components/Spend.js" defer></script>
-  <script src="./index.js" defer></script>
-</head>
-
-<body>
-  <!--Vue.js section activation-->
-  <div class="container px-3" id="app">
-    
+<template>
+  <div class="app">
   <!-- Application Header -->
     <header class="py-1 sticky-top">
       <h1 class="font-weight-bold">Pocket Cash Calculator</h1>
@@ -332,10 +302,223 @@
 
       </div>
        
-    </div>    
+    </div>
+  </div>  
+</template>
 
-  </div>
+<script>
 
-</body>
+import * as utils from './js/utils.js';
 
-</html>
+export default {
+  name: 'App',
+  data: {
+
+    //>>> Trip properties
+    // this trip properties are entered by user 
+    // and saved to DB if user enters " + " button, 
+    // or updated when user eters " save " button
+    description: '',
+    dateStart: '',        
+    dateEnd: '',          
+    totalCash: 0,
+
+    // status of the trip calculated each time
+    // when the site updates. Connected with VUE "Updated" lifecircle hook
+    status: {
+      notStarted: false,
+      inProcess: false,
+      finished: false
+    },
+
+    //>>> Spend properties
+    // this spend properties are entered by user 
+    // and saved to DB if user enters " + " button, 
+    // or updated when user eters " save " button
+    spendDescription: '',
+    spendDate: new Date().toLocaleDateString(),  //for the state of the App all spends have this property equals to current Date
+    spendCash: 0,
+
+    //>>>Helper vars
+    // these vars are replaced with ID of specified Trip / specified Spend,
+    // when it is not 0, the Trip / Spend with specified ID is able to be deleted or updated
+    specifiedTripId: 0,
+    specifiedSpendId: 0,
+      
+    // vars for caching retrieved data from DB
+    tripsList: [],  // cach for all Trips from Trip DB
+    spendsList: [], // cach all Spends connected with specified Trip      
+  },
+    
+  computed: {
+    // control all fields of Trip form to be filled by user,
+    // otherwise it is unable to save Trip to DB
+    startFormIsValid () {
+      return this.description && this.dateStart && this.dateEnd && this.totalCash;
+    },
+
+    // convert entered start Trip date to number
+    dayStart () {
+      return Math.floor(new Date(this.dateStart) / (1000 * 3600 * 24));
+    },
+
+    // convert entered end Trip date to number
+    dayEnd () {
+      return Math.floor(new Date(this.dateEnd) / (1000 * 3600 * 24));
+    },
+
+    // calculate trip length 
+    totalDays () {
+      if ((this.dayEnd - this.dayStart) > 0) {
+        return this.dayEnd - this.dayStart + 1;
+      }
+    },
+
+    // calculate number of days, remaining till trip ends
+    daysLeft () {
+      return this.dayEnd - this.dayNow() + 1;
+    },
+
+    // calculate remaining cash-on-hand
+    cashLeft () {
+        
+      if (this.spendsList.length == 0) {
+        return this.totalCash;
+        
+      } else {
+        let copiedTotalCash = this.totalCash;
+          
+        this.spendsList.forEach(spend => {
+          copiedTotalCash -= spend.spends_sum;
+        });
+
+        return copiedTotalCash;
+      }
+          
+    },
+
+    // calculate total expenses of the specified Trip
+    totalSpends () {
+      if (this.spendsList.length == 0) {
+        return 0;
+        
+      } else {
+        let totalSpends = 0;
+          
+        this.spendsList.forEach(spend => {
+          totalSpends += spend.spends_sum;
+        });
+
+        return totalSpends;
+      }
+      
+    },
+
+    // calculate recommended daily cash amount
+    everydayCash () {
+      return Math.round(this.cashLeft / this.daysLeft);
+    },
+      
+  },
+    
+  methods: {
+  
+    // return current date, converted into days number
+    dayNow () {
+      return Math.floor(new Date() / (1000 * 3600 * 24));
+    },
+
+    // return current Date
+    dateNow () {
+      return new Date().toLocaleDateString();
+    },
+
+    // reset Trip form to default values
+    resetStrtForm () {    
+      this.resetSpendingForm();
+      this.spendsList.length = 0;
+      this.specifiedTripId = 0;
+      this.description = '';
+      this.dateStart = '';
+      this.dateEnd = '';
+      this.totalCash = 0;       
+    },
+
+    // reset Spend form to default values
+    resetSpendingForm () {      
+      this.specifiedSpendId = 0;
+      this.spendDescription = '';
+      this.spendCash = 0;
+    },
+
+    
+
+  },
+    
+  watch: {
+    
+    // when user clicks on prefered Trip, specifiedTripId changes
+    // this automatically refreshes the SpendsList for prefered Trip
+    specifiedTripId () {
+      
+      if (this.specifiedTripId !== 0) {
+        
+        fetch(`http://localhost:4001/api/trips/${this.specifiedTripId}/spends`).
+          then(response => {
+        
+            if (response.ok){
+              return response.json();
+            }
+        
+            throw new Error('Request failed!');
+        
+          }, networkError => console.log(networkError.message)).
+          
+            then(jsonResponse => {
+              
+              // refresh cached Spends List with rows from DB
+              this.spendsList = jsonResponse;
+            
+            });
+          
+        }
+
+    },
+
+  },
+      
+  // cache all Trips from DB at the very start of the App
+  created () {
+    this.getAllTrips();
+  },
+  
+  // control Trip status at the every User's step
+  updated () {
+    
+    if (this.startFormIsValid) {
+      
+      if (this.dayNow() - this.dayStart < 0) {
+        this.status.notStarted = true;
+        this.status.inProcess = false;
+        this.status.finished = false;
+  
+      } else if (this.dayNow() - this.dayStart >= 0 && this.dayNow() - this.dayEnd <= 0) {
+        this.status.notStarted = false;
+        this.status.inProcess = true;
+        this.status.finished = false;
+
+      } else if (this.dayNow() - this.dayEnd > 0) { 
+        this.status.notStarted = false;
+        this.status.inProcess = false;
+        this.status.finished = true;
+
+      }
+    
+    }
+
+  }
+
+
+}
+
+</script>

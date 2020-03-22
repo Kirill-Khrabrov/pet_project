@@ -19,4 +19,4 @@ app.listen(PORT, () => {
   console.log(`${PORT} is listening`);
 });
 
-module.exports = app;
+export { app, PORT };

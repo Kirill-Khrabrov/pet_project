@@ -43,38 +43,34 @@ const app = new Vue({
   computed: {
     // control all fields of Trip form to be filled by user,
     // otherwise it is unable to save Trip to DB
-    startFormIsValid: function() {
+    startFormIsValid () {
       return this.description && this.dateStart && this.dateEnd && this.totalCash;
     },
 
     // convert entered start Trip date to number
-    dayStart: {
-      get: function() {
-        return Math.floor(new Date(this.dateStart) / (1000 * 3600 * 24));
-      }
+    dayStart () {
+      return Math.floor(new Date(this.dateStart) / (1000 * 3600 * 24));
     },
 
     // convert entered end Trip date to number
-    dayEnd: {
-      get: function() {
-        return Math.floor(new Date(this.dateEnd) / (1000 * 3600 * 24));
-      }
+    dayEnd () {
+      return Math.floor(new Date(this.dateEnd) / (1000 * 3600 * 24));
     },
 
     // calculate trip length 
-    totalDays: function() {
+    totalDays () {
       if ((this.dayEnd - this.dayStart) > 0) {
         return this.dayEnd - this.dayStart + 1;
       }
     },
 
     // calculate number of days, remaining till trip ends
-    daysLeft: function() {
+    daysLeft () {
       return this.dayEnd - this.dayNow() + 1;
     },
 
     // calculate remaining cash-on-hand
-    cashLeft: function() {
+    cashLeft () {
         
       if (this.spendsList.length == 0) {
         return this.totalCash;
@@ -92,7 +88,7 @@ const app = new Vue({
     },
 
     // calculate total expenses of the specified Trip
-    totalSpends: function() {
+    totalSpends () {
       if (this.spendsList.length == 0) {
         return 0;
         
@@ -109,7 +105,7 @@ const app = new Vue({
     },
 
     // calculate recommended daily cash amount
-    everydayCash: function() {
+    everydayCash () {
       return Math.round(this.cashLeft / this.daysLeft);
     },
       
@@ -118,17 +114,17 @@ const app = new Vue({
   methods: {
   
     // return current date, converted into days number
-    dayNow: function() {
+    dayNow () {
       return Math.floor(new Date() / (1000 * 3600 * 24));
     },
 
     // return current Date
-    dateNow: function() {
+    dateNow () {
       return new Date().toLocaleDateString();
     },
 
     // reset Trip form to default values
-    resetStrtForm: function() {    
+    resetStrtForm () {    
       this.resetSpendingForm();
       this.spendsList.length = 0;
       this.specifiedTripId = 0;
@@ -139,7 +135,7 @@ const app = new Vue({
     },
 
     // reset Spend form to default values
-    resetSpendingForm: function() {      
+    resetSpendingForm () {      
       this.specifiedSpendId = 0;
       this.spendDescription = '';
       this.spendCash = 0;
@@ -148,7 +144,7 @@ const app = new Vue({
     // This Section is all about CRUD Functionallity
     // GET.............................................. 
     // ...all Trips form DB
-    getAllTrips: function () {     
+    getAllTrips () {     
       
       fetch('http://localhost:4001/api/trips').
         then(response => {
@@ -166,7 +162,7 @@ const app = new Vue({
     },
 
     // ...specific Trip from DB
-    getSpecificTrip: function(target) {
+    getSpecificTrip (target) {
       // at first reset Spend Form 
       this.resetSpendingForm();
       
@@ -192,7 +188,7 @@ const app = new Vue({
     },
 
     // ...specific Spend form DB
-    getSpecificSpend: function(target) {
+    getSpecificSpend (target) {
       
       fetch(`http://localhost:4001/api/trips/${this.specifiedTripId}/spends/${target.spendId}`).
         then(response => {
@@ -215,7 +211,7 @@ const app = new Vue({
 
     // POST............................................
     // ...new Trip to DB
-    saveTripToDatabase: function() {
+    saveTripToDatabase () {
       
       // var for saving body for POST request
       const newTrip = {
@@ -254,7 +250,7 @@ const app = new Vue({
     },
 
     // ...new Spend to DB
-    saveSpendToDatabase: function() {
+    saveSpendToDatabase () {
       
       // var for saving body for POST request  
       const newSpend = {
@@ -292,7 +288,7 @@ const app = new Vue({
 
     // DELETE...........................................
     // ...Trip from DB
-    removeTripFromDatabase: function(target) {
+    removeTripFromDatabase (target) {
          
       const fetchOptions = {
         method: 'DELETE'
@@ -318,7 +314,7 @@ const app = new Vue({
     },
 
       // ...Spend from DB
-    removeSpendFromDatabase: function(target) {
+    removeSpendFromDatabase (target) {
       
       const fetchOptions = {
         method: 'DELETE'
@@ -342,7 +338,7 @@ const app = new Vue({
 
     // UPDATE...........................................
     // ...Trip in DB
-    saveTripChangesToDatabase: function() {
+    saveTripChangesToDatabase () {
 
       // var for saving body for PUT request
       const updatedTrip = {
@@ -388,7 +384,7 @@ const app = new Vue({
     },
 
     // ...Spend in DB
-    saveSpendChangesToDatabase: function() {
+    saveSpendChangesToDatabase () {
       
       // var for saving body for PUT request
       const updatedSpend = {
@@ -438,7 +434,7 @@ const app = new Vue({
     
     // when user clicks on prefered Trip, specifiedTripId changes
     // this automatically refreshes the SpendsList for prefered Trip
-    specifiedTripId: function () {
+    specifiedTripId () {
       
       if (this.specifiedTripId !== 0) {
         
@@ -467,12 +463,12 @@ const app = new Vue({
   },
       
   // cache all Trips from DB at the very start of the App
-  created: function() {
+  created () {
     this.getAllTrips();
   },
   
   // control Trip status at the every User's step
-  updated: function() {
+  updated () {
     
     if (this.startFormIsValid) {
       

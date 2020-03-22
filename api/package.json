@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "node test_bd.js",
-    "build": "node migration.js && node server.js",
-    "start": "npm run build && start index.html"
+    "build": "node migration.js && node server.js"
   },
   "repository": {
     "type": "git",

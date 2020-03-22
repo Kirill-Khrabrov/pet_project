@@ -13,14 +13,16 @@ To start the application, you must have **node.js** installed. <br>
 Next, enter the bash commands: 
     <blockquote>
     npm install<br>
-    npm start<br>
     </blockquote>
+Open **index.html** in your favorite browser. <br>
+    
 If you want to activate a test database containing an example of a trip record, the installation procedure is as follows:
     <blockquote>
     npm install<br>
     npm test<br>
-    npm start<br>
     </blockquote>
+Open **index.html** in your favorite browser.    
+    
 
 Dependencies
 ------------
