@@ -1,75 +1,36 @@
+const url = 'http://localhost';
+const PORT = process.env.PORT || 4001
 
-    // GET.............................................. 
-    // ...all Trips form DB
-    const getAllTrips = () => {     
+//all Trips from DB
+//http://localhost:4001/api/trips
+ // ...specific Trip from DB
+//http://localhost:4001/api/trips/${target.tripId}
+//http://localhost:4001/api/trips/${this.specifiedTripId}/spends/${target.spendId}
+//http://localhost:4001/api/trips
+
+
+//`${url}:${PORT}/api/${endpoint}`
+
+
+// GET
+const getFromDataBase = (endpoint) => {     
       
-        fetch('http://localhost:4001/api/trips').
-          then(response => {
-            if (response.ok){
-              return response.json();
-            }
+  fetch(`${url}:${PORT}/api/${endpoint}`).
+    then(response => {
+      if (response.ok){
+        return response.json();
+      }
             
-            throw new Error('Request failed!');
+      throw new Error('Request failed!');
           
-          }, networkError => console.log(networkError.message)).          
-            then(jsonResponse => {
-              //save rows from Trips DB to cache
-              this.tripsList = jsonResponse;
-            });
-      };
-  
-      // ...specific Trip from DB
-      const getSpecificTrip = (target) => {
-        // at first reset Spend Form 
-        this.resetSpendingForm();
+    }, networkError => console.log(networkError.message)).          
+      then(jsonResponse => jsonResponse);
+};
+
+// POST
+const saveToDataBase = (endpoint, body) => {
         
-        fetch(`http://localhost:4001/api/trips/${target.tripId}`).
-          then(response => {
-            if (response.ok){
-              return response.json();
-            }
-        
-            throw new Error('Request failed!');
-        
-          }, networkError => console.log(networkError.message)).
-            
-            then(jsonResponse => {
-              // overwrite Trip Data with retrieved from DB Trip  
-              this.specifiedTripId = jsonResponse.id;
-              this.description = jsonResponse.description;
-              this.dateStart = jsonResponse.trip_start;
-              this.dateEnd = jsonResponse.trip_end;
-              this.totalCash = jsonResponse.total_cash;
-            });
-  
-      };
-  
-      // ...specific Spend form DB
-      const getSpecificSpend = (target) => {
-        
-        fetch(`http://localhost:4001/api/trips/${this.specifiedTripId}/spends/${target.spendId}`).
-          then(response => {
-            if (response.ok){
-              return response.json();
-            }
-        
-            throw new Error('Request failed!');
-  
-          }, networkError => console.log(networkError.message)).
-            
-            then(jsonResponse => {
-              // overwrite Spend Data with retrieved from DB Spend
-              this.spendDescription = jsonResponse.description;
-              this.spendCash = jsonResponse.spends_sum;
-              this.specifiedSpendId = jsonResponse.id;
-            });
-  
-      };
-  
-      // POST............................................
-      // ...new Trip to DB
-     const saveTripToDatabase = () => {
-        
+/*
         // var for saving body for POST request
         const newTrip = {
           description: this.description,
@@ -77,34 +38,35 @@
           dateEnd: this.dateEnd,
           totalCash: this.totalCash,
         };
+*/
   
-        const fetchOptions = {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'                     
-          },
-          body: JSON.stringify({ trip: newTrip })
-        };
+  const fetchOptions = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'                     
+    },
+    body: JSON.stringify({ element: body })
+  };
   
-        fetch('http://localhost:4001/api/trips', fetchOptions).
-          then(response => {
+  fetch(`${url}:${PORT}/api/${endpoint}`, fetchOptions).
+    then(response => {
             
-            if (response.ok){
-              return response.json();
-            }
+      if (response.ok){
+        return response.json();
+      }
         
-            throw new Error('Request failed!');
+      throw new Error('Request failed!');
         
-          }, networkError => console.log(networkError.message)).
+    }, networkError => console.log(networkError.message)).
               
-            then(jsonResponse => {
-              // cache new Trip info
-              this.tripsList.push(jsonResponse.trip);
-              // refresh the specified Trip ID
-              this.specifiedTripId = jsonResponse.trip.id;
-            });
+      then(jsonResponse => {
+        // cache new Trip info
+        this.tripsList.push(jsonResponse.trip);
+        // refresh the specified Trip ID
+        this.specifiedTripId = jsonResponse.trip.id;
+      });
           
-      };
+};
   
       // ...new Spend to DB
       const saveSpendToDatabase = () => {
@@ -285,10 +247,9 @@
                        
       };     
 
-export { getAllTrips, 
-         getSpecificTrip, 
-         getSpecificSpend,
-         saveTripToDatabase,
+export { getFromDataBase, 
+        
+         saveToDataBase,
          saveSpendToDatabase, 
          removeTripFromDatabase,
          removeSpendFromDatabase,

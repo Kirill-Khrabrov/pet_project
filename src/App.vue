@@ -8,19 +8,20 @@
         <trip-details>
         </trip-details>
 
-        <!-- Trip Info section -->
+<!--
+        <!-- Trip Info section 
         <trip-info>
         </trip-info>
        
 
-        <!-- Expense Details Section-->
+        <!-- Expense Details Section
         <expense-details>
         </expense-details>
         
-
+-->
       </div>     
 
-      <!-- Global container for Trip list  -->   
+      <!-- Global container for Trip list    
       <div id="TripsListSection" class="row py-1 text-center">
         
         <details class="col my-auto">
@@ -64,7 +65,7 @@
         </details>
 
       </div>
-       
+-->       
    
   </div>  
 </template>
@@ -81,30 +82,8 @@ export default {
   data () {
     return {
 
-      //>>> Trip properties
-      // this trip properties are entered by user 
-      // and saved to DB if user enters " + " button, 
-      // or updated when user eters " save " button
-      description: '',
-      dateStart: '',        
-      dateEnd: '',          
-      totalCash: 0,
+      
 
-      // status of the trip calculated each time
-      // when the site updates. Connected with VUE "Updated" lifecircle hook
-      status: {
-        notStarted: false,
-        inProcess: false,
-        finished: false
-      },
-
-      //>>> Spend properties
-      // this spend properties are entered by user 
-      // and saved to DB if user enters " + " button, 
-      // or updated when user eters " save " button
-      spendDescription: '',
-      spendDate: new Date().toLocaleDateString(),  //for the state of the App all spends have this property equals to current Date
-      spendCash: 0,
 
       //>>>Helper vars
       // these vars are replaced with ID of specified Trip / specified Spend,
@@ -116,35 +95,12 @@ export default {
       tripsList: [],  // cach for all Trips from Trip DB
       spendsList: [], // cach all Spends connected with specified Trip      
   
-    
+ /*   
+  
       computed: {
-        // control all fields of Trip form to be filled by user,
-        // otherwise it is unable to save Trip to DB
-        startFormIsValid () {
-          return this.description && this.dateStart && this.dateEnd && this.totalCash;
-        },
+        
 
-        // convert entered start Trip date to number
-        dayStart () {
-          return Math.floor(new Date(this.dateStart) / (1000 * 3600 * 24));
-        },
-
-        // convert entered end Trip date to number
-        dayEnd () {
-          return Math.floor(new Date(this.dateEnd) / (1000 * 3600 * 24));
-        },
-
-        // calculate trip length 
-        totalDays () {
-          if ((this.dayEnd - this.dayStart) > 0) {
-            return this.dayEnd - this.dayStart + 1;
-          }
-        },
-
-        // calculate number of days, remaining till trip ends
-        daysLeft () {
-          return this.dayEnd - this.dayNow() + 1;
-        },
+        
 
         // calculate remaining cash-on-hand
         cashLeft () {
@@ -187,12 +143,15 @@ export default {
         },
       
       },
-    
+
+*/
+/*
+
       methods: {
   
         // return current date, converted into days number
         dayNow () {
-          return Math.floor(new Date() / (1000 * 3600 * 24));
+          return ;
         },
 
         // return current Date
@@ -201,15 +160,7 @@ export default {
         },
 
         // reset Trip form to default values
-        resetStrtForm () {    
-          this.resetSpendingForm();
-          this.spendsList.length = 0;
-          this.specifiedTripId = 0;
-          this.description = '';
-          this.dateStart = '';
-          this.dateEnd = '';
-          this.totalCash = 0;       
-        },
+        
 
         // reset Spend form to default values
         resetSpendingForm () {      
@@ -219,7 +170,10 @@ export default {
         },
 
       },
-    
+
+*/
+/*
+
       watch: {
     
         // when user clicks on prefered Trip, specifiedTripId changes
@@ -251,40 +205,24 @@ export default {
         },
 
       },
-      
+
+*/
+/*
+
       // cache all Trips from DB at the very start of the App
       created () {
-        this.getAllTrips();
+        //this.getAllTrips();
+        console.log(`App started ${this.data}`);
       },
+
+*/
+/*
   
-      // control Trip status at the every User's step
-      updated () {
-    
-        if (this.startFormIsValid) {
       
-          if (this.dayNow() - this.dayStart < 0) {
-            this.status.notStarted = true;
-            this.status.inProcess = false;
-            this.status.finished = false;
-  
-          } else if (this.dayNow() - this.dayStart >= 0 && this.dayNow() - this.dayEnd <= 0) {
-            this.status.notStarted = false;
-            this.status.inProcess = true;
-            this.status.finished = false;
 
-          } else if (this.dayNow() - this.dayEnd > 0) { 
-            this.status.notStarted = false;
-            this.status.inProcess = false;
-            this.status.finished = true;
-
-          }
-    
-        }
-
-    }
-
-
+*/
   };
+  
 
 },
 

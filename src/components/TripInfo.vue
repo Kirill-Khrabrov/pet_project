@@ -1,6 +1,5 @@
 <template>
-  <div  class="col-lg-12 order-md-3 py-lg-1"
-    v-bind:class="{inactive: !startFormIsValid}">
+  <div  class="col-lg-12 order-md-3 py-lg-1">
     
     <!-- Row for all Trip info (DAYS LEFT / CASH PER DAY / CASH REST / TOTAL EXPENSES-->
     <div class="row pt-4 text-center">

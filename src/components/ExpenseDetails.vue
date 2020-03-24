@@ -1,6 +1,5 @@
 <template>
-  <div class="col-lg-6 order-md-2 pt-lg-4 px-lg-4 mx-auto"
-    v-bind:class="{inactive: !startFormIsValid || status.notStarted}">
+  <div class="col-lg-6 order-md-2 pt-lg-4 px-lg-4 mx-auto">
     
     <div class="container">
            
@@ -114,7 +113,13 @@ export default {
   
   data () {
     return {
-      
+      //>>> Spend properties
+      // this spend properties are entered by user 
+      // and saved to DB if user enters " + " button, 
+      // or updated when user eters " save " button
+      spendDescription: '',
+      spendDate: new Date().toLocaleDateString(),  //for the state of the App all spends have this property equals to current Date
+      spendCash: 0,
     };
   }
 
