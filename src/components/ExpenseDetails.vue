@@ -79,6 +79,7 @@
                      v-on:remove-spend = "removeSpendFromDatabase"
                      v-on:show-spend = "getSpecificSpend"
                      v-for = "spend in spendsList"
+                     :key="spend.id"
                      v-bind:status = "status"
                      v-bind:id = "spend.id"
                      v-bind:tripid = "specifiedTripId"

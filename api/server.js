@@ -11,4 +11,4 @@ app.listen(PORT, () => {
   console.log(`${PORT} is listening`);
 });
 
-export { app, PORT };
+module.exports = app;

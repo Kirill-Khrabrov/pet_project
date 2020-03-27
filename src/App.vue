@@ -5,9 +5,7 @@
       <div class="row text-center">
         
         <!-- Trip Details Section -->   
-        <trip-details>
-        </trip-details>
-
+        <trip-details />
 <!--
         <!-- Trip Info section 
         <trip-info>
@@ -19,71 +17,32 @@
         </expense-details>
         
 -->
-      </div>     
+      </div>  
 
-      <!-- Global container for Trip list    
+      <!-- Global container for Trip list -->
       <div id="TripsListSection" class="row py-1 text-center">
-        
-        <details class="col my-auto">
-          
-          <summary class="col my-auto font-weight-bold">SCHEDULE OF TRIPS</summary>
-
-          <div class="TripList row py-1 text-center"> 
-            
-            <div class="col mb-auto">
-              
-              <table class="table table-md table-striped">
-                
-                <thead>
-                  <th></th>
-                  <th>Description</th>
-                  <th>Trip Starts</th>
-                  <th>Trip Ends</th>
-                  <th>Cash</th>          
-                </thead>
-                
-                <tbody id="TripList" class="overflow-auto">
-                  <tr is = "trip" 
-                      v-on:remove-trip = "removeTripFromDatabase"
-                      v-on:show-trip = "getSpecificTrip"
-                      v-for = "trip in tripsList"
-                      v-bind:id = "trip.id"
-                      v-bind:description = "trip.description"
-                      v-bind:datestart = "trip.trip_start"
-                      v-bind:dateend = "trip.trip_end"
-                      v-bind:totalcash = "trip.total_cash"
-                      v-bind:class="{ activeRow: trip.id == specifiedTripId }"></tr>
-                  </tr>
-                </tbody>
-              
-              </table>
-        
-            </div>
-          
-          </div>
-
-        </details>
-
+        <trips-list :allTrips="allTrips" />        
       </div>
--->       
+      
+
+             
+      
+    
    
   </div>  
 </template>
 
 <script>
-
-import * as utils from './js/utils.js';
+import { mapActions } from 'vuex';
 import TripDetails from './components/TripDetails.vue';
 import TripInfo from './components/TripInfo.vue';
 import ExpenseDetails from './components/ExpenseDetails.vue';
+import TripsList from './components/TripsList.vue';
 
 export default {
   name: 'App',
   data () {
     return {
-
-      
-
 
       //>>>Helper vars
       // these vars are replaced with ID of specified Trip / specified Spend,
@@ -91,9 +50,7 @@ export default {
       specifiedTripId: 0,
       specifiedSpendId: 0,
       
-      // vars for caching retrieved data from DB
-      tripsList: [],  // cach for all Trips from Trip DB
-      spendsList: [], // cach all Spends connected with specified Trip      
+           
   
  /*   
   
@@ -226,10 +183,23 @@ export default {
 
 },
 
+computed: {
+  allTrips() {
+    return this.$store.getters.allTrips;
+  }
+},
+
+methods: mapActions(['fetchTrips']),
+
+async mounted() {
+  this.fetchTrips();
+},
+
 components: {
-  TripDetails: TripDetails,
-  TripInfo: TripInfo,
-  ExpenseDetails: ExpenseDetails
+  TripDetails,
+  TripInfo,
+  ExpenseDetails,
+  TripsList
 
 }
 
