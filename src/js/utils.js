@@ -12,20 +12,7 @@ const PORT = process.env.PORT || 4001
 //`${url}:${PORT}/api/${endpoint}`
 
 
-// GET
-const getFromDataBase = (endpoint) => {     
-      
-  fetch(`${url}:${PORT}/api/${endpoint}`).
-    then(response => {
-      if (response.ok){
-        return response.json();
-      }
-            
-      throw new Error('Request failed!');
-          
-    }, networkError => console.log(networkError.message)).          
-      then(jsonResponse => jsonResponse);
-};
+
 
 // POST
 const saveToDataBase = (endpoint, body) => {

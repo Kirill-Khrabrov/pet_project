@@ -10,7 +10,7 @@
         </div>
               
         <div class="col p-0 text-right">
-          <button class="rounded-circle my-1" @click="resetStrtForm"> <img class="mb-1" src="/assets/img/quit.svg"> </button>
+          <button class="rounded-circle my-1" @click="resetTripForm"> <img class="mb-1" src="/assets/img/quit.svg"> </button>
         </div>
             
       </div>
@@ -24,7 +24,7 @@
             <p class="col my-auto pb-2">DATE START</p>
           </div>
           <div class="row text-center">
-            <input class="m-auto" type="date" v-model="dateStart" />
+            <input class="m-auto" type="date" :value="tripDateStart" @input="updateTripDateStart" />
           </div>
         </div>       
 
@@ -33,7 +33,7 @@
             <p class="col my-auto pb-2">DATE END</p>
           </div>
           <div class="row text-center">
-            <input class="m-auto" type="date" v-model="dateEnd" />
+            <input class="m-auto" type="date" :value="tripDateEnd" @input="updateTripDateEnd" />
           </div>            
         </div>
 
@@ -48,10 +48,10 @@
           </div>
           <div class="row py-2 text-left">
             <p class="col-6 my-auto">YOUR CASH</p>
-            <input class="col-5 my-auto mr-auto" type="number" min="0" max="999999" v-model="totalCash" />
+            <input class="col-5 my-auto mr-auto" type="number" min="0" max="999999" :value="tripTotalCash" @input="updateTripTotalCash" />
           </div>
         </div>              
-        <textarea  class="col-6 ml-auto" v-model.trim="description"></textarea>
+        <textarea  class="col-6 ml-auto" :value="tripDescription" @input="updateTripDescription"></textarea>
       
       </div>  
                 
@@ -85,22 +85,22 @@
         </button>
       </div>
     
-      <!-- Row for Trip functions Buttons 
+      <!-- Row for Trip functions Buttons -->
       <div class="row py-lg-4 pb-lg-5">
         
         <button class="col-2 rounded-pill ml-auto mr-3 my-1 py-1 px-0"
-          @click="saveTripToDatabase" 
+          @click="addNewTrip" 
           :disabled="!startFormIsValid"> 
           <img class="mb-1" src="public/img/add-icon.svg"> 
         </button>
-        <button class="col-2 rounded-pill mr-auto ml-3 my-1 py-1 px-0"
+        <!-- <button class="col-2 rounded-pill mr-auto ml-3 my-1 py-1 px-0"
          @click="saveTripChangesToDatabase" 
          :disabled="!startFormIsValid"> 
           <img class="mb-1" src="public/img/diskette.svg"> 
-        </button>
+        </button> -->
 
       </div>   
-    -->
+    
 
     </div>
   </div>
@@ -108,58 +108,52 @@
 
 <script>
 
+import { mapGetters, mapActions, mapMutations } from 'vuex';
 export default {
   
   name: 'TripDetails',
-  
-  props: {
 
-  },
-  
-  data () {
-    return {
-      //>>> Trip properties
-      // this trip properties are entered by user 
-      // and saved to DB if user enters " + " button, 
-      // or updated when user eters " save " button
-      description: '',
-      dateStart: '',        
-      dateEnd: '',          
-      totalCash: 0,
-      
+  data(){
+    return  {
       // status of the trip calculated each time
       // when the site updates. Connected with VUE "Updated" lifecircle hook
       status: {
         notStarted: false,
         inProcess: false,
         finished: false
-      },
-      
-    };
+      }, 
     
-  },
+    };
 
+  },
+      
   computed: {
+    ...mapGetters([
+      'tripDescription',
+      'tripDateStart',
+      'tripDateEnd',
+      'tripTotalCash'
+    ]),
   
     // control all fields of Trip form to be filled by user,
     // otherwise it is unable to save Trip to DB
     startFormIsValid () {
-      return this.description && this.dateStart && this.dateEnd && this.totalCash;
+      return this.tripDescription && this.tripDateStart && this.tripDateEnd && this.tripTotalCash;
     },
 
     // convert entered start Trip date to number
     dayStart () {
-      return Math.floor(new Date(this.dateStart) / (1000 * 3600 * 24));
+      return Math.floor(new Date(this.tripDateStart) / (1000 * 3600 * 24));
     },
 
     // convert entered end Trip date to number
     dayEnd () {
-      return Math.floor(new Date(this.dateEnd) / (1000 * 3600 * 24));
+      return Math.floor(new Date(this.tripDateEnd) / (1000 * 3600 * 24));
     },
 
     // calculate trip length 
     totalDays () {
-      if ((this.dayEnd - this.dayStart) > 0) {
+      if ((this.dayEnd - this.dayStart) >= 0) {
         return this.dayEnd - this.dayStart + 1;
       }
     },
@@ -172,14 +166,32 @@ export default {
   },
 
   methods: {
-    resetStrtForm () {    
-      //this.resetSpendingForm();
-      //this.spendsList.length = 0;
-      //this.specifiedTripId = 0;
-      this.description = '';
-      this.dateStart = '';
-      this.dateEnd = '';
-      this.totalCash = 0;       
+    updateTripDescription(e) {
+      this.$store.commit('updateTripDescription', e.target.value);
+    },
+
+    updateTripDateStart(e) {
+      this.$store.commit('updateTripDateStart', e.target.value);
+    },
+
+    updateTripDateEnd(e) {
+      this.$store.commit('updateTripDateEnd', e.target.value);
+    },
+
+    updateTripTotalCash(e) {
+      this.$store.commit('updateTripTotalCash', e.target.value);
+    },    
+
+    resetTripForm () {    
+      this.$store.commit('resetTripForm');       
+    },
+
+    addNewTrip() {
+      this.$store.dispatch('fetchNewTrip', { 
+        description: this.tripDescription, 
+        dateStart: this.tripDateStart, 
+        dateEnd: this.tripDateEnd, 
+        totalCash: this.tripTotalCash });
     },
 
 

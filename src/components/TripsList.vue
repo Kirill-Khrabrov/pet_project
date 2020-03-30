@@ -19,14 +19,14 @@
                 </thead>
                 
                 <tbody id="TripList" class="overflow-auto">
-                  <tr v-for="trip in allTrips" :key="trip.id" >
+                  <tr v-for="trip in allTrips" :key="trip.id" @click="chooseTrip(trip)">
                     <td>
-                      <img src="public/img/x-circle.svg">
+                      <img src="public/img/x-circle.svg" >
                     </td>
                     <td>{{ trip.description }}</td>
-                    <td>{{ trip.trip_start }}</td>
-                    <td>{{ trip.trip_end }}</td>
-                    <td>{{ trip.total_cash }}</td>                    
+                    <td>{{ trip.trip_start | date('date') }}</td>
+                    <td>{{ trip.trip_end | date('date') }}</td>
+                    <td>{{ trip.total_cash | currency('RUB') }}</td>                    
                   </tr>
                   
                 </tbody>
@@ -40,8 +40,9 @@
         </details>
 
     </template>
+
 <script>
-export default {
+  export default {
     name: 'TripsList',
     
     props: {
@@ -49,6 +50,21 @@ export default {
             required: true,
             type: Array
         }
+    },
+
+    methods: {
+      chooseTrip(trip) {
+        
+        this.$store.commit('updateChosenTripId', trip.id);
+        this.$store.dispatch('fetchAllSpends', this.$store.getters.chosenTrip);
+        this.$store.commit('updateTripDescription', trip.description);
+        this.$store.commit('updateTripDateStart', trip.trip_start);
+        this.$store.commit('updateTripDateEnd',trip.trip_end);
+        this.$store.commit('updateTripTotalCash', trip.total_cash);        
+
+      },
+
+
     }
 }
 </script>

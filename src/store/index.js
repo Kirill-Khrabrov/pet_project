@@ -10,39 +10,105 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   actions: {
-    async fetchTrips(ctx) {
-      
-      console.log(`Sending GET Request to ${url}:${PORT}/api/trips`)
-
+    // GET all trips from DB  
+    async fetchAllTrips(ctx) {
+            
       const res = await fetch(
         `${url}:${PORT}/api/trips`
       );
       const trips = await res.json();
-
-      console.log(`Request received ${trips}`);
-      
+           
       ctx.commit('updateTripList', trips);
 
+    },
+
+    // GET all Spends for specified Trip
+    async fetchAllSpends(ctx, tripId) {
+        
+        const res = await fetch(
+            `${url}:${PORT}/api/trips/${tripId}/spends`
+        );
+        const spends = await res.json();
+
+        ctx.commit('updateSpendList', spends);        
+
+    },
+
+    //PUT new Trip to DB
+    async fetchNewTrip(ctx, newTrip) {
+
+        const body = {
+            description: newTrip.description,
+            dateStart: newTrip.dateStart,
+            dateEnd: newTrip.dateEnd,
+            totalCash: newTrip.totalCash,
+        };
+
+        const fetchOptions = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'                     
+            },
+            body: JSON.stringify({ trip: body })
+          };
+
+          console.log(fetchOptions.body);
+
+        const res = await fetch(
+            `${url}:${PORT}/api/trips`, fetchOptions
+        );
+
+        const newlyCreatedTrip = await res.json();
+        ctx.commit('addTripToTripList', newlyCreatedTrip);
+        ctx.commit('updateChosenTripId',newlyCreatedTrip.id);
     }
+
+        
   },
 
   mutations: {
     updateTripList(state, trips) {
       state.tripsList = trips;
+    },
+
+    addTripToTripList(state, newTrip) {
+        state.tripsList.push(newTrip);
+    },
+
+    updateSpendList(state, spends) {
+      state.spendsList = spends;      
+    },
+
+    updateChosenSpendId(state, spendId) {
+      state.specifiedSpendId = spendId;
     }
   },
 
   state: {
+        
     // vars for caching retrieved data from DB
     tripsList: [],  // cach for all Trips from Trip DB
     spendsList: [], // cach all Spends connected with specified Trip 
+    
+    
+    specifiedSpendId: 0,
   },
 
   getters: {
-    allTrips(state) {
-      console.log(state.tripsList);
+        
+    allTrips(state) {      
       return state.tripsList;
     },
+
+    allSpends(state) {
+      return state.spendsList;
+    },
+
+    chosenSpend(state) {
+      return state.specifiedSpendId;
+    },
+
+
   },  
 
   

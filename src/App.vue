@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapGetters, mapActions, mapMutations } from 'vuex';
 import TripDetails from './components/TripDetails.vue';
 import TripInfo from './components/TripInfo.vue';
 import ExpenseDetails from './components/ExpenseDetails.vue';
@@ -41,17 +41,33 @@ import TripsList from './components/TripsList.vue';
 
 export default {
   name: 'App',
-  data () {
-    return {
 
-      //>>>Helper vars
-      // these vars are replaced with ID of specified Trip / specified Spend,
-      // when it is not 0, the Trip / Spend with specified ID is able to be deleted or updated
-      specifiedTripId: 0,
-      specifiedSpendId: 0,
-      
-           
-  
+
+  computed: {
+    ...mapGetters([
+      'allTrips',
+      'allSpends'
+    ]), 
+    
+  },
+
+  methods: {
+    ...mapActions(['fetchAllTrips']),
+       
+  },
+
+  async mounted() {
+    this.fetchAllTrips();
+  },
+
+  components: {
+    TripDetails,
+    TripInfo,
+    ExpenseDetails,
+    TripsList
+
+  }
+
  /*   
   
       computed: {
@@ -178,30 +194,8 @@ export default {
       
 
 */
-  };
-  
 
-},
 
-computed: {
-  allTrips() {
-    return this.$store.getters.allTrips;
-  }
-},
-
-methods: mapActions(['fetchTrips']),
-
-async mounted() {
-  this.fetchTrips();
-},
-
-components: {
-  TripDetails,
-  TripInfo,
-  ExpenseDetails,
-  TripsList
-
-}
 
 };
 
