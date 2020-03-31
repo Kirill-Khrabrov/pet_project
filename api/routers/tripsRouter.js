@@ -1,7 +1,7 @@
 const express = require('express');
 const sqlite3 = require('sqlite3');
 const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite');
-const spendsRouter = require('./spendsRouter');
+const spendsRouter = require('./spendsRouter.js');
 
 
 // creating router for /api/trips
@@ -33,7 +33,7 @@ tripsRouter.param('tripId', (req, res, next, tripId) => {
    
 });
 
-// CORS functionallity
+// CRUD functionallity
 // GET......................................... 
 // ...all trips
 tripsRouter.get('/', (req, res, next) => {
@@ -61,6 +61,7 @@ tripsRouter.get('/:tripId', (req, res, next) => {
 // POST........................................
 // ...Trip
 tripsRouter.post('/', (req, res, next) => {
+    
     //checking if the req.body is full of Data
     if (!req.body.trip.description || !req.body.trip.dateStart || !req.body.trip.dateEnd || !req.body.trip.totalCash) {
         return res.sendStatus(400);

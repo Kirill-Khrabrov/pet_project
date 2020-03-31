@@ -26,7 +26,7 @@ spendsRouter.param('spendId', (req, res, next, spendId) => {
    
 });
 
-// CORS functionallity
+// CRUD functionallity
 // GET......................................... 
 // ...all spends for specific trip
 spendsRouter.get('/', (req, res, next) => {

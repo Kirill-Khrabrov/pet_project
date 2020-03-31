@@ -1,18 +1,18 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
 const app = express();
 
 const PORT = process.env.PORT || 4001;
 
-// Middleware for handling CORS requests from index.html
-const cors = require('cors');
+//Enable CORS
 app.use(cors());
 
-// Middware for parsing request bodies here:
-const bodyParser = require('body-parser');
+//Enable body-parser
 app.use(bodyParser.json());
 
 // Mounting existing apiRouter below at the '/api' path.
-const apiRouter = require('./server/apiRouter');
+const apiRouter = require('./routers/apiRouter.js');
 app.use('/api', apiRouter);
 
 app.listen(PORT, () => {

@@ -1,40 +1,21 @@
-# pet_project
-Description
-------------
-This project was created as a practical assistant for trip, vacation or teavel cash calculating.<br>
-The logic of this project is simple: the cash-on-hands amount is detailed in the trip description<br> 
-by the user for the entire period of the trip.<br>
-The application calculates the trip days total number, the days left number and recommends the average <br>
-cash-on-hand amount that the user can spend per day without losing his budget.<br>
+# pcc
 
-Installation
-------------
-To start the application, you must have **node.js** installed. <br>
-Next, enter the bash commands: 
-    <blockquote>
-    npm install<br>
-    npm start<br>
-    </blockquote>
-If you want to activate a test database containing an example of a trip record, the installation procedure is as follows:
-    <blockquote>
-    npm install<br>
-    npm test<br>
-    npm start<br>
-    </blockquote>
+> A Vue.js project
 
-Dependencies
-------------
-Vue.js<br>
-express.js<br>
-sqlite3.js<br>
+## Build Setup
 
-Links
-------------
-https://nodejs.org/en/<br>
-https://expressjs.com/en/<br>
-https://www.npmjs.com/package/sqlite3<br>
+``` bash
+# install dependencies
+npm install
 
-------------
-Kirill Khrabrov<br>
-kirill.khrabrov@yandex.ru<br>
-https://github.com/Kirill-Khrabrov<br>
+# serve with hot reload at localhost:8080
+npm run dev
+
+# build for production with minification
+npm run build
+
+# build for production and view the bundle analyzer report
+npm run build --report
+```
+
+For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
