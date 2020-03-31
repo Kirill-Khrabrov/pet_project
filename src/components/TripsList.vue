@@ -1,49 +1,49 @@
 <template>
     
-    <details class="col my-auto">
+  <details class="col my-auto">
           
-        <summary class="col my-auto font-weight-bold">SCHEDULE OF TRIPS</summary>
+    <summary class="col my-auto font-weight-bold">SCHEDULE OF TRIPS</summary>
 
-        <div class="TripList row py-1 text-center"> 
-            
-            <div class="col mb-auto">
+    <div class="TripList row py-1 text-center"> 
               
-              <table class="table table-md table-striped">
+      <div class="col mb-auto">
                 
-                <thead>
-                  <th></th>
-                  <th>Description</th>
-                  <th>Trip Starts</th>
-                  <th>Trip Ends</th>
-                  <th>Cash</th>          
-                </thead>
-                
-                <tbody id="TripList" class="overflow-auto">
-                  <tr v-for="trip in allTrips" :key="trip.id" @click="chooseTrip(trip)">
-                    <td>
-                      <img src="public/img/x-circle.svg" >
-                    </td>
-                    <td>{{ trip.description }}</td>
-                    <td>{{ trip.trip_start | date('date') }}</td>
-                    <td>{{ trip.trip_end | date('date') }}</td>
-                    <td>{{ trip.total_cash | currency('RUB') }}</td>                    
-                  </tr>
+        <table class="table table-md table-striped">
                   
-                </tbody>
-              
-              </table>
-        
-            </div>
+          <thead>
+            <th></th>
+            <th>Description</th>
+            <th>Trip Starts</th>
+            <th>Trip Ends</th>
+            <th>Cash</th>          
+          </thead>
+                  
+          <tbody id="TripList" class="overflow-auto">
+            <tr v-for="trip in allTrips" :key="trip.id">
+              <td>
+                <img src="public/img/x-circle.svg" @click="removeTrip(trip)">
+              </td>
+              <td @click="chooseTrip(trip)">{{ trip.description }}</td>
+              <td @click="chooseTrip(trip)">{{ trip.trip_start | date('date') }}</td>
+              <td @click="chooseTrip(trip)">{{ trip.trip_end | date('date') }}</td>
+              <td @click="chooseTrip(trip)">{{ trip.total_cash | currency('RUB') }}</td>                    
+            </tr>
+                    
+          </tbody>
+                
+        </table>
           
-          </div>
+      </div>
+            
+    </div>
 
-        </details>
+  </details>
 
-    </template>
+</template>
 
 <script>
-  export default {
-    name: 'TripsList',
+export default {
+  name: 'TripsList',
     
     props: {
         allTrips: {
@@ -53,6 +53,10 @@
     },
 
     methods: {
+      removeTrip(trip){
+        this.$store.dispatch('fetchDeleteTrip', trip.id);
+      },
+
       chooseTrip(trip) {
         
         this.$store.commit('updateChosenTripId', trip.id);

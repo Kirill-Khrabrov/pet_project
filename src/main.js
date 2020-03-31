@@ -6,7 +6,6 @@ import store from './store/index.js'
 import dateFilter from './filters/date.filter.js';
 import currencyFilter from './filters/currency.filter.js';
 
-
 Vue.config.productionTip = false
 
 Vue.filter('date', dateFilter);

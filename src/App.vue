@@ -6,28 +6,20 @@
         
         <!-- Trip Details Section -->   
         <trip-details />
-<!--
+
         <!-- Trip Info section 
         <trip-info>
-        </trip-info>
+        </trip-info> -->
        
+        <!-- Expense Details Section -->
+        <expense-details />
 
-        <!-- Expense Details Section
-        <expense-details>
-        </expense-details>
-        
--->
       </div>  
 
       <!-- Global container for Trip list -->
       <div id="TripsListSection" class="row py-1 text-center">
         <trips-list :allTrips="allTrips" />        
       </div>
-      
-
-             
-      
-    
    
   </div>  
 </template>
@@ -45,19 +37,24 @@ export default {
 
   computed: {
     ...mapGetters([
-      'allTrips',
-      'allSpends'
+      'allTrips',      
     ]), 
     
   },
 
   methods: {
     ...mapActions(['fetchAllTrips']),
+
+    ...mapMutations(['updateTripStatus']),
        
   },
 
   async mounted() {
     this.fetchAllTrips();
+  },
+
+  updated() {
+    this.updateTripStatus();
   },
 
   components: {
@@ -70,10 +67,7 @@ export default {
 
  /*   
   
-      computed: {
-        
-
-        
+      computed: {       
 
         // calculate remaining cash-on-hand
         cashLeft () {
@@ -122,15 +116,8 @@ export default {
 
       methods: {
   
-        // return current date, converted into days number
-        dayNow () {
-          return ;
-        },
-
-        // return current Date
-        dateNow () {
-          return new Date().toLocaleDateString();
-        },
+       
+       
 
         // reset Trip form to default values
         
@@ -189,13 +176,6 @@ export default {
       },
 
 */
-/*
-  
-      
-
-*/
-
-
 
 };
 

@@ -67,24 +67,15 @@
 
         <div class="col">
           <div class="row text-center">
-            <label class="co my-auto" for="tripStatus" v-if="status.notStarted || status.inProcess || status.finished">TRIP STATUS</label>
-            <p class="col my-auto text-white" id="tripStatus" v-if="status.notStarted"> NOT STARTED </p>
-            <p class="col my-auto text-white" id="tripStatus" v-if="status.inProcess"> IN PROCESS </p>
-            <p class="col my-auto text-white" id="tripStatus" v-if="status.finished"> FINISHED </p>
+            <label class="co my-auto" for="tripStatus" v-if="tripStatus.notStarted || tripStatus.inProcess || tripStatus.finished">TRIP STATUS</label>
+            <p class="col my-auto text-white" id="tripStatus" v-if="tripStatus.notStarted"> NOT STARTED </p>
+            <p class="col my-auto text-white" id="tripStatus" v-if="tripStatus.inProcess"> IN PROCESS </p>
+            <p class="col my-auto text-white" id="tripStatus" v-if="tripStatus.finished"> FINISHED </p>
           </div>
         </div>
       
       </div>
-
-      <!-- Row for Developer Buttons -->
-      <div class="row py-lg-4 pb-lg-5">
-        <button class="col-2 rounded-pill ml-auto mr-3 my-1 py-1 px-0"
-          @click="showData" 
-          :disabled="!startFormIsValid"> 
-          Show Data 
-        </button>
-      </div>
-    
+      
       <!-- Row for Trip functions Buttons -->
       <div class="row py-lg-4 pb-lg-5">
         
@@ -93,11 +84,11 @@
           :disabled="!startFormIsValid"> 
           <img class="mb-1" src="public/img/add-icon.svg"> 
         </button>
-        <!-- <button class="col-2 rounded-pill mr-auto ml-3 my-1 py-1 px-0"
-         @click="saveTripChangesToDatabase" 
+        <button class="col-2 rounded-pill mr-auto ml-3 my-1 py-1 px-0"
+         @click="updateTrip" 
          :disabled="!startFormIsValid"> 
           <img class="mb-1" src="public/img/diskette.svg"> 
-        </button> -->
+        </button>
 
       </div>   
     
@@ -107,21 +98,15 @@
 </template>
 
 <script>
-
 import { mapGetters, mapActions, mapMutations } from 'vuex';
+
 export default {
   
   name: 'TripDetails',
 
   data(){
     return  {
-      // status of the trip calculated each time
-      // when the site updates. Connected with VUE "Updated" lifecircle hook
-      status: {
-        notStarted: false,
-        inProcess: false,
-        finished: false
-      }, 
+       
     
     };
 
@@ -132,7 +117,9 @@ export default {
       'tripDescription',
       'tripDateStart',
       'tripDateEnd',
-      'tripTotalCash'
+      'tripTotalCash',
+      'chosenTrip',
+      'tripStatus'
     ]),
   
     // control all fields of Trip form to be filled by user,
@@ -185,6 +172,7 @@ export default {
     resetTripForm () {    
       this.$store.commit('resetTripForm');       
     },
+    
 
     addNewTrip() {
       this.$store.dispatch('fetchNewTrip', { 
@@ -194,39 +182,21 @@ export default {
         totalCash: this.tripTotalCash });
     },
 
-
-
-    // developer
-    showData() {
-      console.log(this);
-    }
+    updateTrip() {
+      this.$store.dispatch('fetchUpdateTrip', { 
+        description: this.tripDescription, 
+        dateStart: this.tripDateStart, 
+        dateEnd: this.tripDateEnd, 
+        totalCash: this.tripTotalCash,
+        tripId: this.chosenTrip });
+    },    
 
   },
 
   // control Trip status at the every User's step
   updated () {
-    const dayNow = Math.floor(new Date() / (1000 * 3600 * 24));
-
-    if (this.startFormIsValid) {
-      if (dayNow - this.dayStart < 0) {
-        this.status.notStarted = true;
-        this.status.inProcess = false;
-        this.status.finished = false;
-  
-      } else if (dayNow - this.dayStart >= 0 && dayNow - this.dayEnd <= 0) {
-        this.status.notStarted = false;
-        this.status.inProcess = true;
-        this.status.finished = false;
-
-      } else if (dayNow - this.dayEnd > 0) { 
-        this.status.notStarted = false;
-        this.status.inProcess = false;
-        this.status.finished = true;
-
-      }
-    
-    }
-
+    console.log(this.tripStatus);
+    this.$store.commit('updateTripStatus');
   }
 
 }
