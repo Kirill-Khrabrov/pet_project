@@ -1,25 +1,33 @@
 <template>
-  <div class="app">
+  <div class="container-fluid text-center">
+
+    <div class="row">
+      <img class="backgroundImage" src='./assets/img/natural.png'>
+    </div>
+
+     <!-- Application Header -->
+    <header class="row py-1 sticky-top">
+      <h1 class="mx-2 font-weight-bold">Pocket Cash Calculator</h1>
+    </header>
           
-      <!-- Row for Trip Details/Expense Details/Trip info Sections-->
-      <div class="row text-center">
-        
-        <!-- Trip Details Section -->   
-        <trip-details />
+    <!-- Row for Trip Details/Expense Details/Trip info Sections-->
+    <div class="row text-center">
+      
+      <!-- Trip Details Section -->   
+      <trip-details />
 
-        <!-- Trip Info section 
-        <trip-info>
-        </trip-info> -->
-       
-        <!-- Expense Details Section -->
-        <expense-details />
+      <!-- Trip Info section -->
+      <trip-info :class="{inactive: !startFormIsValid || tripStatus.notStarted}"/>    
+      
+      <!-- Expense Details Section -->
+      <expense-details :class="{inactive: !startFormIsValid || tripStatus.notStarted}"/>
 
-      </div>  
+    </div>  
 
-      <!-- Global container for Trip list -->
-      <div id="TripsListSection" class="row py-1 text-center">
-        <trips-list :allTrips="allTrips" />        
-      </div>
+    <!-- Global container for Trip list -->
+    <div class="row py-1 text-center">
+      <trips-list :allTrips="allTrips" />        
+    </div>
    
   </div>  
 </template>
@@ -34,19 +42,24 @@ import TripsList from './components/TripsList.vue';
 export default {
   name: 'App',
 
-
   computed: {
     ...mapGetters([
-      'allTrips',      
+      'allTrips',
+      'tripStatus',
+      'tripDescription',
+      'tripDateStart',
+      'tripDateEnd',
+      'tripTotalCash'
     ]), 
     
+    startFormIsValid () {
+      return this.tripDescription && this.tripDateStart && this.tripDateEnd && this.tripTotalCash;
+    }
   },
 
   methods: {
     ...mapActions(['fetchAllTrips']),
-
-    ...mapMutations(['updateTripStatus']),
-       
+    ...mapMutations(['updateTripStatus']),       
   },
 
   async mounted() {
@@ -62,121 +75,85 @@ export default {
     TripInfo,
     ExpenseDetails,
     TripsList
-
   }
 
- /*   
-  
-      computed: {       
-
-        // calculate remaining cash-on-hand
-        cashLeft () {
-        
-          if (this.spendsList.length == 0) {
-            return this.totalCash;
-        
-          } else {
-            let copiedTotalCash = this.totalCash;
-          
-            this.spendsList.forEach(spend => {
-              copiedTotalCash -= spend.spends_sum;
-            });
-
-            return copiedTotalCash;
-          }
-          
-        },
-
-        // calculate total expenses of the specified Trip
-        totalSpends () {
-          if (this.spendsList.length == 0) {
-            return 0;
-        
-          } else {
-            let totalSpends = 0;
-          
-            this.spendsList.forEach(spend => {
-              totalSpends += spend.spends_sum;
-            });
-
-            return totalSpends;
-          }
-      
-        },
-
-        // calculate recommended daily cash amount
-        everydayCash () {
-          return Math.round(this.cashLeft / this.daysLeft);
-        },
-      
-      },
-
-*/
-/*
-
-      methods: {
-  
-       
-       
-
-        // reset Trip form to default values
-        
-
-        // reset Spend form to default values
-        resetSpendingForm () {      
-          this.specifiedSpendId = 0;
-          this.spendDescription = '';
-          this.spendCash = 0;
-        },
-
-      },
-
-*/
-/*
-
-      watch: {
-    
-        // when user clicks on prefered Trip, specifiedTripId changes
-        // this automatically refreshes the SpendsList for prefered Trip
-        specifiedTripId () {
-      
-          if (this.specifiedTripId !== 0) {
-        
-            fetch(`http://localhost:4001/api/trips/${this.specifiedTripId}/spends`).
-              then(response => {
-        
-                if (response.ok){
-                  return response.json();
-                }
-        
-                throw new Error('Request failed!');
-        
-              }, networkError => console.log(networkError.message)).
-          
-                then(jsonResponse => {
-              
-                  // refresh cached Spends List with rows from DB
-                  this.spendsList = jsonResponse;
-            
-                });
-          
-            }
-
-        },
-
-      },
-
-*/
-/*
-
-      // cache all Trips from DB at the very start of the App
-      created () {
-        //this.getAllTrips();
-        console.log(`App started ${this.data}`);
-      },
-
-*/
-
 };
-
 </script>
+
+<style>
+  /* Global styles */
+  .backgroundImage {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    opacity: .33;
+  }
+
+  .container-fluid {
+    background-color: #dfedfca8;
+  }
+
+  header {
+    background-color: #bddbf5;  
+  }
+
+  input, textarea {
+    border: 0px;
+    border-radius: 3px;
+    font-family: "Titillium Web";
+  }
+
+  input:hover, textarea:hover {
+    cursor: pointer;
+    background-color: #bddbf5;
+  }
+
+  button {
+    background-color: #d9e1e9;
+    font-family: "Titillium Web";
+    font-weight: 600;
+  }
+
+  img {
+    height: 14px;
+    width: 14px;
+  }
+
+  /* Text styles */
+  p, h1, h3, label, button, summary {
+    font-family: "Titillium Web";
+  }
+
+  p, label {
+    font-weight: 700;
+    text-shadow: #54aaf0 0 0 3px;
+  }
+
+  p.text-white {
+    font-size: 1.1em;
+    text-shadow: #000000 0 0 10px;
+    font-weight: 700;
+  }
+ 
+  /* Table styles */
+  tbody tr:hover {
+    background-color: #bddbf5!important;
+  }
+
+  .activeRow {
+    background-color: #9fcff8!important;
+  }
+
+  th {
+    font-size: 1.1em;
+  }
+
+  td > img:hover {
+    cursor: pointer;
+  }
+
+  /* Styles used for computed visualisation */
+  .inactive {
+    display: none;
+  }
+</style>

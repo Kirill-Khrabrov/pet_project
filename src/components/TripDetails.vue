@@ -10,7 +10,7 @@
         </div>
               
         <div class="col p-0 text-right">
-          <button class="rounded-circle my-1" @click="resetTripForm"> <img class="mb-1" src="/assets/img/quit.svg"> </button>
+          <button class="rounded-circle my-1" @click="resetTripForm"> <img class="mb-1" src="@/assets/img/refresh.svg"> </button>
         </div>
             
       </div>
@@ -82,12 +82,12 @@
         <button class="col-2 rounded-pill ml-auto mr-3 my-1 py-1 px-0"
           @click="addNewTrip" 
           :disabled="!startFormIsValid"> 
-          <img class="mb-1" src="public/img/add-icon.svg"> 
+          <img class="mb-1" src="@/assets/img/add-icon.svg"> 
         </button>
         <button class="col-2 rounded-pill mr-auto ml-3 my-1 py-1 px-0"
          @click="updateTrip" 
          :disabled="!startFormIsValid"> 
-          <img class="mb-1" src="public/img/diskette.svg"> 
+          <img class="mb-1" src="@/assets/img/diskette.svg"> 
         </button>
 
       </div>   
@@ -103,15 +103,7 @@ import { mapGetters, mapActions, mapMutations } from 'vuex';
 export default {
   
   name: 'TripDetails',
-
-  data(){
-    return  {
        
-    
-    };
-
-  },
-      
   computed: {
     ...mapGetters([
       'tripDescription',
@@ -126,30 +118,21 @@ export default {
     // otherwise it is unable to save Trip to DB
     startFormIsValid () {
       return this.tripDescription && this.tripDateStart && this.tripDateEnd && this.tripTotalCash;
-    },
-
-    // convert entered start Trip date to number
-    dayStart () {
-      return Math.floor(new Date(this.tripDateStart) / (1000 * 3600 * 24));
-    },
-
-    // convert entered end Trip date to number
-    dayEnd () {
-      return Math.floor(new Date(this.tripDateEnd) / (1000 * 3600 * 24));
-    },
+    },    
 
     // calculate trip length 
     totalDays () {
-      if ((this.dayEnd - this.dayStart) >= 0) {
-        return this.dayEnd - this.dayStart + 1;
+      const dayEnd = Math.floor(new Date(this.tripDateEnd) / (1000 * 3600 * 24));
+      const dayStart = Math.floor(new Date(this.tripDateStart) / (1000 * 3600 * 24));
+
+      if ((dayEnd - dayStart) >= 0) {
+        return dayEnd - dayStart + 1;
+      } else {
+        return 'The Trip cannot end before start';
       }
-    },
 
-    // calculate number of days, remaining till trip ends
-    daysLeft () {
-      return this.dayEnd - Math.floor(new Date() / (1000 * 3600 * 24)) + 1;
     },
-
+    
   },
 
   methods: {
@@ -180,6 +163,7 @@ export default {
         dateStart: this.tripDateStart, 
         dateEnd: this.tripDateEnd, 
         totalCash: this.tripTotalCash });
+      this.$store.commit('updateSpendList', []);
     },
 
     updateTrip() {
@@ -204,5 +188,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  
+
+
+
 
 </style>

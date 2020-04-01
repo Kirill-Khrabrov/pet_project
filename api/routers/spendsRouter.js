@@ -104,12 +104,10 @@ spendsRouter.put('/:spendId', (req, res, next) => {
     db.run(`
         update Spends
         set description = $description,
-            date = $date,
             spends_sum = $spends_sum
         where Spends.id = ${req.spend.id}; 
     `, {
         $description: updatedSpend.description,
-        $date: updatedSpend.date,
         $spends_sum: updatedSpend.spendCash,        
     }, function(err) {
         

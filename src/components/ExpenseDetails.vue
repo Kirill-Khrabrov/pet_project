@@ -10,7 +10,7 @@
           <h3 class="my-auto font-weight-bold"> Expense Details </h3>
         </div>
         <div class="col p-0 text-right">
-          <button class="rounded-circle my-1" @click="resetSpendForm"> <img class="mb-1" src="public/img/quit.svg"> </button>
+          <button class="rounded-circle my-1" @click="resetSpendForm"> <img class="mb-1" src="@/assets/img/refresh.svg"> </button>
         </div>
 
       </div>
@@ -41,12 +41,12 @@
       <div class="row py-2" v-if="tripStatus.inProcess">
         
         
-        <button class="col-2 rounded-pill ml-auto mr-3 my-1 py-1 px-0" @click="saveSpendToDatabase" :disabled="!spendFormIsValid"> 
-          <img class="mb-1" src="public/img/add-icon.svg"> 
+        <button class="col-2 rounded-pill ml-auto mr-3 my-1 py-1 px-0" @click="saveSpendToDatabase" :disabled="!spendFormIsValid || enoughCash <= 0"> 
+          <img class="mb-1" src="@/assets/img/add-icon.svg"> 
         </button>
         
         <button class="col-2 rounded-pill mr-auto mr-3 my-1 py-1 px-0" @click="updateSpend" :disabled="chosenSpend == 0 || !spendDescription"> 
-          <img class="mb-1" src="public/img/diskette.svg"> 
+          <img class="mb-1" src="@/assets/img/diskette.svg"> 
         </button>
             
       </div>
@@ -64,11 +64,7 @@ import ExpensesList from './ExpensesList.vue';
 
 export default {
   
-  name: 'ExpenseDetails',
-  
-  props: {
-
-  },
+  name: 'ExpenseDetails', 
   
   computed: {
     ...mapGetters([
@@ -78,12 +74,24 @@ export default {
       'chosenSpend',
       'chosenTrip',
       'tripStatus',
-      'allSpends'
+      'allSpends',
+      'tripTotalCash'
     ]),
 
     spendFormIsValid() {
       return this.spendDescription && this.spendCash;
+    },
+
+    enoughCash() {
+      let totalSpends = 0;
+      
+      this.allSpends.forEach(spend => {
+          totalSpends += spend.spends_sum;
+      });
+
+      return this.tripTotalCash - totalSpends;
     }
+  
   },
 
   methods: {

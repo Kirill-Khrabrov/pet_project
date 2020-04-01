@@ -1,6 +1,6 @@
 <template>
     
-  <details class="col my-auto">
+  <details class="col-lg-10 mx-auto">
           
     <summary class="col my-auto font-weight-bold">SCHEDULE OF TRIPS</summary>
 
@@ -19,9 +19,9 @@
           </thead>
                   
           <tbody id="TripList" class="overflow-auto">
-            <tr v-for="trip in allTrips" :key="trip.id">
+            <tr v-for="trip in allTrips" :key="trip.id" :class="{activeRow: chosenTrip === trip.id}">
               <td>
-                <img src="public/img/x-circle.svg" @click="removeTrip(trip)">
+                <img src="@/assets/img/quit.svg" @click="removeTrip(trip)">
               </td>
               <td @click="chooseTrip(trip)">{{ trip.description }}</td>
               <td @click="chooseTrip(trip)">{{ trip.trip_start | date('date') }}</td>
@@ -42,33 +42,59 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'TripsList',
+
+  computed: {
+    ...mapGetters([      
+      'chosenTrip',
+    ]),  
+      
+  },
     
-    props: {
-        allTrips: {
-            required: true,
-            type: Array
-        }
+  props: {
+    allTrips: {
+      required: true,
+      type: Array
+    }
+  },
+
+  methods: {
+    //removes Trip from DB and rendered TripsList
+    removeTrip(trip){
+      this.$store.dispatch('fetchDeleteTrip', trip.id);      
+
+      if (trip.id === this.chosenTrip) {
+        this.$store.commit('resetSpendForm');
+        this.$store.commit("resetTripForm");
+        this.$store.commit('updateSpendList', []);
+      }
     },
 
-    methods: {
-      removeTrip(trip){
-        this.$store.dispatch('fetchDeleteTrip', trip.id);
-      },
+    //switch selected Trip to chosen
+    chooseTrip(trip) {      
+      this.$store.commit('updateChosenTripId', trip.id);
+      this.$store.dispatch('fetchAllSpends', this.$store.getters.chosenTrip);
+      this.$store.commit('updateTripDescription', trip.description);
+      this.$store.commit('updateTripDateStart', trip.trip_start);
+      this.$store.commit('updateTripDateEnd', trip.trip_end);
+      this.$store.commit('updateTripTotalCash', trip.total_cash); 
+      this.$store.commit('resetSpendForm');
+    },
 
-      chooseTrip(trip) {
-        
-        this.$store.commit('updateChosenTripId', trip.id);
-        this.$store.dispatch('fetchAllSpends', this.$store.getters.chosenTrip);
-        this.$store.commit('updateTripDescription', trip.description);
-        this.$store.commit('updateTripDateStart', trip.trip_start);
-        this.$store.commit('updateTripDateEnd',trip.trip_end);
-        this.$store.commit('updateTripTotalCash', trip.total_cash);        
-
-      },
-
-
-    }
+  }
 }
 </script>
+
+<style scoped>
+  .TripList {
+    height: 14em;
+    overflow-y: auto
+  }
+
+  td {
+    font-weight: 500;
+  }
+</style>

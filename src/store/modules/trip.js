@@ -1,5 +1,123 @@
+const url = 'http://127.0.0.1';
+const PORT = process.env.PORT || 4001;
+
 export default {
-    actions: { },
+    state: {
+        //>>> Trip properties
+        // this trip properties are entered by user 
+        // and saved to DB if user enters " + " button, 
+        // or updated when user eters " save " button
+            description: '',
+            dateStart: '',        
+            dateEnd: '',          
+            totalCash: 0,
+        // Helper vars
+        // this var is replaced with ID of specified Trip,
+        // when it is not 0, the Trip with specified ID is able to be deleted or updated
+            specifiedTripId: 0,
+            
+        // status of the trip calculated each time
+        // when the site updates. Connected with VUE "Updated" lifecircle hook
+            status: {
+                notStarted: false,
+                inProcess: false,
+                finished: false
+            },
+        
+    },
+
+    actions: {
+        // GET all trips from DB  
+        async fetchAllTrips(ctx) {
+            
+            const res = await fetch(
+            `${url}:${PORT}/api/trips`
+            );
+            const trips = await res.json();
+                
+            ctx.commit('updateTripList', trips);
+  
+        },
+
+        //POST new Trip to DB
+        async fetchNewTrip(ctx, newTrip) {
+
+            console.log('Sending new POST request')
+    
+            const body = {
+                description: newTrip.description,
+                dateStart: newTrip.dateStart,
+                dateEnd: newTrip.dateEnd,
+                totalCash: newTrip.totalCash,
+            };
+    
+            const fetchOptions = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'                     
+                },
+                body: JSON.stringify({ trip: body })
+            };
+                    
+            const res = await fetch(
+                `${url}:${PORT}/api/trips`, 
+                fetchOptions
+            );
+    
+            const responseJson = await res.json();
+    
+            ctx.commit('updateChosenTripId', responseJson.trip.id);
+            ctx.commit('addTripToTripList', responseJson.trip);        
+    
+        },
+
+        //UPDATE Trip
+    async fetchUpdateTrip(ctx, trip) {
+
+        console.log(`Sending new PUT request witg data ${trip}`)
+  
+        const body = {
+          description: trip.description,
+          dateStart: trip.dateStart,
+          dateEnd: trip.dateEnd,
+          totalCash: trip.totalCash,
+        };
+  
+        const fetchOptions = {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'                     
+          },
+          body: JSON.stringify({ trip: body })
+          };
+                  
+          const res = await fetch(
+            `${url}:${PORT}/api/trips/${trip.tripId}`, 
+            fetchOptions
+          );
+  
+          const responseJson = await res.json();
+  
+          ctx.commit('updateTripInTripsList', responseJson);               
+  
+      },
+
+      //DELETE trip from DB
+    async fetchDeleteTrip(ctx, tripId) {
+
+        const fetchOptions = {
+          method: 'DELETE'
+        };
+  
+        const res = await fetch(
+          `${url}:${PORT}/api/trips/${tripId}`,
+          fetchOptions
+        );
+  
+        ctx.commit('removeTripFromTripList', tripId); 
+      },
+
+    },
 
     mutations: {
         updateTripDescription(state, newDescription) {
@@ -26,7 +144,8 @@ export default {
             state.description = '';
             state.dateStart = '';
             state.dateEnd = '';
-            state.totalCash = ''; 
+            state.totalCash = '';
+            state.specifiedTripId = 0; 
         },
 
         updateTripStatus(state) {
@@ -61,29 +180,7 @@ export default {
            
     },
 
-    state: {
-    //>>> Trip properties
-    // this trip properties are entered by user 
-    // and saved to DB if user enters " + " button, 
-    // or updated when user eters " save " button
-        description: '',
-        dateStart: '',        
-        dateEnd: '',          
-        totalCash: 0,
-    // Helper vars
-    // this var is replaced with ID of specified Trip,
-    // when it is not 0, the Trip with specified ID is able to be deleted or updated
-        specifiedTripId: 0,
-        
-    // status of the trip calculated each time
-    // when the site updates. Connected with VUE "Updated" lifecircle hook
-        status: {
-            notStarted: false,
-            inProcess: false,
-            finished: false
-        },
     
-    },
 
     getters: {
         tripDescription(state) {
