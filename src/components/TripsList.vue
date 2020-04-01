@@ -83,8 +83,8 @@ export default {
       this.$store.commit('updateTripTotalCash', trip.total_cash); 
       this.$store.commit('resetSpendForm');
     },
-
   }
+  
 }
 </script>
 

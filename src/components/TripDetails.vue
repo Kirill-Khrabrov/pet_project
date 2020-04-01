@@ -80,13 +80,14 @@
       <div class="row py-lg-4 pb-lg-5">
         
         <button class="col-2 rounded-pill ml-auto mr-3 my-1 py-1 px-0"
-          @click="addNewTrip" 
-          :disabled="!startFormIsValid"> 
+                @click="addNewTrip" 
+                :disabled="!startFormIsValid"> 
           <img class="mb-1" src="@/assets/img/add-icon.svg"> 
         </button>
+
         <button class="col-2 rounded-pill mr-auto ml-3 my-1 py-1 px-0"
-         @click="updateTrip" 
-         :disabled="!startFormIsValid"> 
+                @click="updateTrip" 
+                :disabled="!startFormIsValid"> 
           <img class="mb-1" src="@/assets/img/diskette.svg"> 
         </button>
 
@@ -98,7 +99,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions, mapMutations } from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
   
@@ -127,6 +128,7 @@ export default {
 
       if ((dayEnd - dayStart) >= 0) {
         return dayEnd - dayStart + 1;
+        
       } else {
         return 'The Trip cannot end before start';
       }
@@ -154,8 +156,7 @@ export default {
 
     resetTripForm () {    
       this.$store.commit('resetTripForm');       
-    },
-    
+    },    
 
     addNewTrip() {
       this.$store.dispatch('fetchNewTrip', { 
@@ -179,18 +180,8 @@ export default {
 
   // control Trip status at the every User's step
   updated () {
-    console.log(this.tripStatus);
     this.$store.commit('updateTripStatus');
   }
 
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-  
-
-
-
-
-</style>

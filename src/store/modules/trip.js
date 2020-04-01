@@ -7,23 +7,23 @@ export default {
         // this trip properties are entered by user 
         // and saved to DB if user enters " + " button, 
         // or updated when user eters " save " button
-            description: '',
-            dateStart: '',        
-            dateEnd: '',          
-            totalCash: 0,
-        // Helper vars
+        description: '',
+        dateStart: '',        
+        dateEnd: '',          
+        totalCash: 0,
+        
         // this var is replaced with ID of specified Trip,
         // when it is not 0, the Trip with specified ID is able to be deleted or updated
-            specifiedTripId: 0,
+        specifiedTripId: 0,
             
         // status of the trip calculated each time
         // when the site updates. Connected with VUE "Updated" lifecircle hook
-            status: {
-                notStarted: false,
-                inProcess: false,
-                finished: false
-            },
-        
+        status: {
+            notStarted: false,
+            inProcess: false,
+            finished: false
+        },
+    
     },
 
     actions: {
@@ -33,16 +33,14 @@ export default {
             const res = await fetch(
             `${url}:${PORT}/api/trips`
             );
-            const trips = await res.json();
-                
+
+            const trips = await res.json();                
             ctx.commit('updateTripList', trips);
   
         },
 
         //POST new Trip to DB
         async fetchNewTrip(ctx, newTrip) {
-
-            console.log('Sending new POST request')
     
             const body = {
                 description: newTrip.description,
@@ -64,58 +62,55 @@ export default {
                 fetchOptions
             );
     
-            const responseJson = await res.json();
-    
+            const responseJson = await res.json();    
             ctx.commit('updateChosenTripId', responseJson.trip.id);
             ctx.commit('addTripToTripList', responseJson.trip);        
     
         },
 
         //UPDATE Trip
-    async fetchUpdateTrip(ctx, trip) {
+        async fetchUpdateTrip(ctx, trip) {
+        
+            const body = {
+                description: trip.description,
+                dateStart: trip.dateStart,
+                dateEnd: trip.dateEnd,
+                totalCash: trip.totalCash,
+            };
+    
+            const fetchOptions = {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'                     
+                },
+                body: JSON.stringify({ trip: body })
+            };
+                    
+            const res = await fetch(
+                `${url}:${PORT}/api/trips/${trip.tripId}`, 
+                fetchOptions
+            );
+    
+            const responseJson = await res.json();
+            ctx.commit('updateTripInTripList', responseJson);               
+  
+        },
 
-        console.log(`Sending new PUT request witg data ${trip}`)
-  
-        const body = {
-          description: trip.description,
-          dateStart: trip.dateStart,
-          dateEnd: trip.dateEnd,
-          totalCash: trip.totalCash,
-        };
-  
-        const fetchOptions = {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json'                     
-          },
-          body: JSON.stringify({ trip: body })
-          };
-                  
-          const res = await fetch(
-            `${url}:${PORT}/api/trips/${trip.tripId}`, 
-            fetchOptions
-          );
-  
-          const responseJson = await res.json();
-  
-          ctx.commit('updateTripInTripsList', responseJson);               
-  
-      },
+        //DELETE trip from DB
+        async fetchDeleteTrip(ctx, tripId) {
 
-      //DELETE trip from DB
-    async fetchDeleteTrip(ctx, tripId) {
+            const fetchOptions = {
+                method: 'DELETE'
+            };
+    
+            const res = await fetch(
+                `${url}:${PORT}/api/trips/${tripId}`,
+                fetchOptions
+            );
+    
+            ctx.commit('removeTripFromTripList', tripId);
 
-        const fetchOptions = {
-          method: 'DELETE'
-        };
-  
-        const res = await fetch(
-          `${url}:${PORT}/api/trips/${tripId}`,
-          fetchOptions
-        );
-  
-        ctx.commit('removeTripFromTripList', tripId); 
-      },
+        },
 
     },
 
@@ -149,10 +144,9 @@ export default {
         },
 
         updateTripStatus(state) {
-            const dayNow = Math.floor(new Date() / (1000 * 3600 * 24));
+            const dayNow = Math.floor(new Date() / (1000 * 3600 * 24) + 1);
             const dayStart = Math.floor(new Date(state.dateStart) / (1000 * 3600 * 24));
             const dayEnd = Math.floor(new Date(state.dateEnd) / (1000 * 3600 * 24));
-
             
             if (state.description && state.dateStart && state.dateEnd && state.totalCash) {
                                 
@@ -174,13 +168,9 @@ export default {
     
             }
    
-        }
-
-        
+        }        
            
-    },
-
-    
+    },    
 
     getters: {
         tripDescription(state) {
@@ -208,6 +198,5 @@ export default {
         }
 
     },
-
     
 }

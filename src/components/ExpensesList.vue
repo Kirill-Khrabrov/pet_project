@@ -38,6 +38,7 @@
 
     </div>
 </template>
+
 <script>
 import { mapGetters } from 'vuex';
 
@@ -59,16 +60,14 @@ export default {
         ]),
     },
 
-    methods: {
-      
+    methods: {      
       chooseSpend(spend) {               
         this.$store.commit('updateChosenSpendId', spend.id);
         this.$store.commit('updateSpendDescription', spend.description);        
         this.$store.commit('updateSpendCash', spend.spends_sum);        
       },
 
-      removeSpend(spend) {        
-
+      removeSpend(spend) {
         this.$store.dispatch('fetchDeleteSpend', {
             tripId: this.chosenTrip,
             spendId: spend.id,
@@ -84,14 +83,14 @@ export default {
 }
 </script>
 <style scoped>
-     /* Styling SpendsList visualisation */
-  .ShortList {
-    height: 7.5em;
-    overflow-y: auto;
-  }
+    /* Styling SpendsList visualisation */
+    .ShortList {
+        height: 7.5em;
+        overflow-y: auto;
+    }
 
-  .LongList {
-    height: 21em;
-    overflow-y: auto;
-  }
+    .LongList {
+        height: 21em;
+        overflow-y: auto;
+    }
 </style>

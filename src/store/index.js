@@ -3,23 +3,16 @@ import Vuex from 'vuex';
 import trip from './modules/trip.js';
 import spend from './modules/spend.js';
 
-const url = 'http://127.0.0.1';
-const PORT = process.env.PORT || 4001;
-
-
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: {
-        
+  state: {        
     // vars for caching retrieved data from DB
-    tripsList: [],  // cach for all Trips from Trip DB
-    spendsList: [], // cach all Spends connected with specified Trip     
-    
+    tripsList: [],  // cache for all Trips from Trip DB
+    spendsList: [], // cache all Spends connected with specified Trip         
   },
 
-  getters: {
-        
+  getters: {        
     allTrips(state) {      
       return state.tripsList;
     },
@@ -27,11 +20,11 @@ export default new Vuex.Store({
     allSpends(state) {
       return state.spendsList;
     },
-
   },
 
 
   mutations: {
+    //change Trip list on different actions
     updateTripList(state, trips) {
       state.tripsList = trips;
     },
@@ -40,7 +33,7 @@ export default new Vuex.Store({
       state.tripsList.push(newTrip);
     },
     
-    updateTripInTripsList(state, updatedTrip) {
+    updateTripInTripList(state, updatedTrip) {
 
       state.tripsList.forEach(trip => {
   
@@ -58,6 +51,7 @@ export default new Vuex.Store({
       state.tripsList = state.tripsList.filter(trip => trip.id !== tripId);
     },    
 
+    //change Spend list on different actions
     updateSpendList(state, spends) {
       state.spendsList = spends;      
     },
@@ -66,7 +60,7 @@ export default new Vuex.Store({
       state.spendsList.push(newSpend);
     },
 
-    updateSpendInSpendsList(state, updatedSpend) {
+    updateSpendInSpendList(state, updatedSpend) {
 
       state.spendsList.forEach(spend => {
   
@@ -82,8 +76,7 @@ export default new Vuex.Store({
 
     removeSpendFromSpendList(state, spendId) {
       state.spendsList = state.spendsList.filter(spend => spend.id !== spendId);
-    },    
-
+    },
   },    
   
   modules: { 

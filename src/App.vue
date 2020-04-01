@@ -1,6 +1,7 @@
 <template>
   <div class="container-fluid text-center">
 
+    <!-- Backgorund Image for all App -->
     <div class="row">
       <img class="backgroundImage" src='./assets/img/natural.png'>
     </div>
@@ -77,7 +78,7 @@ export default {
     TripsList
   }
 
-};
+}
 </script>
 
 <style>

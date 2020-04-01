@@ -59,6 +59,7 @@ export default {
 
         if (copiedTotalCash < 0) {
           return "Nothing left";
+
         } else {
           return copiedTotalCash;
         }
@@ -88,16 +89,19 @@ export default {
     daysLeft () {
       const dayEnd = Math.floor(new Date(this.tripDateEnd) / (1000 * 3600 * 24));
       let today = Math.floor(new Date() / (1000 * 3600 * 24)) + 1;     
-      return dayEnd - today + 2;           
+      return dayEnd - today + 1;           
     },
 
     // calculate recommended daily cash amount
     everydayCash () {
+      
       if (typeof this.cashLeft === 'number') {
         return Math.round(this.cashLeft / this.daysLeft);
+
       } else {
         return 'You are out of budget';
       }
+
     },
       
   },
@@ -105,7 +109,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   .everydayCash {
       font-size: 1.3em!important;

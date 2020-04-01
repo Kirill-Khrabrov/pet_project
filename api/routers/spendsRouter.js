@@ -6,7 +6,7 @@ const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite'
 const spendsRouter = express.Router({mergeParams: true});
 
 spendsRouter.param('spendId', (req, res, next, spendId) => {
-  
+    
     db.get(`
         select * from Spends
         where Spends.id = ${spendId};
@@ -155,9 +155,3 @@ spendsRouter.delete('/:spendId', (req, res, next) => {
 });
 
 module.exports = spendsRouter;
-
-
-
-
-
-
