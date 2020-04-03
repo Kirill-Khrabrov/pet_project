@@ -82,6 +82,9 @@ export default {
 </script>
 
 <style>
+  /* importing Google Fonts */
+  @import url('https://fonts.googleapis.com/css?family=Titillium+Web&display=swap');
+
   /* Global styles */
   .backgroundImage {
     position: fixed;
