@@ -20,7 +20,7 @@
                 </thead>                    
                 
                 <tbody >
-                    <tr v-for="spend in allSpends" :key="spend.id" :class="{activeRow: chosenSpend === spend.id && tripStatus.inProcess}">
+                    <tr v-for="spend in allSpends" :key="spend.id" :class="{activeRow: specifiedSpendId === spend.id && tripStatus.inProcess}">
                         <td>
                            <img src="@/assets/img/quit.svg" @click="removeSpend(spend)" v-if="!tripStatus.finished"> 
                         </td>
@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
     name: 'ExpensesList',
@@ -53,11 +53,11 @@ export default {
     },
 
     computed: {
-        ...mapGetters([
-            'tripStatus',
-            'chosenTrip',
-            'chosenSpend'
-        ]),
+        ...mapState({
+            tripStatus: state => state.trip.tripStatus,
+            specifiedTripId: state => state.trip.specifiedTripId,
+            specifiedSpendId: state => state.spend.specifiedSpendId
+        }),
     },
 
     methods: {      
@@ -69,11 +69,11 @@ export default {
 
       removeSpend(spend) {
         this.$store.dispatch('fetchDeleteSpend', {
-            tripId: this.chosenTrip,
+            tripId: this.specifiedTripId,
             spendId: spend.id,
         })
 
-        if (this.chosenSpend === spend.id) {
+        if (this.specifiedSpendId === spend.id) {
             this.$store.commit('resetSpendForm');
         }
       }

@@ -12,17 +12,6 @@ export default new Vuex.Store({
     spendsList: [], // cache all Spends connected with specified Trip         
   },
 
-  getters: {        
-    allTrips(state) {      
-      return state.tripsList;
-    },
-
-    allSpends(state) {
-      return state.spendsList;
-    },
-  },
-
-
   mutations: {
     //change Trip list on different actions
     updateTripList(state, trips) {

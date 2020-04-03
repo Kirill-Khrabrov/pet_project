@@ -1,16 +1,16 @@
-const url = 'http://127.0.0.1';
-const PORT = process.env.PORT || 4001;
+import { url, PORT } from '../server_config.js';
 
-export default {
+export default {    
+
     state: {
         //>>> Trip properties
         // this trip properties are entered by user 
         // and saved to DB if user enters " + " button, 
         // or updated when user eters " save " button
-        description: '',
-        dateStart: '',        
-        dateEnd: '',          
-        totalCash: 0,
+        tripDescription: '',
+        tripDateStart: '',        
+        tripDateEnd: '',          
+        tripTotalCash: 0,
         
         // this var is replaced with ID of specified Trip,
         // when it is not 0, the Trip with specified ID is able to be deleted or updated
@@ -18,7 +18,7 @@ export default {
             
         // status of the trip calculated each time
         // when the site updates. Connected with VUE "Updated" lifecircle hook
-        status: {
+        tripStatus: {
             notStarted: false,
             inProcess: false,
             finished: false
@@ -28,19 +28,19 @@ export default {
 
     actions: {
         // GET all trips from DB  
-        async fetchAllTrips(ctx) {
+        async fetchAllTrips({commit}) {
             
             const res = await fetch(
             `${url}:${PORT}/api/trips`
             );
 
             const trips = await res.json();                
-            ctx.commit('updateTripList', trips);
+            commit('updateTripList', trips);
   
         },
 
         //POST new Trip to DB
-        async fetchNewTrip(ctx, newTrip) {
+        async fetchNewTrip({commit}, newTrip) {
     
             const body = {
                 description: newTrip.description,
@@ -63,13 +63,13 @@ export default {
             );
     
             const responseJson = await res.json();    
-            ctx.commit('updateChosenTripId', responseJson.trip.id);
-            ctx.commit('addTripToTripList', responseJson.trip);        
+            commit('updateChosenTripId', responseJson.trip.id);
+            commit('addTripToTripList', responseJson.trip);        
     
         },
 
         //UPDATE Trip
-        async fetchUpdateTrip(ctx, trip) {
+        async fetchUpdateTrip({commit}, trip) {
         
             const body = {
                 description: trip.description,
@@ -92,12 +92,12 @@ export default {
             );
     
             const responseJson = await res.json();
-            ctx.commit('updateTripInTripList', responseJson);               
+            commit('updateTripInTripList', responseJson);               
   
         },
 
         //DELETE trip from DB
-        async fetchDeleteTrip(ctx, tripId) {
+        async fetchDeleteTrip({commit}, tripId) {
 
             const fetchOptions = {
                 method: 'DELETE'
@@ -108,7 +108,7 @@ export default {
                 fetchOptions
             );
     
-            ctx.commit('removeTripFromTripList', tripId);
+            commit('removeTripFromTripList', tripId);
 
         },
 
@@ -116,19 +116,19 @@ export default {
 
     mutations: {
         updateTripDescription(state, newDescription) {
-            state.description = newDescription; 
+            state.tripDescription = newDescription; 
         },       
         
         updateTripDateStart(state, newDateStart) {
-            state.dateStart = newDateStart;
+            state.tripDateStart = newDateStart;
         },
         
         updateTripDateEnd(state, newDateEnd) {
-            state.dateEnd = newDateEnd;
+            state.tripDateEnd = newDateEnd;
         },
         
         updateTripTotalCash(state, newTotalCash) {
-            state.totalCash = newTotalCash; 
+            state.tripTotalCash = newTotalCash; 
         },
 
         updateChosenTripId(state, tripId) {
@@ -136,34 +136,34 @@ export default {
         },
 
         resetTripForm(state) {
-            state.description = '';
-            state.dateStart = '';
-            state.dateEnd = '';
-            state.totalCash = '';
+            state.tripDescription = '';
+            state.tripDateStart = '';
+            state.tripDateEnd = '';
+            state.tripTotalCash = '';
             state.specifiedTripId = 0; 
         },
 
         updateTripStatus(state) {
-            const dayNow = Math.floor(new Date() / (1000 * 3600 * 24) + 1);
-            const dayStart = Math.floor(new Date(state.dateStart) / (1000 * 3600 * 24));
-            const dayEnd = Math.floor(new Date(state.dateEnd) / (1000 * 3600 * 24));
+            const dayNow = Math.floor(new Date() / (1000 * 3600 * 24));
+            const dayStart = Math.floor(new Date(state.tripDateStart) / (1000 * 3600 * 24));
+            const dayEnd = Math.floor(new Date(state.tripDateEnd) / (1000 * 3600 * 24));
             
-            if (state.description && state.dateStart && state.dateEnd && state.totalCash) {
+            if (state.tripDescription && state.tripDateStart && state.tripDateEnd && state.tripTotalCash) {
                                 
                 if (dayNow - dayStart < 0) {
-                    state.status.notStarted = true;
-                    state.status.inProcess = false;
-                    state.status.finished = false;
+                    state.tripStatus.notStarted = true;
+                    state.tripStatus.inProcess = false;
+                    state.tripStatus.finished = false;
   
                 } else if (dayNow - dayStart >= 0 && dayNow - dayEnd <= 0) {
-                    state.status.notStarted = false;
-                    state.status.inProcess = true;
-                    state.status.finished = false;
+                    state.tripStatus.notStarted = false;
+                    state.tripStatus.inProcess = true;
+                    state.tripStatus.finished = false;
 
                 } else if (dayNow - dayEnd > 0) { 
-                    state.status.notStarted = false;
-                    state.status.inProcess = false;
-                    state.status.finished = true;
+                    state.tripStatus.notStarted = false;
+                    state.tripStatus.inProcess = false;
+                    state.tripStatus.finished = true;
                 }
     
             }
@@ -171,32 +171,5 @@ export default {
         }        
            
     },    
-
-    getters: {
-        tripDescription(state) {
-            return state.description; 
-        },
-        
-        tripDateStart(state) {
-            return state.dateStart; 
-        },
-        
-        tripDateEnd(state) {
-            return state.dateEnd; 
-        },
-        
-        tripTotalCash(state) {
-            return state.totalCash; 
-        },
-        
-        chosenTrip(state) {
-            return state.specifiedTripId;
-        },
-
-        tripStatus(state) {
-            return state.status;
-        }
-
-    },
     
 }

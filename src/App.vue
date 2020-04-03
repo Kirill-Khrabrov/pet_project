@@ -27,14 +27,14 @@
 
     <!-- Global container for Trip list -->
     <div class="row py-1 text-center">
-      <trips-list :allTrips="allTrips" />        
+      <trips-list :allTrips="tripsList" />        
     </div>
    
   </div>  
 </template>
 
 <script>
-import { mapGetters, mapActions, mapMutations } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 import TripDetails from './components/TripDetails.vue';
 import TripInfo from './components/TripInfo.vue';
 import ExpenseDetails from './components/ExpenseDetails.vue';
@@ -44,14 +44,14 @@ export default {
   name: 'App',
 
   computed: {
-    ...mapGetters([
-      'allTrips',
-      'tripStatus',
-      'tripDescription',
-      'tripDateStart',
-      'tripDateEnd',
-      'tripTotalCash'
-    ]), 
+    ...mapState({     
+      tripStatus: state => state.trip.tripStatus,
+      tripDescription: state => state.trip.tripDescription,
+      tripDateStart: state => state.trip.tripDateStart,
+      tripDateEnd: state => state.trip.tripDateEnd,
+      tripTotalCash: state => state.trip.tripTotalCash,
+      tripsList: state => state.tripsList
+    }),
     
     startFormIsValid () {
       return this.tripDescription && this.tripDateStart && this.tripDateEnd && this.tripTotalCash;

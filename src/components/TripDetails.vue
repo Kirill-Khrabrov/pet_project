@@ -24,7 +24,7 @@
             <p class="col my-auto pb-2">DATE START</p>
           </div>
           <div class="row text-center">
-            <input class="m-auto" type="date" :value="tripDateStart" @input="updateTripDateStart" />
+            <input class="m-auto" type="date" v-model="tripDateStart"/>
           </div>
         </div>       
 
@@ -33,7 +33,7 @@
             <p class="col my-auto pb-2">DATE END</p>
           </div>
           <div class="row text-center">
-            <input class="m-auto" type="date" :value="tripDateEnd" @input="updateTripDateEnd" />
+            <input class="m-auto" type="date" v-model="tripDateEnd"/>
           </div>            
         </div>
 
@@ -48,10 +48,10 @@
           </div>
           <div class="row py-2 text-left">
             <p class="col-6 my-auto">YOUR CASH</p>
-            <input class="col-5 my-auto mr-auto" type="number" min="0" max="999999" :value="tripTotalCash" @input="updateTripTotalCash" />
+            <input class="col-5 my-auto mr-auto" type="number" min="0" max="999999" v-model="tripTotalCash"/>
           </div>
         </div>              
-        <textarea  class="col-6 ml-auto" :value="tripDescription" @input="updateTripDescription"></textarea>
+        <textarea  class="col-6 ml-auto" v-model="tripDescription"></textarea>
       
       </div>  
                 
@@ -99,22 +99,55 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   
   name: 'TripDetails',
        
   computed: {
-    ...mapGetters([
-      'tripDescription',
-      'tripDateStart',
-      'tripDateEnd',
-      'tripTotalCash',
-      'chosenTrip',
-      'tripStatus'
-    ]),
-  
+    ...mapState({
+      tripStatus: state => state.trip.tripStatus,
+      specifiedTripId: state => state.trip.specifiedTripId,         
+    }),
+
+    // computed properties for v-model
+    tripDateStart: {
+      get() {
+        return this.$store.state.trip.tripDateStart;
+      },
+      set(value) {
+        this.$store.commit('updateTripDateStart', value);
+      }
+    },
+    
+    tripDateEnd: {
+      get() {
+        return this.$store.state.trip.tripDateEnd;
+      },
+      set(value) {
+        this.$store.commit('updateTripDateEnd', value);
+      }
+    },
+    
+    tripDescription: {
+      get() {
+        return this.$store.state.trip.tripDescription;
+      },
+      set(value) {
+        this.$store.commit('updateTripDescription', value);
+      }
+    },
+
+    tripTotalCash: {
+      get() {
+        return this.$store.state.trip.tripTotalCash;
+      },
+      set(value) {
+        this.$store.commit('updateTripTotalCash', value);
+      }
+    },
+
     // control all fields of Trip form to be filled by user,
     // otherwise it is unable to save Trip to DB
     startFormIsValid () {
@@ -138,22 +171,6 @@ export default {
   },
 
   methods: {
-    updateTripDescription(e) {
-      this.$store.commit('updateTripDescription', e.target.value);
-    },
-
-    updateTripDateStart(e) {
-      this.$store.commit('updateTripDateStart', e.target.value);
-    },
-
-    updateTripDateEnd(e) {
-      this.$store.commit('updateTripDateEnd', e.target.value);
-    },
-
-    updateTripTotalCash(e) {
-      this.$store.commit('updateTripTotalCash', e.target.value);
-    },    
-
     resetTripForm () {    
       this.$store.commit('resetTripForm');       
     },    
@@ -173,7 +190,7 @@ export default {
         dateStart: this.tripDateStart, 
         dateEnd: this.tripDateEnd, 
         totalCash: this.tripTotalCash,
-        tripId: this.chosenTrip });
+        tripId: this.specifiedTripId });
     },    
 
   },

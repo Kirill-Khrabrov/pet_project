@@ -19,7 +19,7 @@
           </thead>
                   
           <tbody id="TripList" class="overflow-auto">
-            <tr v-for="trip in allTrips" :key="trip.id" :class="{activeRow: chosenTrip === trip.id}">
+            <tr v-for="trip in allTrips" :key="trip.id" :class="{activeRow: specifiedTripId === trip.id}">
               <td>
                 <img src="@/assets/img/quit.svg" @click="removeTrip(trip)">
               </td>
@@ -42,15 +42,15 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   name: 'TripsList',
 
   computed: {
-    ...mapGetters([      
-      'chosenTrip',
-    ]),  
+    ...mapState({
+      specifiedTripId: state => state.trip.specifiedTripId
+    }),  
       
   },
     
@@ -66,7 +66,7 @@ export default {
     removeTrip(trip){
       this.$store.dispatch('fetchDeleteTrip', trip.id);      
 
-      if (trip.id === this.chosenTrip) {
+      if (trip.id === this.specifiedTripId) {
         this.$store.commit('resetSpendForm');
         this.$store.commit("resetTripForm");
         this.$store.commit('updateSpendList', []);
@@ -76,7 +76,7 @@ export default {
     //switch selected Trip to chosen
     chooseTrip(trip) {      
       this.$store.commit('updateChosenTripId', trip.id);
-      this.$store.dispatch('fetchAllSpends', this.$store.getters.chosenTrip);
+      this.$store.dispatch('fetchAllSpends', this.specifiedTripId);
       this.$store.commit('updateTripDescription', trip.description);
       this.$store.commit('updateTripDateStart', trip.trip_start);
       this.$store.commit('updateTripDateEnd', trip.trip_end);

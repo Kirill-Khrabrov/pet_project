@@ -30,10 +30,10 @@
           </div>                    
           <div class="row py-1 text-left">
             <p class="col-6 my-auto">EXPENSE AMOUNT</p>
-            <input class="col-5 my-auto mr-auto" type="number" min="0" max="999999" :value="spendCash" @input="updateSpendCash" />
+            <input class="col-5 my-auto mr-auto" type="number" min="0" max="999999" v-model="spendCash"/>
           </div>      
         </div>
-        <textarea  class="col-6 ml-auto" :value="spendDescription" @input="updateSpendDescription"></textarea>
+        <textarea  class="col-6 ml-auto" v-model="spendDescription"></textarea>
       
       </div>
 
@@ -45,13 +45,13 @@
           <img class="mb-1" src="@/assets/img/add-icon.svg"> 
         </button>
         
-        <button class="col-2 rounded-pill mr-auto mr-3 my-1 py-1 px-0" @click="updateSpend" :disabled="chosenSpend == 0 || !spendDescription"> 
+        <button class="col-2 rounded-pill mr-auto mr-3 my-1 py-1 px-0" @click="updateSpend" :disabled="specifiedSpendId == 0 || !spendDescription"> 
           <img class="mb-1" src="@/assets/img/diskette.svg"> 
         </button>
             
       </div>
 
-      <expenses-list v-if="tripStatus.inProcess || tripStatus.finished" :allSpends="allSpends"/>    
+      <expenses-list v-if="tripStatus.inProcess || tripStatus.finished" :allSpends="spendsList"/>    
       
     </div>  
     
@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
 import ExpensesList from './ExpensesList.vue';
 
 export default {
@@ -67,25 +67,46 @@ export default {
   name: 'ExpenseDetails', 
   
   computed: {
-    ...mapGetters([
-      'spendDescription',
-      'spendDate',
-      'spendCash',
-      'chosenSpend',
-      'chosenTrip',
-      'tripStatus',
-      'allSpends',
-      'tripTotalCash'
-    ]),
+    ...mapState({
+      spendDate: state => state.spend.spendDate,
+      specifiedSpendId: state => state.spend.specifiedSpendId,
+      specifiedTripId: state => state.trip.specifiedTripId,
+      tripStatus: state => state.trip.tripStatus,
+      tripTotalCash: state => state.trip.tripTotalCash,
+      spendsList: state => state.spendsList,
+    }),
 
+    // computed properties for v-model
+    spendDescription: {
+      get() {
+        return this.$store.state.spend.spendDescription;
+      },
+      set(value) {
+        this.$store.commit('updateSpendDescription', value);
+      }
+    },
+
+    spendCash: {
+      get() {
+        return this.$store.state.spend.spendCash;
+      },
+      set(value) {
+        this.$store.commit('updateSpendCash', value);
+      }
+    },
+
+    // control all fields of Spend form to be filled by user,
+    // otherwise it is unable to save Spend to DB
     spendFormIsValid() {
       return this.spendDescription && this.spendCash;
     },
 
+    //property for calculating all expenses amount
+    //if it exceeds the budget, spend button "+" will be disabled
     enoughCash() {
       let totalSpends = 0;
       
-      this.allSpends.forEach(spend => {
+      this.spendsList.forEach(spend => {
           totalSpends += spend.spends_sum;
       });
 
@@ -99,17 +120,9 @@ export default {
       this.$store.commit('resetSpendForm')
     },
 
-    updateSpendDescription(e) {
-      this.$store.commit('updateSpendDescription', e.target.value);
-    },
-
-    updateSpendCash(e) {
-      this.$store.commit('updateSpendCash', e.target.value);
-    },
-
     saveSpendToDatabase() {
       this.$store.dispatch('fetchNewSpend', {
-        tripId: this.chosenTrip,
+        tripId: this.specifiedTripId,
         description: this.spendDescription,
         date: this.spendDate,
         spendCash: this.spendCash
@@ -118,8 +131,8 @@ export default {
 
     updateSpend() {
       this.$store.dispatch('fetchUpdateSpend', { 
-        spendId: this.chosenSpend,
-        tripId: this.chosenTrip,
+        spendId: this.specifiedSpendId,
+        tripId: this.specifiedTripId,
         description: this.spendDescription,
         date: this.spendDate,
         spendCash: this.spendCash });

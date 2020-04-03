@@ -30,30 +30,30 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 
 export default {
 
   name: 'TripInfo',
 
   computed: {
-    ...mapGetters([
-      'allSpends',
-      'tripStatus',
-      'tripTotalCash',
-      'tripDateEnd'
-    ]),
+    ...mapState({
+      tripStatus: state => state.trip.tripStatus,
+      tripTotalCash: state => state.trip.tripTotalCash,
+      tripDateEnd: state => state.trip.tripDateEnd,
+      spendsList: state => state.spendsList 
+    }),    
 
     // calculate remaining cash-on-hand
     cashLeft () {
         
-      if (this.allSpends.length === 0) {
+      if (this.spendsList.length === 0) {
         return +this.tripTotalCash;
     
       } else {
         let copiedTotalCash = this.tripTotalCash;
       
-        this.allSpends.forEach(spend => {
+        this.spendsList.forEach(spend => {
           copiedTotalCash -= spend.spends_sum;
         });
 
@@ -70,13 +70,13 @@ export default {
     // calculate total expenses of the specified Trip
     totalSpends () {
 
-      if (this.allSpends.length === 0) {
+      if (this.spendsList.length === 0) {
         return 0;
     
       } else {
         let totalSpends = 0;
       
-        this.allSpends.forEach(spend => {
+        this.spendsList.forEach(spend => {
           totalSpends += spend.spends_sum;
         });
 
@@ -88,7 +88,7 @@ export default {
     // calculate number of days, remaining till trip ends
     daysLeft () {
       const dayEnd = Math.floor(new Date(this.tripDateEnd) / (1000 * 3600 * 24));
-      let today = Math.floor(new Date() / (1000 * 3600 * 24)) + 1;     
+      let today = Math.floor(new Date() / (1000 * 3600 * 24));     
       return dayEnd - today + 1;           
     },
 
