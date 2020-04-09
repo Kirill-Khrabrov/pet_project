@@ -9,26 +9,25 @@ cash-on-hand amount that the user can spend per day without losing his budget.<b
 ## Build Setup
 
 ``` bash
-# install dependencies
-npm install
+# primary docker container start
+docker-compose up --build -d
 
-# run the server in ./api
-node server.js
+# further docker container start
+docker-compose up -d
 
-# serve with hot reload at localhost:8080
-npm run dev
+# stop docker containers
+docker-compose stop
 
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
+# remove docker containers
+docker-compose down
 ```
+## URL
+
+ Production distribution<br>
+http://127.0.0.1:8080
 
 ##
 
 Kirill Khrabrov<br>
 kirill.khrabrov@yandex.ru<br>
 https://github.com/Kirill-Khrabrov<br>
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
