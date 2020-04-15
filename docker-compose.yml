@@ -6,24 +6,32 @@ volumes:
 services:    
     vue-app:
         build:
-            context: ./
+            context: ./app
             dockerfile: Dockerfile
-        container_name: vue-app        
+        container_name: vue-app
+        volumes:
+            - ./app:/app
+            - /app/node_modules        
         ports:
             - "${PORT}:${PORT}"
         environment:            
             - PORT=${PORT}          
-        command: /bin/sh -c "npm run build && http-server dist"
+        command: /bin/sh -c "npm run build && http-server dist && npm run start"
         
     vue-api:
         build:
             context: ./api
             dockerfile: Dockerfile
         container_name: vue-api
-        volumes: 
-            - ppc_db:/app/database        
+        volumes:
+            - ./api:/api
+            - /api/node_modules 
+            - ppc_db:/api/database
+        logging:
+            driver: none        
         ports:
             - "${API_PORT}:${API_PORT}"
         environment:
             - API_PORT=${API_PORT}
+
         command: "npm run start"

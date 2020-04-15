@@ -8,6 +8,9 @@ cash-on-hand amount that the user can spend per day without losing his budget.<b
 
 ## Build Setup
 
+Copy the content of .env.sample to .env
+Change the parameters if needed
+
 ``` bash
 # primary docker container start
 docker-compose up --build -d
