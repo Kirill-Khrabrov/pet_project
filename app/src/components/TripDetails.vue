@@ -21,7 +21,7 @@
         
         <div class="col">
           <div class="row text-center">
-            <p class="col my-auto pb-2">DATE START!!!!!</p>
+            <p class="col my-auto pb-2">DATE START</p>
           </div>
           <div class="row text-center">
             <input class="m-auto" type="date" v-model="tripDateStart"/>
@@ -30,7 +30,7 @@
 
         <div class="col">
           <div class="row text-center">
-            <p class="col my-auto pb-2">DATE END</p>
+            <p class="col my-auto pb-2">DATE END!</p>
           </div>
           <div class="row text-center">
             <input class="m-auto" type="date" v-model="tripDateEnd"/>

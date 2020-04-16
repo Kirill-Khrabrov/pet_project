@@ -16,7 +16,7 @@ services:
             - "${PORT}:${PORT}"
         environment:            
             - PORT=${PORT}          
-        command: /bin/sh -c "npm run build && http-server dist && npm run start"
+        command: /bin/sh -c "npm run build && npm run start"
         
     vue-api:
         build:
