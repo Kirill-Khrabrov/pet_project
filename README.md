@@ -26,8 +26,7 @@ docker-compose down
 ```
 ## URL
 
- Production distribution<br>
-http://127.0.0.1:8080
+Dev distribution is on 8080 Port 
 
 ##
 
