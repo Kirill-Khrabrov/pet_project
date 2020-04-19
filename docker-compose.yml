@@ -1,27 +1,31 @@
 version: '3'
 
 volumes:
-    ppc_db: 
+    ppc_db:
 
 services:    
     vue-app:
         build:
-            context: ./app
-            dockerfile: Dockerfile
+            context: ./
+            dockerfile: ./docker/app/Dockerfile
         container_name: vue-app
+        links: 
+            - vue-api
+        logging:
+            driver: none
         volumes:
             - ./app:/app
             - /app/node_modules        
         ports:
             - "${PORT}:${PORT}"
-        environment:            
-            - PORT=${PORT}          
-        command: /bin/sh -c "npm run build && npm run start"
+        environment:
+            - PORT=${PORT}                    
+        command: /bin/sh -c "npm run build && npm run dev"
         
     vue-api:
         build:
-            context: ./api
-            dockerfile: Dockerfile
+            context: ./
+            dockerfile: ./docker/api/Dockerfile
         container_name: vue-api
         volumes:
             - ./api:/api

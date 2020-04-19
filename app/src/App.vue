@@ -35,10 +35,10 @@
 
 <script>
 import { mapState, mapActions, mapMutations } from 'vuex';
-import TripDetails from './components/TripDetails.vue';
-import TripInfo from './components/TripInfo.vue';
-import ExpenseDetails from './components/ExpenseDetails.vue';
-import TripsList from './components/TripsList.vue';
+import TripDetails from '@/components/TripDetails';
+import TripInfo from '@/components/TripInfo';
+import ExpenseDetails from '@/components/ExpenseDetails';
+import TripsList from '@/components/TripsList';
 
 export default {
   name: 'App',

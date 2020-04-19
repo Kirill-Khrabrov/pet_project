@@ -60,7 +60,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import ExpensesList from './ExpensesList.vue';
+import ExpensesList from './ExpensesList';
 
 export default {
   
